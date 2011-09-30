@@ -6,6 +6,7 @@ fost-exe webserver
         ../../../fost-base/Cpp/fost-core
         ../../../fost-base/Cpp/fost-datetime
         ../../../fost-internet/Cpp/fost-inet
+        ../urlhandler
         webserver.cpp
     ;
 
