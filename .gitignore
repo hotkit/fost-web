@@ -1,7 +1,9 @@
 bjam
 bjam.run
+build.tmp
 Boost
 boost-version.jam
+dist
 fost-base
 fost-internet
 fost-orm
