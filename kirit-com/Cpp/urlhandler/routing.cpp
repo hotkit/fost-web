@@ -11,8 +11,8 @@
 
 bool urlhandler::service( fostlib::http::server::request &req ) {
     fostlib::text_body response(
-            L"<html><body>This <b>is</b> a response</body></html>",
+            L"<html><body>No site found to service request</body></html>",
             fostlib::mime::mime_headers(), L"text/html" );
-    req( response );
+    req( response, 404 );
     return true;
 }
