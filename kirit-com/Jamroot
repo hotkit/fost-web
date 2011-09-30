@@ -16,5 +16,5 @@ fost-project kirit-com
 
 # The parts of the system that need to be built
 alias server :
-        Cpp/www-kirit-com
+        Cpp/webserver
     ;

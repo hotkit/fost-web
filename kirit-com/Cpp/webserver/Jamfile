@@ -1,11 +1,11 @@
 using testing ;
 
-fost-exe www-kirit-com
+fost-exe webserver
     :
         ../../../fost-base/Cpp/fost-cli
         ../../../fost-base/Cpp/fost-core
         ../../../fost-base/Cpp/fost-datetime
         ../../../fost-internet/Cpp/fost-inet
-        www-kirit-com.cpp
+        webserver.cpp
     ;
 
