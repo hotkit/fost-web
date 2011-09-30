@@ -7,12 +7,33 @@
 
 
 #include <urlhandler.hpp>
+#include <fost/log>
+
+
+namespace {
+    const fostlib::setting< fostlib::json > c_hosts(
+        "urlhandler/routing.cpp",
+        "webserver", "hosts",
+        fostlib::json::object_t());
+}
 
 
 bool urlhandler::service( fostlib::http::server::request &req ) {
-    fostlib::text_body response(
-            L"<html><body>No site found to service request</body></html>",
-            fostlib::mime::mime_headers(), L"text/html" );
-    req( response, 404 );
+    fostlib::host h(req.data()->headers()["Host"].value());
+    fostlib::string requested_host(fostlib::coerce<fostlib::string>(h));
+
+    fostlib::json host_config = c_hosts.value();
+    if ( host_config.has_key(requested_host) ) {
+        // Route the request to the right handler
+        fostlib::text_body response(
+                L"<html><body>Handler not implemented</body></html>",
+                fostlib::mime::mime_headers(), L"text/html" );
+        req( response, 501 );
+    } else {
+        fostlib::text_body response(
+                L"<html><body>No site found to service request</body></html>",
+                fostlib::mime::mime_headers(), L"text/html" );
+        req( response, 500 );
+    }
     return true;
 }
