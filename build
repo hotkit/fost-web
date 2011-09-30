@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+svn co https://svn.felspar.com/external/Boost
+Boost/install `lsb_release -cs`
+svn co https://svn.felspar.com/external/OpenSSL
+
+svn co https://svn.felspar.com/public/fost-base/stable/fost-base
+svn co https://svn.felspar.com/public/fost-internet/stable/fost-internet
+svn co https://svn.felspar.com/public/fost-orm/stable/fost-orm
