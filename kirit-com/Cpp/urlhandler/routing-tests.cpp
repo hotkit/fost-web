@@ -32,10 +32,10 @@ FSL_TEST_FUNCTION(no_configuration) {
 
 
 namespace {
-    void has_configurationn_status(
+    void has_configuration_status(
             const fostlib::mime&, const fostlib::ascii_string &message
     ) {
-        FSL_CHECK_EQ(fostlib::ascii_string("501 Not Implemented"), message);
+        FSL_CHECK_EQ(fostlib::ascii_string("404 Not Found"), message);
     }
 }
 FSL_TEST_FUNCTION(has_configuration) {
@@ -48,7 +48,7 @@ FSL_TEST_FUNCTION(has_configuration) {
     std::auto_ptr< fostlib::binary_body > headers(
         new fostlib::binary_body());
     fostlib::http::server::request req("GET", "/", headers,
-        has_configurationn_status);
+        has_configuration_status);
     FSL_CHECK(urlhandler::service(req));
 }
 

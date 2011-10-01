@@ -26,8 +26,12 @@ namespace urlhandler {
             virtual ~view();
         public:
             /// Handle the request.
-            virtual void operator () (fostlib::http::server::request &,
-                const fostlib::host &) const = 0;
+            virtual std::pair<boost::shared_ptr<fostlib::mime>, int >
+                operator () (fostlib::http::server::request &,
+                    const fostlib::host &) const = 0;
+
+            /// Return the view that matches the provided name
+            static const view &view_for(const fostlib::string &name);
     };
 
 

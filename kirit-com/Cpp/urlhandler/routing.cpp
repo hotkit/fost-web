@@ -26,16 +26,23 @@ namespace {
 bool urlhandler::service( fostlib::http::server::request &req ) {
     fostlib::host h(req.data()->headers()["Host"].value());
     fostlib::string requested_host(h.name());
-    fostlib::logging::debug(requested_host);
 
     fostlib::json host_config = c_hosts.value();
     if ( host_config.has_key(requested_host) ) {
         // Route the request to the right handler
-        fostlib::text_body response(
-                L"<html><body>Handler not implemented</body></html>",
-                fostlib::mime::mime_headers(), L"text/html" );
-        log_response(requested_host, response, 501);
-        req( response, 501 );
+        try {
+            fostlib::string view_fn = fostlib::coerce<fostlib::string>(host_config[requested_host]);
+            std::pair<boost::shared_ptr<fostlib::mime>, int > resource(
+                urlhandler::view::view_for(view_fn)(req, h));
+            log_response(requested_host, *resource.first, resource.second);
+            req(*resource.first, resource.second);
+        } catch ( fostlib::exceptions::exception &e ) {
+            fostlib::text_body response(
+                    fostlib::coerce<fostlib::string>(e),
+                    fostlib::mime::mime_headers(), L"text/html" );
+            fostlib::logging::error(fostlib::coerce<fostlib::string>(e), e.data());
+            req( response, 501 );
+        }
     } else {
         fostlib::text_body response(
                 L"<html><body>No site found to service request</body></html>",
