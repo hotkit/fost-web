@@ -18,7 +18,7 @@ namespace urlhandler {
     bool service( fostlib::http::server::request &req );
 
     /// A view class
-    class view {
+    class view : boost::noncopyable {
         protected:
             /// The name of the configuration that the handler should tie to
             view(const fostlib::string &name);
