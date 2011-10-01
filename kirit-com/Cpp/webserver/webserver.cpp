@@ -34,7 +34,10 @@ FSL_MAIN(
     const fostlib::setting<fostlib::json>
         host_configuration(fostlib::coerce<fostlib::string>(configuration_file),
              "webserver", "hosts",
-            configuration_json["webserver"]["hosts"]);
+            configuration_json["webserver"]["hosts"]),
+        view_configuration(fostlib::coerce<fostlib::string>(configuration_file),
+             "webserver", "views",
+            configuration_json["webserver"]["views"]);
 
     // Bind server to host and port
     http::server server( host( args[2].value(c_host.value()) ), c_port.value() );

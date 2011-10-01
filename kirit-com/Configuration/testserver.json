@@ -3,6 +3,15 @@
     "webserver": {
         "hosts": {
             "localhost:8001": "fost.static"
+        },
+
+        "views": {
+            "testserver.static": {
+                "handler": "fost.static",
+                "configuration": {
+                    "root": "kirit-com/Static/testserver"
+                }
+            }
         }
     }
 

@@ -15,6 +15,10 @@ namespace {
         "urlhandler/routing.cpp",
         "webserver", "hosts",
         fostlib::json::object_t(), true);
+    const fostlib::setting< fostlib::json > c_views(
+        "urlhandler/routing.cpp",
+        "webserver", "views",
+        fostlib::json::object_t(), true);
 
 
     void log_response(const fostlib::string &host, const fostlib::mime &body, int status_code) {
@@ -31,7 +35,11 @@ bool urlhandler::service( fostlib::http::server::request &req ) {
     if ( host_config.has_key(requested_host) ) {
         // Route the request to the right handler
         try {
+            fostlib::json view_config = c_views.value();
             fostlib::string view_fn = fostlib::coerce<fostlib::string>(host_config[requested_host]);
+            while ( view_config.has_key(view_fn) )
+                view_fn = fostlib::coerce<fostlib::string>(view_config[view_fn]["view"]);
+
             std::pair<boost::shared_ptr<fostlib::mime>, int > resource(
                 urlhandler::view::view_for(view_fn)(req, h));
             log_response(requested_host, *resource.first, resource.second);
