@@ -14,13 +14,14 @@ namespace {
     const fostlib::setting< fostlib::json > c_hosts(
         "urlhandler/routing.cpp",
         "webserver", "hosts",
-        fostlib::json::object_t());
+        fostlib::json::object_t(), true);
 }
 
 
 bool urlhandler::service( fostlib::http::server::request &req ) {
     fostlib::host h(req.data()->headers()["Host"].value());
-    fostlib::string requested_host(fostlib::coerce<fostlib::string>(h));
+    fostlib::string requested_host(h.name());
+    fostlib::logging::debug(requested_host);
 
     fostlib::json host_config = c_hosts.value();
     if ( host_config.has_key(requested_host) ) {

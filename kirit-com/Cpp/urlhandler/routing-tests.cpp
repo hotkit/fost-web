@@ -30,3 +30,25 @@ FSL_TEST_FUNCTION(no_configuration) {
     FSL_CHECK(urlhandler::service(req));
 }
 
+
+namespace {
+    void has_configurationn_status(
+            const fostlib::mime&, const fostlib::ascii_string &message
+    ) {
+        FSL_CHECK_EQ(fostlib::ascii_string("501 Not Implemented"), message);
+    }
+}
+FSL_TEST_FUNCTION(has_configuration) {
+    fostlib::json configuration;
+    fostlib::insert(configuration, "", "404");
+    const fostlib::setting<fostlib::json> host_config(
+        "urlhandling/routing-tests.cpp",
+        "webserver", "hosts", configuration);
+
+    std::auto_ptr< fostlib::binary_body > headers(
+        new fostlib::binary_body());
+    fostlib::http::server::request req("GET", "/", headers,
+        has_configurationn_status);
+    FSL_CHECK(urlhandler::service(req));
+}
+
