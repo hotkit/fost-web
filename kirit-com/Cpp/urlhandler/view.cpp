@@ -37,21 +37,3 @@ const urlhandler::view &urlhandler::view::view_for(const fostlib::string &name) 
             "Where zero or more than 1 views are found");
 }
 
-
-const class response_404 : urlhandler::view {
-    public:
-        response_404()
-        : view("fost.response.404") {
-        }
-
-        std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
-            fostlib::http::server::request &req,
-            const fostlib::host &
-        ) const {
-            boost::shared_ptr<fostlib::mime> response(
-                    new fostlib::text_body(
-                        L"<html><body>Resource not found</body></html>",
-                        fostlib::mime::mime_headers(), L"text/html" ));
-            return std::make_pair(response, 404);
-        }
-} c_error_404;
