@@ -2,7 +2,7 @@
 
     "webserver": {
         "hosts": {
-            "localhost:8001": "fost.response.404"
+            "localhost:8001": "fost.static"
         }
     }
 
