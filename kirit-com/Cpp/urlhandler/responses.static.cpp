@@ -21,8 +21,8 @@ const class response_static : public urlhandler::view {
             const fostlib::host &
         ) const {
             boost::shared_ptr<fostlib::mime> response(
-                    new fostlib::text_body(
-                        fostlib::utf::load_file(L"kirit-com/Static/testserver/index.html"),
+                    new fostlib::file_body(
+                        L"kirit-com/Static/testserver/index.html",
                         fostlib::mime::mime_headers(), L"text/html" ));
             return std::make_pair(response, 200);
         }
