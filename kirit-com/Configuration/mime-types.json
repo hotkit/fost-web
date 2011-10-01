@@ -1,13 +1,13 @@
 {
 
-    "txt": "text/plain",
+    ".txt": "text/plain",
 
-    "html":"text/html",
-    "htm": "text/html",
+    ".html":"text/html",
+    ".htm": "text/html",
 
-    "png": "image/png",
-    "jpg": "image/jpg",
-    "jpeg": "image/jpg"
+    ".png": "image/png",
+    ".jpg": "image/jpg",
+    ".jpeg": "image/jpg"
 
 }
 
