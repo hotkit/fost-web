@@ -40,7 +40,7 @@ namespace {
 }
 FSL_TEST_FUNCTION(has_configuration) {
     fostlib::json configuration;
-    fostlib::insert(configuration, "", "404");
+    fostlib::insert(configuration, "", "fost.response.404");
     const fostlib::setting<fostlib::json> host_config(
         "urlhandling/routing-tests.cpp",
         "webserver", "hosts", configuration);

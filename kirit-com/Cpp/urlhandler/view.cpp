@@ -38,10 +38,10 @@ const urlhandler::view &urlhandler::view::view_for(const fostlib::string &name) 
 }
 
 
-const class error_404 : urlhandler::view {
+const class response_404 : urlhandler::view {
     public:
-        error_404()
-        : view("404") {
+        response_404()
+        : view("fost.response.404") {
         }
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
