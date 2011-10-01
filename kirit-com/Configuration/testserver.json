@@ -1,0 +1,10 @@
+{
+
+    "webserver": {
+        "hosts": {
+            "localhost:8001": "fost.response.404"
+        }
+    }
+
+}
+

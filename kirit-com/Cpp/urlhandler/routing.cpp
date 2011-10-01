@@ -47,7 +47,7 @@ bool urlhandler::service( fostlib::http::server::request &req ) {
         fostlib::text_body response(
                 L"<html><body>No site found to service request</body></html>",
                 fostlib::mime::mime_headers(), L"text/html" );
-        fostlib::logging::error(requested_host, "Host configuration not found", 500);
+        fostlib::logging::error(requested_host, "Host configuration not found", host_config);
         req( response, 500 );
     }
     return true;
