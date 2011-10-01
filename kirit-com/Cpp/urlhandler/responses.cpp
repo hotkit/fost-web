@@ -9,7 +9,7 @@
 #include <urlhandler.hpp>
 
 
-const class response_404 : urlhandler::view {
+const class response_404 : public urlhandler::view {
     public:
         response_404()
         : view("fost.response.404") {
@@ -26,3 +26,5 @@ const class response_404 : urlhandler::view {
             return std::make_pair(response, 404);
         }
 } c_response_404;
+
+const urlhandler::view &urlhandler::response_404 =c_response_404;
