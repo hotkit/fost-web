@@ -15,6 +15,11 @@ namespace {
         "urlhandler/routing.cpp",
         "webserver", "hosts",
         fostlib::json::object_t(), true);
+
+
+    void log_response(const fostlib::string &host, const fostlib::mime &body, int status_code) {
+        fostlib::logging::info(host, status_code);
+    }
 }
 
 
@@ -29,11 +34,13 @@ bool urlhandler::service( fostlib::http::server::request &req ) {
         fostlib::text_body response(
                 L"<html><body>Handler not implemented</body></html>",
                 fostlib::mime::mime_headers(), L"text/html" );
+        log_response(requested_host, response, 501);
         req( response, 501 );
     } else {
         fostlib::text_body response(
                 L"<html><body>No site found to service request</body></html>",
                 fostlib::mime::mime_headers(), L"text/html" );
+        fostlib::logging::error(requested_host, "Host configuration not found", 500);
         req( response, 500 );
     }
     return true;
