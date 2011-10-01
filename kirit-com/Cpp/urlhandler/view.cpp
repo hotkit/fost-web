@@ -23,8 +23,12 @@ const class error_404 : urlhandler::view {
         }
 
         void operator () (
-            fostlib::http::server::request &,
+            fostlib::http::server::request &req,
             const fostlib::host &
         ) const {
+            fostlib::text_body response(
+                    L"<html><body>Resource not found</body></html>",
+                    fostlib::mime::mime_headers(), L"text/html" );
+            req( response, 404 );
         }
 } c_error_404;
