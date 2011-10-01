@@ -23,7 +23,8 @@ const class response_static : public urlhandler::view {
             boost::shared_ptr<fostlib::mime> response(
                     new fostlib::file_body(
                         L"kirit-com/Static/testserver/index.html",
-                        fostlib::mime::mime_headers(), L"text/html" ));
+                        fostlib::mime::mime_headers(),
+                        urlhandler::mime_type("html")));
             return std::make_pair(response, 200);
         }
 } c_response_static;

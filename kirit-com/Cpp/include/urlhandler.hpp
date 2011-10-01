@@ -17,6 +17,12 @@ namespace urlhandler {
     /// The prime routing for web sites
     bool service( fostlib::http::server::request &req );
 
+    /// Load MIME configuration data from the specified file
+    void load_mime_configuration(const fostlib::string &filename);
+
+    /// Return the MIME type for the given file extension
+    fostlib::string mime_type(const fostlib::string &extension);
+
     /// A view class
     class view : boost::noncopyable {
         protected:
