@@ -6,9 +6,10 @@
 */
 
 
+#include <urlhandler.hpp>
 #include <fost/main>
 #include <fost/threading>
-#include <urlhandler.hpp>
+#include <fost/unicode>
 
 
 using namespace fostlib;
@@ -22,13 +23,27 @@ namespace {
 
 FSL_MAIN(
     L"webserver",
-    L"Threaded HTTP server\nCopyright (c) 2009-2011, Felspar Co. Ltd."
+    L"Threaded HTTP server\nCopyright (c) 2002-2011, Felspar Co. Ltd."
 )( fostlib::ostream &o, fostlib::arguments &args ) {
+    // Load the configuration
+    boost::filesystem::wpath configuration_file(
+        fostlib::coerce<boost::filesystem::wpath>(args[1].value("webserver.json")));
+    fostlib::string configuration_data(fostlib::utf::load_file(configuration_file, "{}"));
+    fostlib::json configuration_json(fostlib::json::parse(configuration_data));
+
+    const fostlib::setting<fostlib::json>
+        host_configuration(fostlib::coerce<fostlib::string>(configuration_file),
+             "webserver", "hosts",
+            configuration_json["webserver"]["hosts"]);
+
     // Bind server to host and port
-    http::server server( host( args[1].value(c_host.value()) ), c_port.value() );
-    o << L"Answering requests on http://" << server.binding() << L":" << server.port() << L"/" << std::endl;
+    http::server server( host( args[2].value(c_host.value()) ), c_port.value() );
+    o << L"Answering requests on "
+        L"http://" << server.binding() << L":" << server.port() << L"/" << std::endl;
+
     // Service requests
     server( urlhandler::service );
+
     // It will never get this far
     return 0;
 }

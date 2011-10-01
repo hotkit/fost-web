@@ -7,12 +7,48 @@
 
 
 #include <urlhandler.hpp>
+#include <fost/log>
+
+
+namespace {
+    const fostlib::setting< fostlib::json > c_hosts(
+        "urlhandler/routing.cpp",
+        "webserver", "hosts",
+        fostlib::json::object_t(), true);
+
+
+    void log_response(const fostlib::string &host, const fostlib::mime &body, int status_code) {
+        fostlib::logging::info(host, status_code);
+    }
+}
 
 
 bool urlhandler::service( fostlib::http::server::request &req ) {
-    fostlib::text_body response(
-            L"<html><body>This <b>is</b> a response</body></html>",
-            fostlib::mime::mime_headers(), L"text/html" );
-    req( response );
+    fostlib::host h(req.data()->headers()["Host"].value());
+    fostlib::string requested_host(h.name());
+
+    fostlib::json host_config = c_hosts.value();
+    if ( host_config.has_key(requested_host) ) {
+        // Route the request to the right handler
+        try {
+            fostlib::string view_fn = fostlib::coerce<fostlib::string>(host_config[requested_host]);
+            std::pair<boost::shared_ptr<fostlib::mime>, int > resource(
+                urlhandler::view::view_for(view_fn)(req, h));
+            log_response(requested_host, *resource.first, resource.second);
+            req(*resource.first, resource.second);
+        } catch ( fostlib::exceptions::exception &e ) {
+            fostlib::text_body response(
+                    fostlib::coerce<fostlib::string>(e),
+                    fostlib::mime::mime_headers(), L"text/html" );
+            fostlib::logging::error(fostlib::coerce<fostlib::string>(e), e.data());
+            req( response, 501 );
+        }
+    } else {
+        fostlib::text_body response(
+                L"<html><body>No site found to service request</body></html>",
+                fostlib::mime::mime_headers(), L"text/html" );
+        fostlib::logging::error(requested_host, "Host configuration not found", host_config);
+        req( response, 500 );
+    }
     return true;
 }
