@@ -33,7 +33,9 @@ void urlhandler::load_mime_configuration(
                 filename, "MIME", fostlib::coerce<fostlib::string>(jc.key()), *jc)));
 }
 
-fostlib::string urlhandler::mime_type(const fostlib::string &extension) {
+fostlib::string urlhandler::mime_type(const boost::filesystem::wpath &filename) {
+    std::wstring extension = boost::filesystem::extension(filename);
     return fostlib::setting<fostlib::string>::value(
-        fostlib::string("MIME"), extension, fostlib::null).value("text/plain");
+        fostlib::string("MIME"), fostlib::coerce<fostlib::string>(extension),
+            fostlib::null).value("text/plain");
 }

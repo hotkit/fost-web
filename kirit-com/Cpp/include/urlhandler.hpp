@@ -21,7 +21,7 @@ namespace urlhandler {
     void load_mime_configuration(const fostlib::string &filename);
 
     /// Return the MIME type for the given file extension
-    fostlib::string mime_type(const fostlib::string &extension);
+    fostlib::string mime_type(const boost::filesystem::wpath &filename);
 
     /// A view class
     class view : boost::noncopyable {
@@ -30,6 +30,7 @@ namespace urlhandler {
             view(const fostlib::string &name);
             /// Allow sub-classing to work properly
             virtual ~view();
+
         public:
             /// Handle the request.
             virtual std::pair<boost::shared_ptr<fostlib::mime>, int >
