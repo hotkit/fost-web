@@ -36,12 +36,15 @@ bool urlhandler::service( fostlib::http::server::request &req ) {
         // Route the request to the right handler
         try {
             fostlib::json view_config = c_views.value();
-            fostlib::string view_fn = fostlib::coerce<fostlib::string>(host_config[requested_host]);
-            while ( view_config.has_key(view_fn) )
-                view_fn = fostlib::coerce<fostlib::string>(view_config[view_fn]["view"]);
+            std::pair<fostlib::string, fostlib::json> view_fn = std::make_pair(
+                fostlib::coerce<fostlib::string>(host_config[requested_host]), fostlib::json());;
+            while ( view_config.has_key(view_fn.first) )
+                view_fn = std::make_pair(
+                    fostlib::coerce<fostlib::string>(view_config[view_fn.first]["view"]),
+                    view_config[view_fn.first]["configuration"]);
 
             std::pair<boost::shared_ptr<fostlib::mime>, int > resource(
-                urlhandler::view::view_for(view_fn)(fostlib::json(), req, h));
+                urlhandler::view::view_for(view_fn.first)(view_fn.second, req, h));
             log_response(requested_host, *resource.first, resource.second);
             req(*resource.first, resource.second);
         } catch ( fostlib::exceptions::exception &e ) {
