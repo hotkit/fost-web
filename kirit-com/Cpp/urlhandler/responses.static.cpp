@@ -21,11 +21,12 @@ const class response_static : public urlhandler::view {
             fostlib::http::server::request &req,
             const fostlib::host &
         ) const {
+            boost::filesystem::wpath root(
+                fostlib::coerce<boost::filesystem::wpath>(configuration["root"]));
+            boost::filesystem::wpath filename = root / L"index.html";
             boost::shared_ptr<fostlib::mime> response(
-                    new fostlib::file_body(
-                        L"kirit-com/Static/testserver/index.html",
-                        fostlib::mime::mime_headers(),
-                        urlhandler::mime_type(boost::filesystem::extension("index.html"))));
+                    new fostlib::file_body(filename, fostlib::mime::mime_headers(),
+                        urlhandler::mime_type(filename)));
             return std::make_pair(response, 200);
         }
 } c_response_static;
