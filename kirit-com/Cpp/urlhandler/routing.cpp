@@ -41,7 +41,7 @@ bool urlhandler::service( fostlib::http::server::request &req ) {
                 view_fn = fostlib::coerce<fostlib::string>(view_config[view_fn]["view"]);
 
             std::pair<boost::shared_ptr<fostlib::mime>, int > resource(
-                urlhandler::view::view_for(view_fn)(req, h));
+                urlhandler::view::view_for(view_fn)(fostlib::json(), req, h));
             log_response(requested_host, *resource.first, resource.second);
             req(*resource.first, resource.second);
         } catch ( fostlib::exceptions::exception &e ) {

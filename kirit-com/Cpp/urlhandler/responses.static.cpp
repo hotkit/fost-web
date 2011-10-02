@@ -17,6 +17,7 @@ const class response_static : public urlhandler::view {
         }
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
+            const fostlib::json &configuration,
             fostlib::http::server::request &req,
             const fostlib::host &
         ) const {

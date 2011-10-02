@@ -16,6 +16,7 @@ const class response_404 : public urlhandler::view {
         }
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
+            const fostlib::json &,
             fostlib::http::server::request &req,
             const fostlib::host &
         ) const {
