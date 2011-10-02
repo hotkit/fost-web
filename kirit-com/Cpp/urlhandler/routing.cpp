@@ -15,6 +15,10 @@ namespace {
         "urlhandler/routing.cpp",
         "webserver", "hosts",
         fostlib::json::object_t(), true);
+    const fostlib::setting< fostlib::json > c_views(
+        "urlhandler/routing.cpp",
+        "webserver", "views",
+        fostlib::json::object_t(), true);
 
 
     void log_response(const fostlib::string &host, const fostlib::mime &body, int status_code) {
@@ -31,9 +35,16 @@ bool urlhandler::service( fostlib::http::server::request &req ) {
     if ( host_config.has_key(requested_host) ) {
         // Route the request to the right handler
         try {
-            fostlib::string view_fn = fostlib::coerce<fostlib::string>(host_config[requested_host]);
+            fostlib::json view_config = c_views.value();
+            std::pair<fostlib::string, fostlib::json> view_fn = std::make_pair(
+                fostlib::coerce<fostlib::string>(host_config[requested_host]), fostlib::json());;
+            while ( view_config.has_key(view_fn.first) )
+                view_fn = std::make_pair(
+                    fostlib::coerce<fostlib::string>(view_config[view_fn.first]["view"]),
+                    view_config[view_fn.first]["configuration"]);
+
             std::pair<boost::shared_ptr<fostlib::mime>, int > resource(
-                urlhandler::view::view_for(view_fn)(req, h));
+                urlhandler::view::view_for(view_fn.first)(view_fn.second, req, h));
             log_response(requested_host, *resource.first, resource.second);
             req(*resource.first, resource.second);
         } catch ( fostlib::exceptions::exception &e ) {
