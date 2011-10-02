@@ -43,6 +43,7 @@ FSL_MAIN(
             configuration_json["webserver"]["views"]);
 
     // Bind server to host and port
+    args.commandSwitch("p", c_port.section(), c_port.name());
     http::server server( host( args[2].value(c_host.value()) ), c_port.value() );
     o << L"Answering requests on "
         L"http://" << server.binding() << L":" << server.port() << L"/" << std::endl;
