@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+cd `dirname $0`
+
+CPUCOUNT=`grep -c ^processor /proc/cpuinfo`
+TOOLSET=gcc
+
+time ../bjam -j$CPUCOUNT toolset=$TOOLSET `../python.opts.sh` $*

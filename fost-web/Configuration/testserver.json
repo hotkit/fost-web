@@ -1,0 +1,19 @@
+{
+
+    "webserver": {
+        "hosts": {
+            "localhost:8001": "testserver.static"
+        },
+
+        "views": {
+            "testserver.static": {
+                "view": "fost.static",
+                "configuration": {
+                    "root": "kirit-com/Static/testserver"
+                }
+            }
+        }
+    }
+
+}
+
