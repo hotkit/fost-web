@@ -1,7 +1,7 @@
 
-fost-lib-autotest urlhandler
+fost-lib-autotest fost-urlhandler
     :
-        Cpp/urlhandler
+        Cpp/fost-urlhandler
     :
         ../../../fost-internet/Cpp/fost-inet
     ;
