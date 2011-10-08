@@ -6,10 +6,10 @@
 */
 
 
-#include <urlhandler.hpp>
+#include <fost/urlhandler.hpp>
 
 
-const class response_404 : public urlhandler::view {
+const class response_404 : public fostlib::urlhandler::view {
     public:
         response_404()
         : view("fost.response.404") {
@@ -28,4 +28,4 @@ const class response_404 : public urlhandler::view {
         }
 } c_response_404;
 
-const urlhandler::view &urlhandler::response_404 =c_response_404;
+const fostlib::urlhandler::view &fostlib::urlhandler::response_404 =c_response_404;

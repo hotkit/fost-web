@@ -6,7 +6,7 @@
 */
 
 
-#include <urlhandler.hpp>
+#include <fost/urlhandler.hpp>
 #include <fost/log>
 
 
@@ -27,7 +27,7 @@ namespace {
 }
 
 
-bool urlhandler::service( fostlib::http::server::request &req ) {
+bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
     fostlib::host h(req.data()->headers()["Host"].value());
     fostlib::string requested_host(h.name());
 

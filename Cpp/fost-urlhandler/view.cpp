@@ -6,28 +6,30 @@
 */
 
 
-#include <urlhandler.hpp>
+#include <fost/urlhandler.hpp>
 #include <fost/threading>
 
 
 namespace {
-    typedef fostlib::threadsafe_store<urlhandler::view*> view_store;
+    typedef fostlib::threadsafe_store<fostlib::urlhandler::view*> view_store;
     view_store &views() {
         static view_store store;
         return store;
     }
 }
 
-urlhandler::view::view(const fostlib::string &name) {
+fostlib::urlhandler::view::view(const fostlib::string &name) {
     views().add(name, this);
 }
 
-urlhandler::view::~view() {
+fostlib::urlhandler::view::~view() {
     // Allow the view to leak as they'll only be removed on termination
 }
 
 
-const urlhandler::view &urlhandler::view::view_for(const fostlib::string &name) {
+const fostlib::urlhandler::view &fostlib::urlhandler::view::view_for(
+        const fostlib::string &name
+) {
     view_store::found_t found(views().find(name));
     if ( found.size() == 1 )
         return *found[0];

@@ -6,7 +6,7 @@
 */
 
 
-#include <urlhandler.hpp>
+#include <fost/urlhandler>
 #include <fost/test>
 
 
@@ -27,7 +27,7 @@ FSL_TEST_FUNCTION(no_configuration) {
         new fostlib::binary_body());
     fostlib::http::server::request req("GET", "/", headers,
         no_configuration_status);
-    FSL_CHECK(urlhandler::service(req));
+    FSL_CHECK(fostlib::urlhandler::service(req));
 }
 
 
@@ -49,6 +49,6 @@ FSL_TEST_FUNCTION(has_configuration) {
         new fostlib::binary_body());
     fostlib::http::server::request req("GET", "/", headers,
         has_configuration_status);
-    FSL_CHECK(urlhandler::service(req));
+    FSL_CHECK(fostlib::urlhandler::service(req));
 }
 

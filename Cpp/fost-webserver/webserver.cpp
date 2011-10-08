@@ -6,7 +6,7 @@
 */
 
 
-#include <urlhandler.hpp>
+#include <fost/urlhandler>
 #include <fost/main>
 #include <fost/threading>
 #include <fost/unicode>

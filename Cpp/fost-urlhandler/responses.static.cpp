@@ -6,11 +6,11 @@
 */
 
 
-#include <urlhandler.hpp>
+#include <fost/urlhandler.hpp>
 #include <fost/unicode>
 
 
-const class response_static : public urlhandler::view {
+const class response_static : public fostlib::urlhandler::view {
     public:
         response_static()
         : view("fost.static") {
@@ -28,12 +28,12 @@ const class response_static : public urlhandler::view {
             if ( boost::filesystem::is_directory(filename) )
                 filename /= L"index.html";
             if ( !boost::filesystem::exists(filename) )
-                return urlhandler::response_404(fostlib::json(), req, host);
+                return fostlib::urlhandler::response_404(fostlib::json(), req, host);
             boost::shared_ptr<fostlib::mime> response(
                     new fostlib::file_body(filename, fostlib::mime::mime_headers(),
-                        urlhandler::mime_type(filename)));
+                        fostlib::urlhandler::mime_type(filename)));
             return std::make_pair(response, 200);
         }
 } c_response_static;
 
-const urlhandler::view &urlhandler::static_server =c_response_static;
+const fostlib::urlhandler::view &fostlib::urlhandler::static_server =c_response_static;

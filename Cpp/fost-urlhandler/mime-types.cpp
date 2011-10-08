@@ -6,7 +6,7 @@
 */
 
 
-#include <urlhandler.hpp>
+#include <fost/urlhandler.hpp>
 #include <fost/unicode>
 
 
@@ -21,7 +21,7 @@ namespace {
 }
 
 
-void urlhandler::load_mime_configuration(
+void fostlib::urlhandler::load_mime_configuration(
     const fostlib::string &filename
 ) {
     fostlib::string db_data(fostlib::utf::load_file(
@@ -33,7 +33,9 @@ void urlhandler::load_mime_configuration(
                 filename, "MIME", fostlib::coerce<fostlib::string>(jc.key()), *jc)));
 }
 
-fostlib::string urlhandler::mime_type(const boost::filesystem::wpath &filename) {
+fostlib::string fostlib::urlhandler::mime_type(
+        const boost::filesystem::wpath &filename
+) {
     std::wstring extension = boost::filesystem::extension(filename);
     return fostlib::setting<fostlib::string>::value(
         fostlib::string("MIME"), fostlib::coerce<fostlib::string>(extension),
