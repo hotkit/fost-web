@@ -18,18 +18,29 @@ const class pathprefix : public fostlib::urlhandler::view {
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
             const fostlib::json &configuration,
             fostlib::http::server::request &req,
-            const fostlib::host &
+            const fostlib::host &h
         ) const {
             fostlib::string path( fostlib::coerce<fostlib::string>(
                 fostlib::coerce<boost::filesystem::wpath>(
                     req.file_spec())).substr(1) );
 
-            boost::shared_ptr<fostlib::mime> response(
-                    new fostlib::text_body(
-                        L"<html><body><h1>Path prefix</h1>" +
-                            path + L"</body></html>",
-                        fostlib::mime::mime_headers(), L"text/html" ));
-            return std::make_pair(response, 200);
+            std::pair< std::size_t, fostlib::string> longest( 0, fostlib::string() );
+            for ( fostlib::json::const_iterator p(configuration.begin());
+                    p != configuration.end(); ++p ) {
+                fostlib::string key = fostlib::coerce<fostlib::string>(p.key());
+                std::size_t length = key.length();
+                if ( path.substr(0, length) == key && length > longest.first )
+                    longest = std::make_pair(length, key);
+            }
+
+            std::pair<fostlib::string, fostlib::json> to_exec(
+                view::find_view(
+                    fostlib::coerce<fostlib::string>(configuration[longest.second])));
+
+            if ( configuration.has_key(longest.second) )
+                return view::view_for(to_exec.first)(to_exec.second, req, h);
+            else
+                return fostlib::urlhandler::response_404(fostlib::json(), req, h);
         }
 } c_pathprefix;
 
