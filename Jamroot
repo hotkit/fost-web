@@ -18,4 +18,5 @@ fost-project kirit-com
 alias fost-web :
         Cpp/fost-urlhandler
         Cpp/fost-webserver
+        Cpp/fost-webserver-test
     ;
