@@ -20,13 +20,9 @@ const class pathprefix : public fostlib::urlhandler::view {
             fostlib::http::server::request &req,
             const fostlib::host &
         ) const {
-            fostlib::string path;
-            if (configuration.has_key("path"))
-                path = fostlib::coerce<fostlib::string>(configuration["path"]);
-            else
-                path = fostlib::coerce<fostlib::string>(
-                    fostlib::coerce<boost::filesystem::wpath>(
-                        req.file_spec()));
+            fostlib::string path( fostlib::coerce<fostlib::string>(
+                fostlib::coerce<boost::filesystem::wpath>(
+                    req.file_spec())).substr(1) );
 
             boost::shared_ptr<fostlib::mime> response(
                     new fostlib::text_body(
