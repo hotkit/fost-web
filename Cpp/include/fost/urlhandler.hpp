@@ -46,6 +46,10 @@ namespace fostlib {
                         fostlib::http::server::request &request,
                         const fostlib::host &host) const = 0;
 
+                /// Trace down the JSON for the view function and its configuration
+                static std::pair<fostlib::string, fostlib::json>
+                    find_view(const fostlib::string &view_name, const fostlib::json &view_config);
+
                 /// Return the view that matches the provided name
                 static const view &view_for(const fostlib::string &name);
         };
