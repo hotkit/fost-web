@@ -39,10 +39,10 @@ FSL_MAIN(
     // Set up the settings
     const fostlib::setting<fostlib::json>
         host_configuration(fostlib::coerce<fostlib::string>(configuration_file),
-             "webserver", "hosts",
+             fostlib::urlhandler::c_hosts,
             configuration_json["webserver"]["hosts"]),
         view_configuration(fostlib::coerce<fostlib::string>(configuration_file),
-             "webserver", "views",
+             fostlib::urlhandler::c_views,
             configuration_json["webserver"]["views"]);
 
     // Load any shared objects
