@@ -11,16 +11,6 @@
 
 
 namespace {
-    const fostlib::setting< fostlib::json > c_hosts(
-        "urlhandler/routing.cpp",
-        "webserver", "hosts",
-        fostlib::json::object_t(), true);
-    const fostlib::setting< fostlib::json > c_views(
-        "urlhandler/routing.cpp",
-        "webserver", "views",
-        fostlib::json::object_t(), true);
-
-
     void log_response(const fostlib::string &host, const fostlib::mime &body, int status_code) {
         fostlib::logging::info(host, status_code);
     }
@@ -37,7 +27,7 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
         try {
             fostlib::json view_config = c_views.value();
             std::pair<fostlib::string, fostlib::json> view_fn = std::make_pair(
-                fostlib::coerce<fostlib::string>(host_config[requested_host]), fostlib::json());;
+                fostlib::coerce<fostlib::string>(host_config[requested_host]), fostlib::json());
             while ( view_config.has_key(view_fn.first) )
                 view_fn = std::make_pair(
                     fostlib::coerce<fostlib::string>(view_config[view_fn.first]["view"]),

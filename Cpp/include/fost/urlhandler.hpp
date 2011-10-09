@@ -17,6 +17,11 @@ namespace fostlib {
     namespace urlhandler {
 
 
+        /// The host configuration
+        extern const fostlib::setting< fostlib::json > c_hosts;
+        /// The view configuration
+        extern const fostlib::setting< fostlib::json > c_views;
+
         /// The prime routing for web sites
         bool service( fostlib::http::server::request &req );
 
