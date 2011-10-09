@@ -1,6 +1,8 @@
 {
 
     "webserver": {
+        "load": ["something.so"],
+
         "hosts": {
             "localhost:8001": "testserver.static"
         },
@@ -9,7 +11,7 @@
             "testserver.static": {
                 "view": "fost.static",
                 "configuration": {
-                    "root": "kirit-com/Static/testserver"
+                    "root": "Static/testserver"
                 }
             }
         }

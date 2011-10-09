@@ -26,7 +26,7 @@ FSL_MAIN(
     L"Threaded HTTP server\nCopyright (c) 2002-2011, Felspar Co. Ltd."
 )( fostlib::ostream &o, fostlib::arguments &args ) {
     // Load MIME types
-    urlhandler::load_mime_configuration("kirit-com/Configuration/mime-types.json");
+    urlhandler::load_mime_configuration("Configuration/mime-types.json");
 
     // Load the configuration
     boost::filesystem::wpath configuration_file(
@@ -34,6 +34,7 @@ FSL_MAIN(
     fostlib::string configuration_data(fostlib::utf::load_file(configuration_file, "{}"));
     fostlib::json configuration_json(fostlib::json::parse(configuration_data));
 
+    // Set up the settings
     const fostlib::setting<fostlib::json>
         host_configuration(fostlib::coerce<fostlib::string>(configuration_file),
              "webserver", "hosts",
