@@ -52,6 +52,9 @@ namespace fostlib {
         /// Returns static files
         extern const view &static_server;
 
+        /// Runs the view found at the location with the longest prefix
+        extern const view &view_pathprefix;
+
 
     }
 
