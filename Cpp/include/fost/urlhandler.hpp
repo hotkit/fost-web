@@ -48,7 +48,8 @@ namespace fostlib {
 
                 /// Trace down the JSON for the view function and its configuration
                 static std::pair<fostlib::string, fostlib::json>
-                    find_view(const fostlib::string &view_name, const fostlib::json &view_config);
+                    find_view(const fostlib::string &view_name,
+                        const fostlib::json &view_config = fostlib::json());
 
                 /// Return the view that matches the provided name
                 static const view &view_for(const fostlib::string &name);
