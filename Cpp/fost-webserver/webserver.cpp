@@ -10,6 +10,7 @@
 #include <fost/main>
 #include <fost/threading>
 #include <fost/unicode>
+#include <fost/log>
 
 
 using namespace fostlib;
@@ -42,6 +43,11 @@ FSL_MAIN(
         view_configuration(fostlib::coerce<fostlib::string>(configuration_file),
              "webserver", "views",
             configuration_json["webserver"]["views"]);
+
+    // Load any shared objects
+    fostlib::json so(configuration_json["webserver"]["load"]);
+    for ( fostlib::json::const_iterator p(so.begin()); p != so.end(); ++p )
+        fostlib::logging::error(*p);
 
     // Bind server to host and port
     args.commandSwitch("p", c_port.section(), c_port.name());
