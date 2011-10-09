@@ -6,11 +6,12 @@
 */
 
 
-#include <fost/urlhandler>
+#include <fost/dynlib>
+#include <fost/log>
 #include <fost/main>
 #include <fost/threading>
 #include <fost/unicode>
-#include <fost/log>
+#include <fost/urlhandler>
 
 
 using namespace fostlib;
@@ -46,8 +47,10 @@ FSL_MAIN(
 
     // Load any shared objects
     fostlib::json so(configuration_json["webserver"]["load"]);
+    std::vector< boost::shared_ptr<fostlib::dynlib> > dynlibs;
     for ( fostlib::json::const_iterator p(so.begin()); p != so.end(); ++p )
-        fostlib::logging::error(*p);
+        dynlibs.push_back(boost::shared_ptr<fostlib::dynlib>(
+            new dynlib(fostlib::coerce<fostlib::string>(*p))));
 
     // Bind server to host and port
     args.commandSwitch("p", c_port.section(), c_port.name());

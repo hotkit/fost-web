@@ -1,7 +1,7 @@
 {
 
     "webserver": {
-        "load": ["libfost-webserver-test.so"],
+        "load": ["libfost-webserver-test-d.so"],
 
         "hosts": {
             "localhost:8001": "testserver.static"
