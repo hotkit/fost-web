@@ -4,10 +4,17 @@
         "load": ["libfost-webserver-test-d.so"],
 
         "hosts": {
-            "localhost:8001": "testserver.static"
+            "localhost:8001": "testserver"
         },
 
         "views": {
+            "testserver": {
+                "view": "fost.view.pathprefix",
+                "configuration": {
+                    "": "testserver.static",
+                    "test/": "fost.test.runner"
+                }
+            },
             "testserver.static": {
                 "view": "fost.static",
                 "configuration": {

@@ -27,6 +27,19 @@ fostlib::urlhandler::view::~view() {
 }
 
 
+std::pair<fostlib::string, fostlib::json> fostlib::urlhandler::view::find_view(
+    const fostlib::string &view_name, const fostlib::json &view_config
+) {
+    fostlib::json views(c_views.value());
+    std::pair<fostlib::string, fostlib::json> final(view_name, view_config);
+    while ( views.has_key(final.first) )
+        final = std::make_pair(
+            fostlib::coerce<fostlib::string>(views[final.first]["view"]),
+            views[final.first]["configuration"]);
+    return final;
+}
+
+
 const fostlib::urlhandler::view &fostlib::urlhandler::view::view_for(
         const fostlib::string &name
 ) {

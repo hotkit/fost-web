@@ -17,6 +17,11 @@ namespace fostlib {
     namespace urlhandler {
 
 
+        /// The host configuration
+        extern const fostlib::setting< fostlib::json > c_hosts;
+        /// The view configuration
+        extern const fostlib::setting< fostlib::json > c_views;
+
         /// The prime routing for web sites
         bool service( fostlib::http::server::request &req );
 
@@ -41,6 +46,11 @@ namespace fostlib {
                         fostlib::http::server::request &request,
                         const fostlib::host &host) const = 0;
 
+                /// Trace down the JSON for the view function and its configuration
+                static std::pair<fostlib::string, fostlib::json>
+                    find_view(const fostlib::string &view_name,
+                        const fostlib::json &view_config = fostlib::json());
+
                 /// Return the view that matches the provided name
                 static const view &view_for(const fostlib::string &name);
         };
@@ -51,6 +61,9 @@ namespace fostlib {
 
         /// Returns static files
         extern const view &static_server;
+
+        /// Runs the view found at the location with the longest prefix
+        extern const view &view_pathprefix;
 
 
     }
