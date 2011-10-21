@@ -20,4 +20,6 @@ alias fost-web :
         Cpp/fost-urlhandler
         Cpp/fost-webserver
         Cpp/fost-webserver-test
+        Static/testserver
+        Templates/testserver
     ;
