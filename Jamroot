@@ -16,6 +16,7 @@ fost-project kirit-com
 
 # The parts of the system that need to be built
 alias fost-web :
+        Configuration
         Cpp/fost-urlhandler
         Cpp/fost-webserver
         Cpp/fost-webserver-test

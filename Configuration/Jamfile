@@ -1,0 +1,7 @@
+
+install fost-web-config :
+        mime-types.json
+        testserver-d.unix.json
+    :
+        <location>$(PREFIX)/Configuration
+    ;
