@@ -25,8 +25,7 @@ const class middleware_template : public fostlib::urlhandler::view {
             std::pair<fostlib::string, fostlib::json> view_fn = view::find_view(view);
             std::pair<boost::shared_ptr<fostlib::mime>, int>  wrapped(
                 view_for(view_fn.first)(view_fn.second, req, h));
-            if ( wrapped.second == 200 &&
-                    wrapped.first->headers()["Content-Type"].value() == "text/html" ) {
+            if ( wrapped.first->headers()["Content-Type"].value() == "text/html" ) {
                 fostlib::string skin(
                     fostlib::utf::load_file(
                         fostlib::coerce<boost::filesystem::wpath>(configuration["template"])));
@@ -47,7 +46,7 @@ const class middleware_template : public fostlib::urlhandler::view {
                 boost::shared_ptr<fostlib::mime> response(
                         new fostlib::text_body(skin,
                             fostlib::mime::mime_headers(), L"text/html" ));
-                return std::make_pair(response, 200);
+                return std::make_pair(response, wrapped.second);
             } else
                 return wrapped;
         }
