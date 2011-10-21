@@ -36,13 +36,13 @@ const class middleware_template : public fostlib::urlhandler::view {
                 std::pair<fostlib::string, fostlib::nullable<fostlib::string> > title(
                     fostlib::crack(content, "<title>", "</title>"));
                 if ( !title.second.isnull() )
-                    skin = replaceAll(skin, "{{ element:title }}",
+                    skin = replaceAll(skin, "{{ element title }}",
                         L"<title>" + title.second.value() + L"</title>");
 
                 std::pair<fostlib::string, fostlib::nullable<fostlib::string> > inner(
                     fostlib::crack(content, "<body>", "</body>"));
                 if ( !inner.second.isnull() )
-                    skin = replaceAll(skin, "{{ content:body }}", inner.second.value());
+                    skin = replaceAll(skin, "{{ content body }}", inner.second.value());
 
                 boost::shared_ptr<fostlib::mime> response(
                         new fostlib::text_body(skin,
