@@ -5,9 +5,10 @@
     ".html":"text/html",
     ".htm": "text/html",
 
-    ".png": "image/png",
+    ".ico": "image/vnd.microsoft.icon",
     ".jpg": "image/jpg",
-    ".jpeg": "image/jpg"
+    ".jpeg": "image/jpg",
+    ".png": "image/png"
 
 }
 

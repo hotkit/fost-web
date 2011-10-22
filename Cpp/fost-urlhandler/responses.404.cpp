@@ -22,7 +22,8 @@ const class response_404 : public fostlib::urlhandler::view {
         ) const {
             boost::shared_ptr<fostlib::mime> response(
                     new fostlib::text_body(
-                        L"<html><body>Resource not found</body></html>",
+                        L"<html><head><title>Resource not found</title></head>"
+                            L"<body><h1>Resource not found</h1></body></html>",
                         fostlib::mime::mime_headers(), L"text/html" ));
             return std::make_pair(response, 404);
         }

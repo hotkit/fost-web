@@ -10,7 +10,13 @@ body {
     font-family: Verdana, sans-serif;
     font-size : 90%;
 }
-
+#body {
+    margin-left: 15em;
+}
+#menu {
+    position: fixed;
+    top: 1em; left: 1em;
+}
 
 /* Links */
 

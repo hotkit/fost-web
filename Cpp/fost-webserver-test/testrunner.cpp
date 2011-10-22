@@ -22,7 +22,8 @@ const class testrunner : public fostlib::urlhandler::view {
         ) const {
             boost::shared_ptr<fostlib::mime> response(
                     new fostlib::text_body(
-                        L"<html><body><h1>Web server tests</h1></body></html>",
+                        L"<html><head><title>Web server tests</title></head>"
+                            L"<body><h1>Web server tests</h1></body></html>",
                         fostlib::mime::mime_headers(), L"text/html" ));
             return std::make_pair(response, 200);
         }
