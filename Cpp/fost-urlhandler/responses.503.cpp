@@ -16,7 +16,7 @@ const class response_503 : public fostlib::urlhandler::view {
         }
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
-            const fostlib::json &,
+            const fostlib::json &, const fostlib::string &,
             fostlib::http::server::request &req,
             const fostlib::host &
         ) const {
