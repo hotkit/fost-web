@@ -1,5 +1,5 @@
 /*
-    Copyright 2011 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2012 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -18,17 +18,18 @@ const class response_static : public fostlib::urlhandler::view {
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
             const fostlib::json &configuration,
+            const fostlib::string &path,
             fostlib::http::server::request &req,
             const fostlib::host &host
         ) const {
             boost::filesystem::wpath root(
                 fostlib::coerce<boost::filesystem::wpath>(configuration["root"]));
             boost::filesystem::wpath filename = root /
-                fostlib::coerce<boost::filesystem::wpath>(req.file_spec());
+                fostlib::coerce<boost::filesystem::wpath>(path);
             if ( boost::filesystem::is_directory(filename) )
                 filename /= L"index.html";
             if ( !boost::filesystem::exists(filename) )
-                return fostlib::urlhandler::response_404(fostlib::json(), req, host);
+                return fostlib::urlhandler::response_404(fostlib::json(), path, req, host);
             boost::shared_ptr<fostlib::mime> response(
                     new fostlib::file_body(filename, fostlib::mime::mime_headers(),
                         fostlib::urlhandler::mime_type(filename)));

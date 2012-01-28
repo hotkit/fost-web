@@ -1,5 +1,5 @@
 /*
-    Copyright 2008-2011 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2008-2012 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -29,8 +29,11 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
             std::pair<fostlib::string, fostlib::json> view_fn = view::find_view(
                 fostlib::coerce<fostlib::string>(host_config[requested_host]));
 
+            fostlib::string path(fostlib::coerce<fostlib::string>(
+                req.file_spec().underlying()).substr(1));
+
             std::pair<boost::shared_ptr<fostlib::mime>, int > resource(
-                view::view_for(view_fn.first)(view_fn.second, req, h));
+                view::view_for(view_fn.first)(view_fn.second, path, req, h));
             log_response(requested_host, *resource.first, resource.second);
             req(*resource.first, resource.second);
         } catch ( fostlib::exceptions::exception &e ) {

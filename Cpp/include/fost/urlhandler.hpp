@@ -1,5 +1,5 @@
 /*
-    Copyright 2011 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2012 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -43,6 +43,7 @@ namespace fostlib {
                 /// Handle the request.
                 virtual std::pair<boost::shared_ptr<fostlib::mime>, int >
                     operator () (const fostlib::json &configuration,
+                        const fostlib::string &path,
                         fostlib::http::server::request &request,
                         const fostlib::host &host) const = 0;
 

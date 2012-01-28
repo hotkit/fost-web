@@ -1,0 +1,3 @@
+2012-01-28  Kirit Saelensminde  <kirit@felspar.com>
+ Added ChangeLog
+ Added a path which can be re-written by views acting as middleware.

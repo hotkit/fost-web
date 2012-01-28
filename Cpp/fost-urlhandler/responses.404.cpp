@@ -1,5 +1,5 @@
 /*
-    Copyright 2011 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2012 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -16,7 +16,7 @@ const class response_404 : public fostlib::urlhandler::view {
         }
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
-            const fostlib::json &,
+            const fostlib::json &, const fostlib::string &,
             fostlib::http::server::request &req,
             const fostlib::host &
         ) const {

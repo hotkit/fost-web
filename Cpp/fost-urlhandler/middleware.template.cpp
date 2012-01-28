@@ -1,5 +1,5 @@
 /*
-    Copyright 2011 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2012 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -17,6 +17,7 @@ const class middleware_template : public fostlib::urlhandler::view {
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
             const fostlib::json &configuration,
+            const fostlib::string &path,
             fostlib::http::server::request &req,
             const fostlib::host &h
         ) const {
@@ -24,7 +25,7 @@ const class middleware_template : public fostlib::urlhandler::view {
                 configuration["view"]));
             std::pair<fostlib::string, fostlib::json> view_fn = view::find_view(view);
             std::pair<boost::shared_ptr<fostlib::mime>, int>  wrapped(
-                view_for(view_fn.first)(view_fn.second, req, h));
+                view_for(view_fn.first)(view_fn.second, path, req, h));
             if ( wrapped.first->headers()["Content-Type"].value() == "text/html" ) {
                 fostlib::string skin(
                     fostlib::utf::load_file(

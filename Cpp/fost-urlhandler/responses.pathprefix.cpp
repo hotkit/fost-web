@@ -1,5 +1,5 @@
 /*
-    Copyright 2011 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2012 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -17,13 +17,10 @@ const class pathprefix : public fostlib::urlhandler::view {
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
             const fostlib::json &configuration,
+            const fostlib::string &path,
             fostlib::http::server::request &req,
             const fostlib::host &h
         ) const {
-            fostlib::string path( fostlib::coerce<fostlib::string>(
-                fostlib::coerce<boost::filesystem::wpath>(
-                    req.file_spec())).substr(1) );
-
             std::pair< std::size_t, fostlib::string> longest( 0, fostlib::string() );
             for ( fostlib::json::const_iterator p(configuration.begin());
                     p != configuration.end(); ++p ) {
@@ -38,9 +35,10 @@ const class pathprefix : public fostlib::urlhandler::view {
                     fostlib::coerce<fostlib::string>(configuration[longest.second])));
 
             if ( configuration.has_key(longest.second) )
-                return view::view_for(to_exec.first)(to_exec.second, req, h);
+                return view::view_for(to_exec.first)(
+                    to_exec.second, path.substr(longest.first), req, h);
             else
-                return fostlib::urlhandler::response_404(fostlib::json(), req, h);
+                return fostlib::urlhandler::response_404(fostlib::json(), path, req, h);
         }
 } c_pathprefix;
 
