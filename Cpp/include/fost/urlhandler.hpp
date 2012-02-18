@@ -59,6 +59,8 @@ namespace fostlib {
 
         /// Used to return a standard 404 to the user
         extern const view &response_404;
+        /// Used to return a standard 503 (service unavailable) to the user
+        extern const view &response_503;
 
         /// Returns static files
         extern const view &static_server;
