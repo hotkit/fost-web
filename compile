@@ -2,6 +2,5 @@
 cd `dirname $0`
 
 CPUCOUNT=`grep -c ^processor /proc/cpuinfo`
-TOOLSET=gcc
 
-time ../bjam -j$CPUCOUNT toolset=$TOOLSET `../python.opts.sh` $*
+../bjam -j$CPUCOUNT `../python.opts.sh` $*
