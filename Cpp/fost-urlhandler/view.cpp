@@ -49,6 +49,7 @@ const fostlib::urlhandler::view &fostlib::urlhandler::view::view_for(
     else
         throw fostlib::exceptions::not_implemented(
             "urlhandler::view::view_for(const fostlib::string &)",
-            "Where zero or more than 1 views are found");
+            "Where zero or more than 1 views are found",
+            name);
 }
 
