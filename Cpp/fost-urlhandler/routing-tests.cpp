@@ -49,3 +49,32 @@ FSL_TEST_FUNCTION(has_configuration) {
     FSL_CHECK(fostlib::urlhandler::service(req));
 }
 
+
+namespace {
+    void directory_error(
+            const fostlib::mime&, const fostlib::ascii_string &message
+    ) {
+        FSL_CHECK_EQ(fostlib::ascii_string("400 Bad Request"), message);
+    }
+}
+FSL_TEST_FUNCTION(path_must_start_with_slash) {
+    std::auto_ptr< fostlib::binary_body > headers(
+        new fostlib::binary_body());
+    fostlib::http::server::request req("GET", "path/to/file", headers,
+        directory_error);
+    FSL_CHECK(fostlib::urlhandler::service(req));
+}
+FSL_TEST_FUNCTION(slashdotdot_not_allowed) {
+    std::auto_ptr< fostlib::binary_body > headers(
+        new fostlib::binary_body());
+    fostlib::http::server::request req("GET", "/..", headers,
+        directory_error);
+    FSL_CHECK(fostlib::urlhandler::service(req));
+}
+FSL_TEST_FUNCTION(dotdotslash_not_allowed) {
+    std::auto_ptr< fostlib::binary_body > headers(
+        new fostlib::binary_body());
+    fostlib::http::server::request req("GET", "../", headers,
+        directory_error);
+    FSL_CHECK(fostlib::urlhandler::service(req));
+}

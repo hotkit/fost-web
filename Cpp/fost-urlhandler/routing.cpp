@@ -18,6 +18,19 @@ namespace {
 
 
 bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
+    // Before doing anything else run some sanity checks on the request
+    if (
+            req.file_spec().underlying().underlying()[0] != '/'
+            || req.file_spec().underlying().underlying().find("/..") != std::string::npos
+    ) {
+        fostlib::text_body response(
+                    fostlib::string("400 Bad Request\n"),
+                    fostlib::mime::mime_headers(), L"text/plain" );
+        req(response, 400);
+        return true;
+    }
+
+    // Now process it
     fostlib::host h(req.data()->headers()["Host"].value());
     fostlib::string requested_host(h.name());
 
@@ -39,7 +52,7 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
         } catch ( fostlib::exceptions::exception &e ) {
             fostlib::text_body response(
                     fostlib::coerce<fostlib::string>(e),
-                    fostlib::mime::mime_headers(), L"text/html" );
+                    fostlib::mime::mime_headers(), L"text/plain" );
             fostlib::logging::error(fostlib::coerce<fostlib::string>(e), e.data());
             req( response, 501 );
         }
