@@ -13,9 +13,6 @@
 FSL_TEST_SUITE(routing);
 
 
-typedef boost::function<
-    void (const fostlib::mime&, const fostlib::ascii_string&)> handler_fn;
-
 namespace {
     void no_configuration_status(const fostlib::mime&, const fostlib::ascii_string &message) {
         FSL_CHECK_EQ(fostlib::ascii_string("500 Internal Server Error"), message);
