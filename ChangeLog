@@ -1,3 +1,6 @@
+2012-03-03  Kirit Saelensminde  <kirit@felspar.com>
+ A default host configuration can now be set up using an empty host name key in the hosts configuration location.
+
 2012-01-28  Kirit Saelensminde  <kirit@felspar.com>
  Added ChangeLog
  Added a path which can be re-written by views acting as middleware.

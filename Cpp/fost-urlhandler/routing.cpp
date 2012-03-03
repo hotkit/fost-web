@@ -35,12 +35,15 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
     fostlib::string requested_host(h.name());
 
     fostlib::json host_config = c_hosts.value();
-    if ( host_config.has_key(requested_host) ) {
+    if ( host_config.has_key(requested_host)
+            || host_config.has_key(fostlib::string()) ) {
         // Route the request to the right handler
         try {
             fostlib::json view_config = c_views.value();
             std::pair<fostlib::string, fostlib::json> view_fn = view::find_view(
-                fostlib::coerce<fostlib::string>(host_config[requested_host]));
+                fostlib::coerce<fostlib::string>(
+                    host_config[host_config.has_key(requested_host) ?
+                        requested_host : fostlib::string()]));
 
             fostlib::string path(fostlib::coerce<fostlib::string>(
                 req.file_spec().underlying()).substr(1));
