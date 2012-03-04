@@ -1,3 +1,6 @@
+2012-03-04  Kirit Saelensminde  <kirit@felspar.com>
+ Added a 412 resaponse.
+
 2012-03-03  Kirit Saelensminde  <kirit@felspar.com>
  A default host configuration can now be set up using an empty host name key in the hosts configuration location.
 
