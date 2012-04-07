@@ -21,6 +21,13 @@ namespace {
         }
         return fostlib::null;
     }
+    void replace_content(
+        fostlib::string &skin, const fostlib::string &block, const fostlib::string &with
+    ) {
+        fostlib::string::size_type start = skin.find(block);
+        if ( start != fostlib::string::npos )
+            skin.replace(start, block.length(), with);
+    }
 }
 
 
@@ -50,13 +57,13 @@ const class middleware_template : public fostlib::urlhandler::view {
 
                 fostlib::nullable<fostlib::string> title( find_content(content, "title") );
                 if ( !title.isnull() )
-                    skin = replaceAll(skin, "{{ element title }}",
+                    replace_content(skin, "{{ element title }}",
                         L"<title>" + title.value() + L"</title>");
 
                 fostlib::nullable<fostlib::string> inner(
                     find_content(content, "body") );
                 if ( !inner.isnull() )
-                    skin = replaceAll(skin, "{{ content body }}", inner.value());
+                    replace_content(skin, "{{ content body }}", inner.value());
 
                 boost::shared_ptr<fostlib::mime> response(
                         new fostlib::text_body(skin,
