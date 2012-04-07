@@ -9,6 +9,21 @@
 #include <fost/urlhandler.hpp>
 
 
+namespace {
+    fostlib::nullable< fostlib::string > find_content(
+            const fostlib::string &text, const fostlib::string &tag) {
+        fostlib::string::size_type start(text.find("<" + tag));
+        if ( start != fostlib::string::npos ) {
+            start = text.find(">", start)  + 1;
+            fostlib::string::size_type end(text.find("</" + tag));
+            if ( end != fostlib::string::npos )
+                return text.substr(start, end-start);
+        }
+        return fostlib::null;
+    }
+}
+
+
 const class middleware_template : public fostlib::urlhandler::view {
     public:
         middleware_template()
@@ -33,16 +48,15 @@ const class middleware_template : public fostlib::urlhandler::view {
                 fostlib::string content(
                     fostlib::coerce<fostlib::string>(*wrapped.first));
 
-                std::pair<fostlib::string, fostlib::nullable<fostlib::string> > title(
-                    fostlib::crack(content, "<title>", "</title>"));
-                if ( !title.second.isnull() )
+                fostlib::nullable<fostlib::string> title( find_content(content, "title") );
+                if ( !title.isnull() )
                     skin = replaceAll(skin, "{{ element title }}",
-                        L"<title>" + title.second.value() + L"</title>");
+                        L"<title>" + title.value() + L"</title>");
 
-                std::pair<fostlib::string, fostlib::nullable<fostlib::string> > inner(
-                    fostlib::crack(content, "<body>", "</body>"));
-                if ( !inner.second.isnull() )
-                    skin = replaceAll(skin, "{{ content body }}", inner.second.value());
+                fostlib::nullable<fostlib::string> inner(
+                    find_content(content, "body") );
+                if ( !inner.isnull() )
+                    skin = replaceAll(skin, "{{ content body }}", inner.value());
 
                 boost::shared_ptr<fostlib::mime> response(
                         new fostlib::text_body(skin,
