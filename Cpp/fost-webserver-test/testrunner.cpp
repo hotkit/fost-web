@@ -9,7 +9,15 @@
 #include <fost/urlhandler>
 
 
-const class testrunner : public fostlib::urlhandler::view {
+#ifdef FOST_OS_WINDOWS
+    #define FOST_WEBSERVER_TEST_DECLSPEC __declspec( dllexport )
+#else
+    #define FOST_WEBSERVER_TEST_DECLSPEC
+#endif
+
+
+const class FOST_WEBSERVER_TEST_DECLSPEC testrunner
+        : public fostlib::urlhandler::view {
     public:
         testrunner()
         : view("fost.test.runner") {

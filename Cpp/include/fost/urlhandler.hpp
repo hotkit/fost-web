@@ -18,21 +18,26 @@ namespace fostlib {
 
 
         /// The host configuration
-        extern const fostlib::setting< fostlib::json > c_hosts;
+        FOST_URLHANDLER_DECLSPEC
+            extern const fostlib::setting< fostlib::json > c_hosts;
         /// The view configuration
-        extern const fostlib::setting< fostlib::json > c_views;
+        FOST_URLHANDLER_DECLSPEC
+            extern const fostlib::setting< fostlib::json > c_views;
 
         /// The prime routing for web sites
-        bool service( fostlib::http::server::request &req );
+        FOST_URLHANDLER_DECLSPEC
+            bool service( fostlib::http::server::request &req );
 
         /// Load MIME configuration data from the specified file
-        void load_mime_configuration(const fostlib::string &filename);
+        FOST_URLHANDLER_DECLSPEC
+            void load_mime_configuration(const fostlib::string &filename);
 
         /// Return the MIME type for the given file extension
-        fostlib::string mime_type(const boost::filesystem::wpath &filename);
+        FOST_URLHANDLER_DECLSPEC
+            fostlib::string mime_type(const boost::filesystem::wpath &filename);
 
         /// A view class
-        class view : boost::noncopyable {
+        class FOST_URLHANDLER_DECLSPEC view : boost::noncopyable {
             protected:
                 /// The name of the configuration that the handler should tie to
                 view(const fostlib::string &name);

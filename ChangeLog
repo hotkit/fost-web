@@ -1,3 +1,6 @@
+2012-04-08  Kirit Saelensminde  <kirit@felspar.com>
+ Added support for Windows build.
+
 2012-04-07  Kirit Saelensminde  <kirit@felspar.com>
  Switched away from the use of crack to make use of a special search for the inner content in the template middleware for about 17-18% speed up.
  Switched away from replaceAll to using the string's replace() method for a further 12-14% speed up.

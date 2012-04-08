@@ -6,6 +6,7 @@
 */
 
 
+#include "fost-urlhandler.hpp"
 #include <fost/urlhandler.hpp>
 #include <fost/log>
 
