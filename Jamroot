@@ -15,7 +15,7 @@ fost-project kirit-com
     ;
 
 # The parts of the system that need to be built
-alias fost-web :
+alias fost :
         ../fost-base//fost
         ../fost-internet//fost
         Configuration
@@ -25,3 +25,4 @@ alias fost-web :
         Static/testserver
         Templates/testserver
     ;
+
