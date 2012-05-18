@@ -1,0 +1,12 @@
+using testing ;
+
+fost-exe fost-webserver
+    :
+        ../../../fost-base/Cpp/fost-cli
+        ../../../fost-base/Cpp/fost-core
+        ../../../fost-base/Cpp/fost-datetime
+        ../../../fost-internet/Cpp/fost-inet
+        ../fost-urlhandler
+        webserver.cpp
+    ;
+

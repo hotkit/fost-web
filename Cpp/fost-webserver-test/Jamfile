@@ -1,0 +1,8 @@
+
+fost-lib-autotest fost-webserver-test
+    :
+        Cpp/fost-webserver-test
+    :
+        ../../../fost-internet/Cpp/fost-inet
+        ../fost-urlhandler
+    ;

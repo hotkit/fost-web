@@ -1,0 +1,35 @@
+{
+
+    "webserver": {
+        "load": ["libfost-webserver-test-d.so"],
+
+        "hosts": {
+            "localhost:8001": "testserver.template"
+        },
+
+        "views": {
+            "testserver.template": {
+                "view": "fost.middleware.template",
+                "configuration": {
+                    "template": "Templates/testserver/skin.html",
+                    "view": "testserver"
+                }
+            },
+            "testserver": {
+                "view": "fost.view.pathprefix",
+                "configuration": {
+                    "": "testserver.static",
+                    "test/": "fost.test.runner"
+                }
+            },
+            "testserver.static": {
+                "view": "fost.static",
+                "configuration": {
+                    "root": "Static/testserver"
+                }
+            }
+        }
+    }
+
+}
+

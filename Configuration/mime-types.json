@@ -1,0 +1,14 @@
+{
+
+    ".txt": "text/plain",
+
+    ".html":"text/html",
+    ".htm": "text/html",
+
+    ".asp": "text/xml",
+
+    ".ico": "image/vnd.microsoft.icon",
+    ".jpg": "image/jpg",
+    ".jpeg": "image/jpg",
+    ".png": "image/png"
+}
