@@ -15,7 +15,9 @@ namespace {
     void log_response(
         const fostlib::string &host, const fostlib::mime &body, int status_code
     ) {
-        fostlib::log::info(host, status_code);
+        fostlib::log::info()
+            ("host", host)
+            ("status code", status_code);
     }
 }
 
@@ -66,7 +68,10 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
         fostlib::text_body response(
                 L"<html><body>No site found to service request</body></html>",
                 fostlib::mime::mime_headers(), L"text/html" );
-        fostlib::log::error(requested_host, "Host configuration not found", host_config);
+        fostlib::log::error()
+            ("message", "Host configuration not found")
+            ("requested host", requested_host)
+            ("host configuration", host_config);
         req( response, 500 );
     }
     return true;
