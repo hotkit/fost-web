@@ -1,3 +1,9 @@
+2012-07-06  Kirit Saelensminde  <kirit@felspar.com>
+ Added an `all` target so it's compatible with other projects.
+
+2012-07-05  Kirit Saelensminde  <kirit@felspar.com>
+ Changed the logging to use JSON objects rather than arrays.
+
 2012-04-08  Kirit Saelensminde  <kirit@felspar.com>
  Added support for Windows build.
 

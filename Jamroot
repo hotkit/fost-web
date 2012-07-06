@@ -26,3 +26,9 @@ alias fost :
         Templates/testserver
     ;
 
+alias all :
+        ../fost-base//all
+        ../fost-internet//all
+        fost
+    ;
+explicit all ;
