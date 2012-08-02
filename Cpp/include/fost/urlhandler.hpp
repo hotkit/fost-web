@@ -62,6 +62,12 @@ namespace fostlib {
         };
 
 
+        /// Used to return a standard 301 to the user
+        extern const view &response_301;
+        /// Used to return a standard 302 to the user
+        extern const view &response_302;
+        /// Used to return a standard 303 to the user
+        extern const view &response_303;
         /// Used to return a standard 404 to the user
         extern const view &response_404;
         /// Used to return a standard 405 to the user

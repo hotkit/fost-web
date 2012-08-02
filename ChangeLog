@@ -1,5 +1,5 @@
 2012-08-02  Kirit Saelensminde  <kirit@felspar.com>
- Implemented a proper 405, 500 and 501 responses.
+ Implemented a proper 301, 302, 303, 405, 500 and 501 responses.
 
 2012-07-06  Kirit Saelensminde  <kirit@felspar.com>
  Added an `all` target so it's compatible with other projects.
