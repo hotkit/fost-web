@@ -64,10 +64,16 @@ namespace fostlib {
 
         /// Used to return a standard 404 to the user
         extern const view &response_404;
+        /// Used to return a standard 405 to the user
+        extern const view &response_405;
         /// Used to return a standard 410 to the user
         extern const view &response_410;
         /// Used to return a standard 412 to the user
         extern const view &response_412;
+        /// Used to return a standard 500 (internal server error) to the user
+        extern const view &response_500;
+        /// Used to return a standard 501 (not implemented) to the user
+        extern const view &response_501;
         /// Used to return a standard 503 (service unavailable) to the user
         extern const view &response_503;
 
