@@ -63,31 +63,43 @@ namespace fostlib {
 
 
         /// Used to return a standard 301 to the user
-        extern const view &response_301;
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_301;
         /// Used to return a standard 302 to the user
-        extern const view &response_302;
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_302;
         /// Used to return a standard 303 to the user
-        extern const view &response_303;
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_303;
         /// Used to return a standard 404 to the user
-        extern const view &response_404;
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_404;
         /// Used to return a standard 405 to the user
-        extern const view &response_405;
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_405;
         /// Used to return a standard 410 to the user
-        extern const view &response_410;
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_410;
         /// Used to return a standard 412 to the user
-        extern const view &response_412;
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_412;
         /// Used to return a standard 500 (internal server error) to the user
-        extern const view &response_500;
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_500;
         /// Used to return a standard 501 (not implemented) to the user
-        extern const view &response_501;
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_501;
         /// Used to return a standard 503 (service unavailable) to the user
-        extern const view &response_503;
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_503;
 
         /// Returns static files
-        extern const view &static_server;
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &static_server;
 
         /// Runs the view found at the location with the longest prefix
-        extern const view &view_pathprefix;
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &view_pathprefix;
 
 
     }
