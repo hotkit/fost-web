@@ -10,6 +10,11 @@
 #include <fost/http.server.hpp>
 
 
+#pragma once
+#ifndef FOST_URLHANDLER_HPP
+#define FOST_URLHANDLER_HPP
+
+
 namespace fostlib {
 
 
@@ -106,3 +111,7 @@ namespace fostlib {
 
 
 }
+
+
+#endif // FOST_URLHANDLER_HPP
+
