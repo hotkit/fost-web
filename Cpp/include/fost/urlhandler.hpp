@@ -1,5 +1,5 @@
 /*
-    Copyright 2011-2012 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2014 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -32,6 +32,13 @@ namespace fostlib {
         /// The prime routing for web sites
         FOST_URLHANDLER_DECLSPEC
             bool service( fostlib::http::server::request &req );
+
+        /// The routing part of the web service
+        FOST_URLHANDLER_DECLSPEC
+            std::pair<boost::shared_ptr<fostlib::mime>, int >
+                router(const fostlib::host &requested_host,
+                    const fostlib::string &view_name,
+                    fostlib::http::server::request &req);
 
         /// Load MIME configuration data from the specified file
         FOST_URLHANDLER_DECLSPEC
