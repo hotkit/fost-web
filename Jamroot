@@ -7,9 +7,14 @@ include ../fost-base/fost.jam ;
 
 # Bring in the projects used
 use-project fost-base : ../fost-base ;
+use-project fost-internet : ../fost-internet ;
 
 #Define this project
-fost-project proxy-lib ;
+fost-project proxy-lib
+    :
+        <include>../fost-internet/Cpp/include
+    ;
+
 
 # The parts of the system that need to be built
 alias proxy-lib :
