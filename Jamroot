@@ -13,6 +13,7 @@ use-project fost-internet : ../fost-internet ;
 fost-project proxy-lib
     :
         <include>../fost-internet/Cpp/include
+        <include>../fost-web/Cpp/include
     ;
 
 

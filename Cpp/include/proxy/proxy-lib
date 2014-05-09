@@ -6,3 +6,4 @@
 
 
 #include <proxy/libtext.hpp>
+#include <proxy/views.hpp>
