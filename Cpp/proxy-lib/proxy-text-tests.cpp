@@ -9,5 +9,6 @@ FSL_TEST_SUITE(proxy_lib);
 
 FSL_TEST_FUNCTION(can_see_config) {
     fostlib::http::server::request req("GET", "/_config");
+    proxy::view::c_config(fostlib::json(), "/", req, fostlib::host());
 }
 
