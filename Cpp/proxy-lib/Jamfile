@@ -1,0 +1,6 @@
+
+fost-lib-autotest proxy-lib
+    : Cpp/proxy-lib
+    :
+        ../../../fost-base/Cpp/fost-core
+    ;
