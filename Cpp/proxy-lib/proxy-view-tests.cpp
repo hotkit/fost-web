@@ -8,9 +8,9 @@ FSL_TEST_SUITE(proxy);
 
 
 FSL_TEST_FUNCTION(can_get_page) {
-    fostlib::http::server::request req("GET", "/");
-    FSL_CHECK_EXCEPTION(
-        proxy::view::c_proxy(fostlib::json(), "/", req, fostlib::host()),
-        fostlib::exceptions::not_implemented &);
+    fostlib::http::server::request req("GET", "/GPLed%20TLA%20FAQ");
+    std::pair<boost::shared_ptr<fostlib::mime>, int > response =
+        proxy::view::c_proxy(
+            fostlib::json(), "/GPLed TLA FAQ", req, fostlib::host());
 }
 

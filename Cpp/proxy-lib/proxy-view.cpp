@@ -1,3 +1,4 @@
+#include <fost/log>
 #include <proxy/views.hpp>
 
 
@@ -16,6 +17,17 @@ namespace {
                 const fostlib::string &path,
                 fostlib::http::server::request &request,
                 const fostlib::host &host) const {
+            auto info = fostlib::log::info()("id", fostlib::guid());
+
+            fostlib::url base("http://www.kirit.com/");
+            fostlib::url location(base, request.file_spec());
+            info("location", location);
+
+            fostlib::http::user_agent ua(base);
+            std::auto_ptr< fostlib::http::user_agent::response >
+                response = ua.get(location);
+            info("response", "status", response->status());
+
             throw fostlib::exceptions::not_implemented("proxy view");
         }
 
