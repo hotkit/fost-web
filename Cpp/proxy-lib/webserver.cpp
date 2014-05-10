@@ -17,22 +17,34 @@ namespace {
 
     fostlib::worker g_server;
     boost::shared_ptr< fostlib::detail::future_result< void > > g_running;
+
+    boost::mutex g_terminate_lock;
+    bool g_terminate = false;
 }
 
 
 void proxy::start(const boost::filesystem::wpath &root) {
     g_running = g_server([]() {
         fostlib::http::server server(fostlib::host(0), 2555);
-        server(service);
+        server(service, []() {
+            boost::mutex::scoped_lock lock(g_terminate_lock);
+            return g_terminate;
+        });
     });
     sleep(1);
 }
 
 
 void proxy::wait() {
+    g_running->wait();
 }
 
 
 void proxy::stop() {
+    {
+        boost::mutex::scoped_lock lock(g_terminate_lock);
+        g_terminate = true;
+    }
+    fostlib::network_connection(fostlib::host(), 2555);
 }
 
