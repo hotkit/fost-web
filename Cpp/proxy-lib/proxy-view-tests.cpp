@@ -13,5 +13,8 @@ FSL_TEST_FUNCTION(can_get_page) {
         proxy::view::c_proxy(
             fostlib::json(), "/GPLed TLA FAQ", req, fostlib::host());
     FSL_CHECK_EQ(response.second, 200);
+    FSL_CHECK_EQ(
+        response.first->headers()["content-type"].value(),
+        "text/html");
 }
 

@@ -28,9 +28,11 @@ namespace {
                 response = ua.get(location);
             info("response", "status", response->status());
 
+            fostlib::mime::mime_headers headers;
+            headers.set("Content-Type", response->headers()["Content-Type"]);
             boost::shared_ptr<fostlib::mime> body =
                 boost::make_shared<fostlib::binary_body>(
-                    response->body()->data());
+                    response->body()->data(), headers);
 
             return std::make_pair(body, response->status());
         }
