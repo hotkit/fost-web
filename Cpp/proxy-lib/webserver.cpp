@@ -31,7 +31,6 @@ void proxy::start(const boost::filesystem::wpath &root) {
             return g_terminate;
         });
     });
-    sleep(1);
 }
 
 
@@ -41,10 +40,11 @@ void proxy::wait() {
 
 
 void proxy::stop() {
-    {
+    { // Tell the server to stop
         boost::mutex::scoped_lock lock(g_terminate_lock);
         g_terminate = true;
     }
+    // Tickle the port so it notices
     fostlib::network_connection(fostlib::host(), 2555);
 }
 
