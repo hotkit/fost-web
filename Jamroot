@@ -12,6 +12,7 @@ use-project fost-internet : ../fost-internet ;
 #Define this project
 fost-project proxy-lib
     :
+        <toolset>clang:<cxxflags>-std=c++11
         <include>../fost-internet/Cpp/include
         <include>../fost-web/Cpp/include
     ;
