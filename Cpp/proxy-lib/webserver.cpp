@@ -9,3 +9,7 @@ void proxy::start(const boost::filesystem::wpath &root) {
 void proxy::wait() {
 }
 
+
+void proxy::stop() {
+}
+
