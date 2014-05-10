@@ -28,7 +28,11 @@ namespace {
                 response = ua.get(location);
             info("response", "status", response->status());
 
-            throw fostlib::exceptions::not_implemented("proxy view");
+            boost::shared_ptr<fostlib::mime> body =
+                boost::make_shared<fostlib::binary_body>(
+                    response->body()->data());
+
+            return std::make_pair(body, response->status());
         }
 
     } c_proxy_view;
