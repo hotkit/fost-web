@@ -1,9 +1,4 @@
-#ifdef FOST_OS_WINDOWS
-    #define PROXY_LIB_DECLSPEC __declspec( dllimport )
-#else
-    #define PROXY_LIB_DECLSPEC
-#endif
-
+#include <proxy/detail/exports.hpp>
 
 #include <proxy/views.hpp>
 #include <proxy/webserver.hpp>
