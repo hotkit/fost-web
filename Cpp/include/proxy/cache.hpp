@@ -9,5 +9,9 @@ namespace proxy {
     fostlib::hex_string hash(const fostlib::http::server::request &req);
 
 
+    /// Returns the cache entry for the hash
+    fostlib::json db_entry(const fostlib::hex_string &hash);
+
+
 }
 
