@@ -3,5 +3,6 @@ fost-lib-autotest proxy-lib
     : Cpp/proxy-lib
     :
         ../../../fost-internet/Cpp/fost-inet
+        ../../../fost-orm/Cpp/fost-jsondb
         ../../../fost-web/Cpp/fost-urlhandler
     ;

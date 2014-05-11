@@ -1,6 +1,7 @@
 #include <fost/http>
 #include <fost/http.server.hpp>
 #include <fost/file>
+#include <fost/jsondb>
 
 
 namespace proxy {
@@ -16,6 +17,14 @@ namespace proxy {
 
     /// Return the cache address hash for the request
     fostlib::hex_string hash(const fostlib::http::server::request &req);
+
+
+    /// Returns the cache database (if we already know the root location)
+    fostlib::jsondb &cache_db(const boost::filesystem::wpath &);
+    /// Returns the cache database
+    inline fostlib::jsondb &cache_db() {
+        return cache_db(root());
+    }
 
 
     /// Returns the cache entry for the hash
