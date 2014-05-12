@@ -54,5 +54,6 @@ void proxy::stop() {
     }
     // Tickle the port so it notices
     fostlib::network_connection(fostlib::host(), 2555);
+    g_new_root.reset(nullptr);
 }
 
