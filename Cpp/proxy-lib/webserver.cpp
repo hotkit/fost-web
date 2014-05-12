@@ -29,8 +29,6 @@ namespace {
 void proxy::start(const boost::filesystem::wpath &root) {
     g_new_root.reset(new fostlib::setting<fostlib::string>(
         "proxy::start", c_cache_dir, fostlib::coerce<fostlib::string>(root)));
-    // Force the root to be checked and created if needed
-    proxy::root();
     // Start the web server and set the termination condition
     g_running = g_server([]() {
         fostlib::http::server server(fostlib::host(0), 2555);
