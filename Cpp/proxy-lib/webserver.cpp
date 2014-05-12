@@ -45,6 +45,6 @@ void proxy::stop() {
         g_terminate = true;
     }
     // Tickle the port so it notices
-    fostlib::network_connection(fostlib::host(), 2555);
+    fostlib::network_connection tickle(fostlib::host("localhost"), 2555);
 }
 
