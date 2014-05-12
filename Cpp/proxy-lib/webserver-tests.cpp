@@ -11,14 +11,14 @@ FSL_TEST_FUNCTION(starts_and_stops) {
 
     FSL_CHECK_EXCEPTION(
         ua.get(fostlib::url("http://localhost:2555")),
-        fostlib::exceptions::connect_failure&);
-    proxy::start("/");
+        fostlib::exceptions::exception&);
+    proxy::start("/tmp/proxy");
     sleep(1);
     FSL_CHECK_NOTHROW(ua.get(fostlib::url("http://localhost:2555")));
     proxy::stop();
     proxy::wait();
     FSL_CHECK_EXCEPTION(
         ua.get(fostlib::url("http://localhost:2555")),
-        fostlib::exceptions::connect_failure&);
+        fostlib::exceptions::exception&);
 }
 
