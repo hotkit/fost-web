@@ -20,3 +20,11 @@ boost::filesystem::wpath proxy::root() {
     return root;
 }
 
+
+void proxy::flush_cache() {
+    boost::filesystem::wpath path(root());
+    fostlib::log::info()
+        ("root", path)
+        ("removed", boost::filesystem::remove_all(path));
+}
+

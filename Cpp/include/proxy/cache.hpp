@@ -19,8 +19,13 @@ namespace proxy {
     fostlib::hex_string hash(const fostlib::http::server::request &req);
 
 
+    /// Flush the entire cache
+    void flush_cache();
+
+
     /// Returns the cache database (if we already know the root location)
     fostlib::jsondb &cache_db(const boost::filesystem::wpath &);
+
     /// Returns the cache database
     inline fostlib::jsondb &cache_db() {
         return cache_db(root());

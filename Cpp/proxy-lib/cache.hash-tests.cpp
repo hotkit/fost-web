@@ -7,6 +7,7 @@ FSL_TEST_SUITE(cache_db);
 
 
 FSL_TEST_FUNCTION(empty_db) {
+    proxy::flush_cache();
     fostlib::jsondb &db(proxy::cache_db());
     fostlib::jsondb::local trans(db);
 }
