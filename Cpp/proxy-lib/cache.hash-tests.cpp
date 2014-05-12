@@ -10,5 +10,6 @@ FSL_TEST_FUNCTION(empty_db) {
     proxy::flush_cache();
     fostlib::jsondb &db(proxy::cache_db());
     fostlib::jsondb::local trans(db);
+    FSL_CHECK_EQ(trans["sub-caches"], fostlib::json(fostlib::json::object_t()));
 }
 
