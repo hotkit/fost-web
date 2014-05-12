@@ -13,10 +13,6 @@ const fostlib::setting<fostlib::string> proxy::c_cache_dir(
 boost::filesystem::wpath proxy::root() {
     boost::filesystem::wpath root(
         fostlib::coerce<boost::filesystem::wpath>(c_cache_dir.value()));
-    if ( !boost::filesystem::exists(root) ) {
-        boost::filesystem::create_directory(root);
-        fostlib::log::warning("Created directory", root);
-    }
     return root;
 }
 
@@ -26,5 +22,6 @@ void proxy::flush_cache() {
     fostlib::log::info()
         ("root", path)
         ("removed", boost::filesystem::remove_all(path));
+    boost::filesystem::create_directory(path);
 }
 
