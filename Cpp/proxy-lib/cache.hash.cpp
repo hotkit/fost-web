@@ -20,10 +20,22 @@ fostlib::hex_string proxy::hash(
 
 fostlib::hex_string proxy::variant(
         const fostlib::mime::mime_headers &headers) {
-    fostlib::digester md5(fostlib::md5);
-    const fostlib::string newline("\n"), separator(": ");
     if ( headers.exists("Vary") ) {
-        fostlib::split_type names(fostlib::split(headers["Vary"].value(), ","));
+        return variant(headers, headers["Vary"].value());
+    } else {
+        return variant(headers, fostlib::string());
+    }
+}
+
+
+fostlib::hex_string proxy::variant(
+    const fostlib::mime::mime_headers &headers,
+    const fostlib::string &vary
+) {
+    fostlib::digester md5(fostlib::md5);
+    if ( !vary.empty() ) {
+        const fostlib::string newline("\n"), separator(": ");
+        fostlib::split_type names(fostlib::split(vary, ","));
         for ( auto name : names ) {
             if ( headers.exists(name) ) {
                 md5 << name << separator <<

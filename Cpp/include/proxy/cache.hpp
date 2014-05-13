@@ -22,6 +22,9 @@ namespace proxy {
 
     /// Return the variant hash for the set of headers
     fostlib::hex_string variant(const fostlib::mime::mime_headers &);
+    /// Return the variant hash for the headers given a Vary header
+    fostlib::hex_string variant(const fostlib::mime::mime_headers &,
+        const fostlib::string &vary);
 
 
     /// Flush the entire cache
