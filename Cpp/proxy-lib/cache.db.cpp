@@ -77,10 +77,11 @@ boost::filesystem::wpath proxy::save_entry(
     fostlib::json description;
     boost::filesystem::wpath pathname(root() /
         fostlib::coerce<boost::filesystem::wpath>(fdb_name) /
-        fostlib::coerce<boost::filesystem::wpath>(fdb_key));
+        fostlib::coerce<boost::filesystem::wpath>(fdb_key + "-" + vh));
     fostlib::insert(description, "address", response.address());
     fostlib::insert(description, "hash", h);
     fostlib::json variant;
+    fostlib::insert(variant, "pathname", pathname);
     fostlib::insert(variant, "response", "status", response.status());
     fostlib::insert(variant, "response", "headers", response.headers());
     fostlib::insert(description, "variant", vh, variant);
