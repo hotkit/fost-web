@@ -34,7 +34,7 @@ namespace proxy {
     }
 
 
-    /// Returns the cache entry for the hash
+    /// Returns the cache DB entry for the hash
     fostlib::json db_entry(const fostlib::hex_string &hash);
 
 

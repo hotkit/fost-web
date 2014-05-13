@@ -23,5 +23,8 @@ void proxy::flush_cache() {
         ("root", path)
         ("removed", boost::filesystem::remove_all(path));
     boost::filesystem::create_directory(path);
+    fostlib::json cache;
+    fostlib::insert(cache, "file-db", fostlib::json::object_t());
+    fostlib::jsondb db(path / "cache.json", cache);
 }
 
