@@ -70,9 +70,19 @@ boost::filesystem::wpath proxy::save_entry(
         const fostlib::http::user_agent::response &r) {
     fostlib::string h(fostlib::coerce<fostlib::string>(hash(r)));
     fostlib::string fdb_name(h.substr(0, 2));
-    std::shared_ptr<fostlib::jsondb> db(cache_db(fdb_name));
-    return root() /
+    fostlib::string fdb_key(h.substr(2));
+    fostlib::json description;
+    boost::filesystem::wpath pathname(root() /
         fostlib::coerce<boost::filesystem::wpath>(fdb_name) /
-        fostlib::coerce<boost::filesystem::wpath>(h.substr(2));
+        fostlib::coerce<boost::filesystem::wpath>(fdb_key));
+    fostlib::insert(description, "status", r.status());
+    fostlib::insert(description, "address", r.address());
+    fostlib::insert(description, "headers", r.headers());
+    fostlib::insert(description, "hash", h);
+    std::shared_ptr<fostlib::jsondb> db(cache_db(fdb_name));
+    fostlib::jsondb::local trans(*db);
+    trans.set(fostlib::jcursor("file") / fdb_key, description);
+    trans.commit();
+    return pathname;
 }
 
