@@ -1,6 +1,7 @@
 #include <fost/log>
 #include <proxy/cache.hpp>
 #include <proxy/views.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 
 namespace {
@@ -28,7 +29,16 @@ namespace {
             std::auto_ptr< fostlib::http::user_agent::response >
                 response = ua.get(location);
             info("response", "status", response->status());
-            proxy::save_entry(*response);
+
+            boost::filesystem::wpath pathname = proxy::save_entry(*response);
+            info("response", "size", response->body()->data().size());
+            if ( response->body()->data().size() ) {
+                boost::filesystem::ofstream(pathname,
+                        std::ios_base::out | std::ios_base::binary).
+                    write(reinterpret_cast<const char *>(
+                            response->body()->data().data()),
+                        response->body()->data().size());
+            }
 
             fostlib::mime::mime_headers headers;
             headers.set("Content-Type", response->headers()["Content-Type"]);
