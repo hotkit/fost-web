@@ -21,3 +21,12 @@ fostlib::json proxy::db_entry(const fostlib::hex_string &hash) {
     return fostlib::json();
 }
 
+
+boost::filesystem::wpath proxy::save_entry(
+        const fostlib::http::user_agent::response &r) {
+    fostlib::string h(fostlib::coerce<fostlib::string>(hash(r)));
+    return root() /
+        fostlib::coerce<boost::filesystem::wpath>(h.substr(0, 2)) /
+        fostlib::coerce<boost::filesystem::wpath>(h.substr(2));
+}
+

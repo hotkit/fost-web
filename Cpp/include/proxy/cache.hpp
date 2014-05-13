@@ -36,5 +36,10 @@ namespace proxy {
     fostlib::json db_entry(const fostlib::hex_string &hash);
 
 
+    /// Save a response into the cache -- returns path to save body at
+    boost::filesystem::wpath save_entry(
+        const fostlib::http::user_agent::response &);
+
+
 }
 
