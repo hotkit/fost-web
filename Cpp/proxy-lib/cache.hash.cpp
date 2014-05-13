@@ -8,3 +8,12 @@ fostlib::hex_string proxy::hash(const fostlib::http::server::request &req) {
     return fostlib::coerce<fostlib::hex_string>(md5.digest());
 }
 
+
+fostlib::hex_string proxy::hash(
+        const fostlib::http::user_agent::response &response) {
+    fostlib::digester md5(fostlib::md5);
+    md5 << response.method() <<
+        fostlib::coerce<fostlib::string>(response.address().pathspec());
+    return fostlib::coerce<fostlib::hex_string>(md5.digest());
+}
+
