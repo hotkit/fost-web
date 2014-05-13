@@ -17,3 +17,22 @@ fostlib::hex_string proxy::hash(
     return fostlib::coerce<fostlib::hex_string>(md5.digest());
 }
 
+
+fostlib::hex_string proxy::variant(
+        const fostlib::mime::mime_headers &headers) {
+    fostlib::digester md5(fostlib::md5);
+    const fostlib::string newline("\n"), separator(": ");
+    if ( headers.exists("Vary") ) {
+        fostlib::split_type names(fostlib::split(headers["Vary"].value(), ","));
+        for ( auto name : names ) {
+            if ( headers.exists(name) ) {
+                md5 << name << separator <<
+                    fostlib::coerce<fostlib::string>(headers[name]) << newline;
+            } else {
+                md5 << newline;
+            }
+        }
+    }
+    return fostlib::coerce<fostlib::hex_string>(md5.digest());
+}
+

@@ -20,6 +20,9 @@ namespace proxy {
     /// Return the cache address hash for the response
     fostlib::hex_string hash(const fostlib::http::user_agent::response &);
 
+    /// Return the variant hash for the set of headers
+    fostlib::hex_string variant(const fostlib::mime::mime_headers &);
+
 
     /// Flush the entire cache
     void flush_cache();
