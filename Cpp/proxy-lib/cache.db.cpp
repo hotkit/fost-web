@@ -28,10 +28,11 @@ std::shared_ptr<fostlib::jsondb> proxy::cache_db(
     static std::shared_ptr<fostlib::jsondb> dbp;
     static std::vector<std::shared_ptr<fostlib::jsondb>> sdbs;
 
-    if ( !dbp || dbp->filename().value() != root / "cache.json" ) {
+    boost::filesystem::wpath cache_file(root / "cache.json");
+    if ( !dbp || dbp->filename().value() != cache_file ) {
         fostlib::json cache;
         fostlib::insert(cache, "file-db", fostlib::json::object_t());
-        dbp = std::make_shared<fostlib::jsondb>(root / "cache.json", cache);
+        dbp = std::make_shared<fostlib::jsondb>(cache_file, cache);
         sdbs.clear();
         sdbs.resize(256);
     }
@@ -43,13 +44,14 @@ std::shared_ptr<fostlib::jsondb> proxy::cache_db(
         if ( trans["file-db"][subdb.value()].isnull() ) {
             boost::filesystem::wpath fdb_path(root/
                 fostlib::coerce<boost::filesystem::wpath>(subdb.value()));
+            boost::filesystem::wpath fdb_pathname(fdb_path / "file-db.json");
             boost::filesystem::create_directory(fdb_path);
             fostlib::json content;
             fostlib::insert(content, "file", fostlib::json::object_t());
             sdbs[slot] = std::make_shared<fostlib::jsondb>(
-                fdb_path / "file-db.json", content);
+                fdb_pathname, content);
             trans.insert(fostlib::jcursor("file-db") / subdb.value() / "db",
-                fostlib::coerce<fostlib::json>(fdb_path / "file-db.json"));
+                fostlib::coerce<fostlib::json>(fdb_pathname));
             trans.commit();
         } else if ( !sdbs[slot] ) {
             sdbs[slot] = std::make_shared<fostlib::jsondb>(
