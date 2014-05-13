@@ -1,4 +1,5 @@
 #include <fost/log>
+#include <proxy/cache.hpp>
 #include <proxy/views.hpp>
 
 
@@ -27,6 +28,7 @@ namespace {
             std::auto_ptr< fostlib::http::user_agent::response >
                 response = ua.get(location);
             info("response", "status", response->status());
+            proxy::save_entry(*response);
 
             fostlib::mime::mime_headers headers;
             headers.set("Content-Type", response->headers()["Content-Type"]);

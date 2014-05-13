@@ -8,10 +8,11 @@ FSL_TEST_SUITE(cache_db);
 
 FSL_TEST_FUNCTION(empty_db) {
     proxy::flush_cache();
-    fostlib::jsondb &db(proxy::cache_db());
-    fostlib::jsondb::local trans(db);
+    std::shared_ptr<fostlib::jsondb> db(proxy::cache_db());
+    fostlib::jsondb::local trans(*db);
     FSL_CHECK_EQ(trans["file-db"],
         fostlib::json(fostlib::json::object_t()));
+    FSL_CHECK_EQ(db, proxy::cache_db());
 }
 
 
@@ -23,9 +24,12 @@ FSL_TEST_FUNCTION(save_response) {
     FSL_CHECK_EQ(
         proxy::save_entry(r),
         proxy::root() / "e0" / "e39d220ff38421b6dd61a998975b28");
-    fostlib::jsondb &db(proxy::cache_db());
-    fostlib::jsondb::local trans(db);
+    std::shared_ptr<fostlib::jsondb> db(proxy::cache_db());
+    fostlib::jsondb::local trans(*db);
     FSL_CHECK_EQ(trans["file-db"]["e0"]["db"],
         fostlib::coerce<fostlib::json>(proxy::root() / "e0" / "file-db.json"));
+    FSL_CHECK_EQ(
+        proxy::save_entry(r),
+        proxy::root() / "e0" / "e39d220ff38421b6dd61a998975b28");
 }
 

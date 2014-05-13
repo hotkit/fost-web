@@ -26,16 +26,19 @@ namespace proxy {
 
 
     /// Returns the cache database (if we already know the root location)
-    fostlib::jsondb &cache_db(const boost::filesystem::wpath &,
-        fostlib::nullable<fostlib::string> subdb = fostlib::null);
+    std::shared_ptr<fostlib::jsondb> cache_db(
+        const boost::filesystem::wpath &,
+        const fostlib::nullable<fostlib::string> &subdb = fostlib::null);
 
 
     /// Returns the cache database
-    inline fostlib::jsondb &cache_db() {
+    inline std::shared_ptr<fostlib::jsondb> cache_db() {
         return cache_db(root());
     }
     /// Returns the file sub-database
-    inline fostlib::jsondb &cache_db(const fostlib::string &sdb) {
+    inline std::shared_ptr<fostlib::jsondb> cache_db(
+        const fostlib::string &sdb
+    ) {
         return cache_db(root(), sdb);
     }
 
