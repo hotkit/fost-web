@@ -3,13 +3,12 @@
 #include <fost/test>
 
 
-FSL_TEST_SUITE(cache_db);
+FSL_TEST_SUITE(cache_hash);
 
 
-FSL_TEST_FUNCTION(empty_db) {
-    proxy::flush_cache();
-    fostlib::jsondb &db(proxy::cache_db());
-    fostlib::jsondb::local trans(db);
-    FSL_CHECK_EQ(trans["sub-caches"], fostlib::json(fostlib::json::object_t()));
+FSL_TEST_FUNCTION(GET_simple) {
+    FSL_CHECK_EQ(
+        proxy::hash(fostlib::http::server::request("GET", "/")),
+        "e0e39d220ff38421b6dd61a998975b28");
 }
 
