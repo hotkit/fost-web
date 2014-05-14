@@ -21,7 +21,7 @@ namespace {
                 const fostlib::host &host) const {
             auto info = fostlib::log::info()("id", fostlib::guid());
 
-            fostlib::url base("http://www.kirit.com/");
+            fostlib::url base("http://wos.appever.net:8000/");
             fostlib::url location(base, request.file_spec());
             info("location", location);
 
