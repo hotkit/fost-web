@@ -35,3 +35,15 @@ FSL_TEST_FUNCTION(save_response) {
             "-d41d8cd98f00b204e9800998ecf8427e");
 }
 
+
+
+FSL_TEST_FUNCTION(cache_miss) {
+    proxy::flush_cache();
+    proxy::save_entry(
+        fostlib::http::user_agent::response("GET",
+            fostlib::url("http://example.com/"), 200,
+            boost::make_shared<fostlib::binary_body>()));
+    fostlib::json entry(proxy::db_entry(
+        "00e39d220ff38421b6dd61a998975b28"));
+    FSL_CHECK_EQ(entry, fostlib::json());
+}
