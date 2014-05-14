@@ -36,6 +36,19 @@ FSL_TEST_FUNCTION(save_response) {
 }
 
 
+FSL_TEST_FUNCTION(retrieve_response) {
+    proxy::flush_cache();
+    proxy::save_entry(
+        fostlib::http::user_agent::response("GET",
+            fostlib::url("http://example.com/"), 200,
+            boost::make_shared<fostlib::binary_body>()));
+    fostlib::json entry(proxy::db_entry(
+        "e0e39d220ff38421b6dd61a998975b28"));
+    FSL_CHECK_NEQ(entry, fostlib::json());
+    FSL_CHECK_EQ(entry["hash"],
+        fostlib::json("e0e39d220ff38421b6dd61a998975b28"));
+}
+
 
 FSL_TEST_FUNCTION(cache_miss) {
     proxy::flush_cache();
@@ -47,3 +60,4 @@ FSL_TEST_FUNCTION(cache_miss) {
         "00e39d220ff38421b6dd61a998975b28"));
     FSL_CHECK_EQ(entry, fostlib::json());
 }
+

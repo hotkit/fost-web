@@ -3,6 +3,14 @@
 
 
 fostlib::json proxy::db_entry(const fostlib::hex_string &hash) {
+    fostlib::string h(fostlib::coerce<fostlib::string>(hash));
+    fostlib::string fdb_name(h.substr(0, 2));
+    fostlib::string fdb_key(h.substr(2));
+    std::shared_ptr<fostlib::jsondb> db(cache_db(fdb_name));
+    if ( db ) {
+        fostlib::jsondb::local trans(*db);
+        return trans["file"][fdb_key];
+    }
     return fostlib::json();
 }
 
