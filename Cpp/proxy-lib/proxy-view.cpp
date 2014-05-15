@@ -1,3 +1,4 @@
+#include <fost/timer>
 #include <fost/log>
 #include <proxy/cache.hpp>
 #include <proxy/views.hpp>
@@ -19,11 +20,43 @@ namespace {
                 const fostlib::string &path,
                 fostlib::http::server::request &request,
                 const fostlib::host &host) const {
-            auto info = fostlib::log::info()("id", fostlib::guid());
-
+            fostlib::timer started;
             fostlib::url base("http://wos.appever.net:8000/");
             fostlib::url location(base, request.file_spec());
-            info("location", location);
+            auto info(
+                fostlib::log::info()
+                    ("id", fostlib::guid())
+                    ("location", location)
+                    ("time", "begin", fostlib::timestamp::now()));
+
+            fostlib::json entry(proxy::db_entry(proxy::hash(request)));
+            if ( !entry.isnull() ) {
+                info("cache", "entry", entry);
+                fostlib::json variant(entry["variant"]
+                    [fostlib::coerce<fostlib::string>(
+                        proxy::variant(request.data()->headers()))]);
+                if ( !variant.isnull() ) {
+                    info("cache", "variant", variant);
+                    info("cache", "hit", true);
+                    boost::filesystem::wpath filename(
+                        fostlib::coerce<boost::filesystem::wpath>(
+                                variant["pathname"]));
+                    info("cache", "file", filename);
+                    info("time", "end", fostlib::timestamp::now());
+                    info("time", "duration", started.elapsed());
+                    return std::make_pair(
+                        boost::make_shared<fostlib::file_body>(filename,
+                            fostlib::mime::mime_headers(),
+                            fostlib::coerce<fostlib::string>(
+                                variant["response"]["headers"]["Content-Type"])),
+                        fostlib::coerce<int>(variant["response"]["status"]));
+                } else {
+                    info("cache", "hit", false);
+                    info("request", "variant",
+                        fostlib::coerce<fostlib::string>(
+                            proxy::variant(request.data()->headers())));
+                }
+            }
 
             fostlib::http::user_agent ua(base);
             std::auto_ptr< fostlib::http::user_agent::response >
@@ -46,6 +79,8 @@ namespace {
                 boost::make_shared<fostlib::binary_body>(
                     response->body()->data(), headers);
 
+            info("time", "end", fostlib::timestamp::now());
+            info("time", "duration", started.elapsed());
             return std::make_pair(body, response->status());
         }
 
