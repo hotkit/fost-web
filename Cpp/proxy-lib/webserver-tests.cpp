@@ -11,7 +11,7 @@ FSL_TEST_FUNCTION(starts_and_stops) {
 
     FSL_CHECK_EXCEPTION(
         ua.get(fostlib::url("http://localhost:2555")),
-        fostlib::exceptions::exception&);
+        fostlib::exceptions::socket_error&);
     proxy::start("/tmp/proxy");
     sleep(1);
     FSL_CHECK_NOTHROW(ua.get(fostlib::url("http://localhost:2555")));
@@ -19,6 +19,6 @@ FSL_TEST_FUNCTION(starts_and_stops) {
     proxy::wait();
     FSL_CHECK_EXCEPTION(
         ua.get(fostlib::url("http://localhost:2555")),
-        fostlib::exceptions::exception&);
+        fostlib::exceptions::socket_error&);
 }
 
