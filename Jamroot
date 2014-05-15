@@ -8,6 +8,8 @@ include ../fost-base/fost.jam ;
 # Bring in the projects used
 use-project fost-base : ../fost-base ;
 use-project fost-internet : ../fost-internet ;
+use-project fost-orm : ../fost-orm ;
+use-project fost-web : ../fost-web ;
 
 #Define this project
 fost-project proxy-lib
@@ -16,6 +18,7 @@ fost-project proxy-lib
         <toolset>clang:<cxxflags>-Wno-deprecated-declarations
         <toolset>clang:<cxxflags>-DBOOST_ASIO_DISABLE_MOVE
         <include>../fost-internet/Cpp/include
+        <include>../fost-orm/Cpp/include
         <include>../fost-web/Cpp/include
     ;
 
