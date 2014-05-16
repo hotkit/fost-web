@@ -7,15 +7,6 @@
 
 
 namespace {
-    bool service(fostlib::http::server::request &req) {
-        std::pair<boost::shared_ptr<fostlib::mime>, int > response =
-            proxy::view::c_proxy(fostlib::json(),
-                fostlib::coerce<fostlib::string>(req.file_spec()),
-                req, fostlib::host());
-        req(*response.first, response.second);
-        return true;
-    }
-
     fostlib::worker g_server;
     boost::shared_ptr< fostlib::detail::future_result< void > > g_running;
 
@@ -32,7 +23,7 @@ void proxy::start(const boost::filesystem::wpath &root) {
     // Start the web server and set the termination condition
     g_running = g_server([]() {
         fostlib::http::server server(fostlib::host(0), 2555);
-        server(service, []() {
+        server(fostlib::urlhandler::service, []() {
             boost::mutex::scoped_lock lock(g_terminate_lock);
             return g_terminate;
         });
