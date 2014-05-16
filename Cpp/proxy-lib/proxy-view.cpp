@@ -21,7 +21,10 @@ namespace {
                 fostlib::http::server::request &request,
                 const fostlib::host &host) const {
             fostlib::timer started;
-            fostlib::url base("http://wos.appever.net:8000/");
+            fostlib::url base(
+                configuration.has_key("origin") ?
+                    fostlib::coerce<fostlib::string>(configuration["origin"]) :
+                    "http://www.wallofsport.com/");
             fostlib::url location(base, request.file_spec());
             auto info(
                 fostlib::log::info()
