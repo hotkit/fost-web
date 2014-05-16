@@ -17,14 +17,15 @@ fostlib::json proxy::db_entry(const fostlib::hex_string &hash) {
 
 boost::filesystem::wpath proxy::save_entry(
         const fostlib::http::user_agent::response &response) {
-    fostlib::string h(fostlib::coerce<fostlib::string>(hash(response)));
-    fostlib::string vh(fostlib::coerce<fostlib::string>(
-        proxy::variant(response.headers())));
+    const fostlib::string h(fostlib::coerce<fostlib::string>(hash(response)));
+    const fostlib::string vh("d41d8cd98f00b204e9800998ecf8427e");
+    // fostlib::string vh(fostlib::coerce<fostlib::string>(
+    //     proxy::variant(response.headers())));
 
-    fostlib::string fdb_name(h.substr(0, 2));
-    fostlib::string fdb_key(h.substr(2));
+    const fostlib::string fdb_name(h.substr(0, 2));
+    const fostlib::string fdb_key(h.substr(2));
     fostlib::json description;
-    boost::filesystem::wpath pathname(root() /
+    const boost::filesystem::wpath pathname(root() /
         fostlib::coerce<boost::filesystem::wpath>(fdb_name) /
         fostlib::coerce<boost::filesystem::wpath>(fdb_key + "-" + vh));
     fostlib::insert(description, "address", response.address());
