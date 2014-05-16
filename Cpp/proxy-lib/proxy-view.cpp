@@ -62,8 +62,15 @@ namespace {
             }
 
             fostlib::http::user_agent ua(base);
+            fostlib::http::user_agent::request ua_req("GET", location);
+            if ( request.data()->headers().exists("Accept") ) {
+                ua_req.headers().set("Accept",
+                    request.data()->headers()["Accept"]);
+            } else {
+                ua_req.headers().set("Accept", "text/html");
+            }
             std::auto_ptr< fostlib::http::user_agent::response >
-                response = ua.get(location);
+                response = ua(ua_req);
             info("response", "status", response->status());
 
             boost::filesystem::wpath pathname = proxy::save_entry(*response);
