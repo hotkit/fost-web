@@ -26,6 +26,7 @@ namespace {
                     fostlib::coerce<fostlib::string>(configuration["origin"]) :
                     "http://www.wallofsport.com/");
             fostlib::url location(base, request.file_spec());
+            location.query() = request.query_string();
             auto info(
                 fostlib::log::info()
                     ("id", fostlib::guid())
