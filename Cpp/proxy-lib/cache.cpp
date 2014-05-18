@@ -33,10 +33,7 @@ namespace {
 
 const fostlib::setting<fostlib::string> proxy::c_cache_dir(
     "cache.cpp", "proxy", "Cache directory",
-    fostlib::coerce<fostlib::string>(
-        (boost::filesystem::temp_directory_path() /
-            boost::filesystem::unique_path()).wstring()),
-    true);
+    "/tmp/proxy-lib/", true);
 
 
 boost::filesystem::wpath proxy::root() {
