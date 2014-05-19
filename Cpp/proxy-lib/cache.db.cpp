@@ -34,7 +34,8 @@ boost::filesystem::wpath proxy::save_entry(
     fostlib::insert(description, "address", response.address());
     fostlib::insert(description, "hash", h);
     fostlib::json variant;
-    fostlib::insert(variant, "accessed", fostlib::timestamp::now());
+    fostlib::insert(variant, "created", fostlib::timestamp::now());
+    fostlib::insert(variant, "accessed", variant["created"]);
     fostlib::insert(variant, "pathname", pathname);
     fostlib::insert(variant, "request", "headers", request.data()->headers());
     fostlib::insert(variant, "response", "status", response.status());
