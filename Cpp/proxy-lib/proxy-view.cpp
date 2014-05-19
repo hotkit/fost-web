@@ -75,7 +75,8 @@ namespace {
             info("response", "status", response->status());
             info("response", "size", response->body()->data().size());
 
-            boost::filesystem::wpath pathname = proxy::save_entry(*response);
+            boost::filesystem::wpath pathname = proxy::save_entry(
+                request, *response);
             if ( response->body()->data().size() ) {
                 boost::filesystem::ofstream(pathname,
                         std::ios_base::out | std::ios_base::binary).

@@ -55,6 +55,7 @@ namespace proxy {
 
     /// Save a response into the cache -- returns path to save body at
     boost::filesystem::wpath save_entry(
+        const fostlib::http::server::request &,
         const fostlib::http::user_agent::response &);
 
 

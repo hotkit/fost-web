@@ -18,11 +18,12 @@ FSL_TEST_FUNCTION(empty_db) {
 
 FSL_TEST_FUNCTION(save_response) {
     proxy::flush_cache();
+    fostlib::http::server::request req("GET", "/");
     fostlib::http::user_agent::response r("GET",
         fostlib::url("http://example.com/"), 200,
         boost::make_shared<fostlib::binary_body>());
     FSL_CHECK_EQ(
-        proxy::save_entry(r),
+        proxy::save_entry(req, r),
         proxy::root() / "e0" / "e39d220ff38421b6dd61a998975b28"
             "-d41d8cd98f00b204e9800998ecf8427e");
     std::shared_ptr<fostlib::jsondb> db(proxy::cache_db());
@@ -30,7 +31,7 @@ FSL_TEST_FUNCTION(save_response) {
     FSL_CHECK_EQ(trans["file-db"]["e0"]["db"],
         fostlib::coerce<fostlib::json>(proxy::root() / "e0" / "file-db.json"));
     FSL_CHECK_EQ(
-        proxy::save_entry(r),
+        proxy::save_entry(req, r),
         proxy::root() / "e0" / "e39d220ff38421b6dd61a998975b28"
             "-d41d8cd98f00b204e9800998ecf8427e");
 }
@@ -39,6 +40,7 @@ FSL_TEST_FUNCTION(save_response) {
 FSL_TEST_FUNCTION(retrieve_response) {
     proxy::flush_cache();
     proxy::save_entry(
+        fostlib::http::server::request("GET", "/"),
         fostlib::http::user_agent::response("GET",
             fostlib::url("http://example.com/"), 200,
             boost::make_shared<fostlib::binary_body>()));
@@ -53,6 +55,7 @@ FSL_TEST_FUNCTION(retrieve_response) {
 FSL_TEST_FUNCTION(cache_miss) {
     proxy::flush_cache();
     proxy::save_entry(
+        fostlib::http::server::request("GET", "/"),
         fostlib::http::user_agent::response("GET",
             fostlib::url("http://example.com/"), 200,
             boost::make_shared<fostlib::binary_body>()));

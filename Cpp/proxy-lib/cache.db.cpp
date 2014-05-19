@@ -1,4 +1,5 @@
 #include <proxy/cache.hpp>
+#include <fost/datetime>
 #include <fost/insert>
 
 
@@ -16,7 +17,9 @@ fostlib::json proxy::db_entry(const fostlib::hex_string &hash) {
 
 
 boost::filesystem::wpath proxy::save_entry(
-        const fostlib::http::user_agent::response &response) {
+    const fostlib::http::server::request &request,
+    const fostlib::http::user_agent::response &response
+) {
     const fostlib::string h(fostlib::coerce<fostlib::string>(hash(response)));
     const fostlib::string vh("d41d8cd98f00b204e9800998ecf8427e");
     // fostlib::string vh(fostlib::coerce<fostlib::string>(
@@ -31,7 +34,9 @@ boost::filesystem::wpath proxy::save_entry(
     fostlib::insert(description, "address", response.address());
     fostlib::insert(description, "hash", h);
     fostlib::json variant;
+    fostlib::insert(variant, "accessed", fostlib::timestamp::now());
     fostlib::insert(variant, "pathname", pathname);
+    fostlib::insert(variant, "request", "headers", request.data()->headers());
     fostlib::insert(variant, "response", "status", response.status());
     fostlib::insert(variant, "response", "headers", response.headers());
     fostlib::insert(description, "variant", vh, variant);
