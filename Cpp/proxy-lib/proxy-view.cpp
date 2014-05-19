@@ -34,8 +34,8 @@ namespace {
                     ("time", "begin", fostlib::timestamp::now()));
 
             fostlib::json entry(proxy::db_entry(proxy::hash(request)));
+            info("cache", "entry", entry);
             if ( !entry.isnull() ) {
-                info("cache", "entry", entry);
                 fostlib::json variant(entry["variant"]
                     [fostlib::coerce<fostlib::string>(
                         proxy::variant(request.data()->headers()))]);
@@ -73,9 +73,9 @@ namespace {
             std::auto_ptr< fostlib::http::user_agent::response >
                 response = ua(ua_req);
             info("response", "status", response->status());
+            info("response", "size", response->body()->data().size());
 
             boost::filesystem::wpath pathname = proxy::save_entry(*response);
-            info("response", "size", response->body()->data().size());
             if ( response->body()->data().size() ) {
                 boost::filesystem::ofstream(pathname,
                         std::ios_base::out | std::ios_base::binary).
