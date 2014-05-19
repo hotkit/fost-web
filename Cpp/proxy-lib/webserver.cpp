@@ -18,6 +18,8 @@ namespace {
 
 
 void proxy::start(const boost::filesystem::wpath &root) {
+    fostlib::log::debug()
+        ("saving-root", root);
     g_new_root.reset(new fostlib::setting<fostlib::string>(
         "proxy::start", c_cache_dir, fostlib::coerce<fostlib::string>(root)));
     // Start the web server and set the termination condition
