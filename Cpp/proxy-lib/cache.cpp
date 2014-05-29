@@ -76,18 +76,19 @@ std::shared_ptr<fostlib::jsondb> proxy::cache_db(
         fostlib::jsondb::local trans(*g_dbp);
         std::size_t slot(unhex(subdb.value()[0], subdb.value()[1]));
         if ( trans["file-db"][subdb.value()].isnull() ) {
-            boost::filesystem::wpath fdb_path(root/
+            boost::filesystem::wpath fdb_path(
                 fostlib::coerce<boost::filesystem::wpath>(subdb.value()));
             boost::filesystem::wpath fdb_pathname(fdb_path / "file-db.json");
             fostlib::log::debug()
                 ("", "Creating sub database")
                 ("sub-db", subdb.value())
                 ("fdb_pathname", fdb_pathname)
-                ("create-folder", boost::filesystem::create_directory(fdb_path));
+                ("create-folder",
+                    boost::filesystem::create_directory(root / fdb_path));
             fostlib::json content;
             fostlib::insert(content, "file", fostlib::json::object_t());
             g_sdbs[slot] = std::make_shared<fostlib::jsondb>(
-                fdb_pathname, content);
+                root / fdb_pathname, content);
             trans.insert(fostlib::jcursor("file-db") / subdb.value() / "db",
                 fostlib::coerce<fostlib::json>(fdb_pathname));
             trans.commit();
@@ -98,7 +99,7 @@ std::shared_ptr<fostlib::jsondb> proxy::cache_db(
                 ("sub-db", subdb.value())
                 ("pathname", trans["file-db"][subdb.value()]["db"]);
             g_sdbs[slot] = std::make_shared<fostlib::jsondb>(
-                fostlib::coerce<boost::filesystem::wpath>(
+                root / fostlib::coerce<boost::filesystem::wpath>(
                     trans["file-db"][subdb.value()]["db"]));
         }
         return g_sdbs[slot];

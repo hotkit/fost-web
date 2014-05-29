@@ -24,15 +24,18 @@ FSL_TEST_FUNCTION(save_response) {
         boost::make_shared<fostlib::binary_body>());
     FSL_CHECK_EQ(
         proxy::save_entry(req, r),
-        proxy::root() / "e0" / "e39d220ff38421b6dd61a998975b28"
+        boost::filesystem::wpath("e0") /
+            "e39d220ff38421b6dd61a998975b28"
             "-d41d8cd98f00b204e9800998ecf8427e");
     std::shared_ptr<fostlib::jsondb> db(proxy::cache_db());
     fostlib::jsondb::local trans(*db);
     FSL_CHECK_EQ(trans["file-db"]["e0"]["db"],
-        fostlib::coerce<fostlib::json>(proxy::root() / "e0" / "file-db.json"));
+        fostlib::coerce<fostlib::json>(
+            boost::filesystem::wpath("e0") / "file-db.json"));
     FSL_CHECK_EQ(
         proxy::save_entry(req, r),
-        proxy::root() / "e0" / "e39d220ff38421b6dd61a998975b28"
+        boost::filesystem::wpath("e0") /
+            "e39d220ff38421b6dd61a998975b28"
             "-d41d8cd98f00b204e9800998ecf8427e");
 }
 

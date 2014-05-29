@@ -43,7 +43,7 @@ namespace {
                     info("cache", "variant", variant);
                     info("cache", "hit", true);
                     boost::filesystem::wpath filename(
-                        fostlib::coerce<boost::filesystem::wpath>(
+                        proxy::root() / fostlib::coerce<boost::filesystem::wpath>(
                                 variant["pathname"]));
                     info("cache", "file", filename);
                     info("time", "end", fostlib::timestamp::now());
@@ -75,8 +75,8 @@ namespace {
             info("response", "status", response->status());
             info("response", "size", response->body()->data().size());
 
-            boost::filesystem::wpath pathname = proxy::save_entry(
-                request, *response);
+            boost::filesystem::wpath pathname =
+                proxy::root() / proxy::save_entry(request, *response);
             if ( response->body()->data().size() ) {
                 boost::filesystem::ofstream(pathname,
                         std::ios_base::out | std::ios_base::binary).

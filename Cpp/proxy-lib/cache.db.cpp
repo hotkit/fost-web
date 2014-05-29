@@ -28,7 +28,7 @@ boost::filesystem::wpath proxy::save_entry(
     const fostlib::string fdb_name(h.substr(0, 2));
     const fostlib::string fdb_key(h.substr(2));
     fostlib::json description;
-    const boost::filesystem::wpath pathname(root() /
+    const boost::filesystem::wpath pathname(
         fostlib::coerce<boost::filesystem::wpath>(fdb_name) /
         fostlib::coerce<boost::filesystem::wpath>(fdb_key + "-" + vh));
     fostlib::insert(description, "address", response.address());
