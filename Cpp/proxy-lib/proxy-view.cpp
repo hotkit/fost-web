@@ -27,11 +27,11 @@ namespace {
                     "http://www.wallofsport.com/");
             fostlib::url location(base, request.file_spec());
             location.query() = request.query_string();
-            auto info(
+            auto info(std::move(
                 fostlib::log::info()
                     ("id", fostlib::guid())
                     ("location", location)
-                    ("time", "begin", fostlib::timestamp::now()));
+                    ("time", "begin", fostlib::timestamp::now())));
 
             fostlib::json entry(proxy::db_entry(proxy::hash(request)));
             info("cache", "entry", entry);
