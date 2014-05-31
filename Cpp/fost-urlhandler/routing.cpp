@@ -8,18 +8,6 @@
 
 #include "fost-urlhandler.hpp"
 #include <fost/urlhandler.hpp>
-#include <fost/log>
-
-
-namespace {
-    void log_response(
-        const fostlib::string &host, const fostlib::mime &body, int status_code
-    ) {
-        fostlib::log::info()
-            ("host", host)
-            ("status code", status_code);
-    }
-}
 
 
 std::pair<boost::shared_ptr<fostlib::mime>, int> fostlib::urlhandler::router(
@@ -61,23 +49,17 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
                 host_config.has_key(hostname) ? hostname : fostlib::string()];
             std::pair<boost::shared_ptr<fostlib::mime>, int > resource(
                 router(host(hostname), fostlib::coerce<fostlib::string>(view_config), req));
-            log_response(hostname, *resource.first, resource.second);
             req(*resource.first, resource.second);
         } catch ( fostlib::exceptions::exception &e ) {
             fostlib::text_body response(
                     fostlib::coerce<fostlib::string>(e),
                     fostlib::mime::mime_headers(), L"text/plain" );
-            fostlib::log::error(fostlib::coerce<fostlib::string>(e), e.data());
             req( response, 501 );
         }
     } else {
         fostlib::text_body response(
                 L"<html><body>No site found to service request</body></html>",
                 fostlib::mime::mime_headers(), L"text/html" );
-        fostlib::log::error()
-            ("message", "Host configuration not found")
-            ("requested host", hostname)
-            ("host configuration", host_config);
         req( response, 500 );
     }
     return true;

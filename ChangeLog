@@ -1,3 +1,6 @@
+2014-05-31  Kirit Saelensminde  <kirit@felspar.com>
+ Remove logging from the router as it interferes with loaded views trying to manage logging options.
+
 2014-03-02  Kirit Saelensminde  <kirit@felspar.com>
  Split out the top level HTTP parsing from the lower level routing of a request to a view.
 
