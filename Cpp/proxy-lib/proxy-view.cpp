@@ -7,6 +7,44 @@
 
 namespace {
 
+    class capture_copy {
+        bool capture;
+        std::size_t level;
+        fostlib::nliteral name;
+        fostlib::json messages;
+        fostlib::timer started;
+        public:
+            typedef fostlib::json result_type;
+
+            capture_copy()
+            : capture(true), level(0) {
+                fostlib::insert(messages, "id", fostlib::guid());
+                fostlib::insert(messages, "time", "began", fostlib::timestamp::now());
+            }
+            ~capture_copy() {
+                capture = false;
+                if ( level ) {
+                    fostlib::insert(messages, "time", "end", fostlib::timestamp::now());
+                    fostlib::insert(messages, "time", "duration", started.elapsed());
+                    fostlib::log::log(level, name, messages);
+                }
+            }
+            bool operator () (const fostlib::log::message &m) {
+                using namespace fostlib;
+                if ( capture && !m.body().isnull() ) {
+                    if ( m.level() >  level ) {
+                        level = m.level();
+                        name = m.name();
+                    }
+                    fostlib::push_back(messages, "messages", coerce<json>(m));
+                }
+                return !capture;
+            }
+            fostlib::json operator() () {
+                return messages;
+            }
+    };
+
 
     const class proxy_view : public fostlib::urlhandler::view {
     public:
@@ -20,7 +58,7 @@ namespace {
                 const fostlib::string &path,
                 fostlib::http::server::request &request,
                 const fostlib::host &host) const {
-            fostlib::timer started;
+            fostlib::log::scoped_sink< capture_copy > cc;
             fostlib::url base(
                 configuration.has_key("origin") ?
                     fostlib::coerce<fostlib::string>(configuration["origin"]) :
@@ -29,28 +67,23 @@ namespace {
             location.query() = request.query_string();
             auto info(std::move(
                 fostlib::log::info()
-                    ("id", fostlib::guid())
                     ("method", request.method())
-                    ("location", location)
-                    ("time", "begin", fostlib::timestamp::now())));
+                    ("location", location)));
 
             fostlib::http::user_agent::request origin(
                 request.method(), location);
             fostlib::json entry(proxy::db_entry(proxy::hash(origin)));
             info("cache", "entry", entry);
             if ( !entry.isnull() ) {
-                fostlib::json variant(entry["variant"]
-                    [fostlib::coerce<fostlib::string>(
-                        proxy::variant(request.data()->headers()))]);
+                fostlib::string vhash(fostlib::coerce<fostlib::string>(
+                        proxy::variant(request.data()->headers())));
+                info("cache", "variant", vhash);
+                fostlib::json variant(entry["variant"][vhash]);
                 if ( !variant.isnull() ) {
-                    proxy::update_entry(origin);
-                    info("cache", "variant", variant);
                     info("cache", "hit", true);
                     boost::filesystem::wpath filename(
                         proxy::root() / proxy::update_entry(origin));
                     info("cache", "file", filename);
-                    info("time", "end", fostlib::timestamp::now());
-                    info("time", "duration", started.elapsed());
                     return std::make_pair(
                         boost::make_shared<fostlib::file_body>(filename,
                             fostlib::mime::mime_headers(),
@@ -58,29 +91,44 @@ namespace {
                                 variant["response"]["headers"]["Content-Type"])),
                         fostlib::coerce<int>(variant["response"]["status"]));
                 } else {
-                    info("cache", "hit", false);
+                    info("cache", "miss", "variant not found");
                     info("request", "variant",
                         fostlib::coerce<fostlib::string>(
                             proxy::variant(request.data()->headers())));
                 }
             }
 
-            fostlib::http::user_agent ua(base);
-            fostlib::http::user_agent::request ua_req("GET", location);
+            return fetch_origin(request, origin);
+        }
+
+
+        std::pair<boost::shared_ptr<fostlib::mime>, int >
+                fetch_origin(
+                    fostlib::http::server::request &request,
+                    fostlib::http::user_agent::request &ua_req
+                ) const {
             if ( request.data()->headers().exists("Accept") ) {
-                origin.headers().set("Accept",
+                ua_req.headers().set("Accept",
                     request.data()->headers()["Accept"]);
             } else {
-                origin.headers().set("Accept", "text/html");
+                ua_req.headers().set("Accept", "text/html");
             }
+            fostlib::log::info()
+                ("", "Fetching URL from origin")
+                ("request", "url", ua_req.address())
+                ("request", "headers", ua_req.data().headers());
+            fostlib::http::user_agent ua;
             std::auto_ptr< fostlib::http::user_agent::response >
-                response = ua(origin);
-            info("response", "status", response->status());
-            info("response", "size", response->body()->data().size());
+                response = ua(ua_req);
+            fostlib::log::info()
+                ("response", "status", response->status())
+                ("response", "size", response->body()->data().size());
 
-            boost::filesystem::wpath pathname =
+            const boost::filesystem::wpath pathname =
                 proxy::root() / proxy::save_entry(request, *response);
             if ( response->body()->data().size() ) {
+                fostlib::log::debug()
+                    ("saving", "pathname", pathname);
                 boost::filesystem::ofstream(pathname,
                         std::ios_base::out | std::ios_base::binary).
                     write(reinterpret_cast<const char *>(
@@ -94,8 +142,6 @@ namespace {
                 boost::make_shared<fostlib::binary_body>(
                     response->body()->data(), headers);
 
-            info("time", "end", fostlib::timestamp::now());
-            info("time", "duration", started.elapsed());
             return std::make_pair(body, response->status());
         }
 
