@@ -6,10 +6,20 @@
 FSL_TEST_SUITE(cache_hash);
 
 
-FSL_TEST_FUNCTION(GET_simple) {
+FSL_TEST_FUNCTION(GET_simple_request) {
     FSL_CHECK_EQ(
-        proxy::hash(fostlib::http::server::request("GET", "/")),
-        "e0e39d220ff38421b6dd61a998975b28");
+        proxy::hash(fostlib::http::user_agent::request(
+            "GET", fostlib::url("http://localhost/"))),
+        "ecea064e38ede52b47cab6fb652af22b");
+}
+
+
+FSL_TEST_FUNCTION(GET_simple_response) {
+    FSL_CHECK_EQ(
+        proxy::hash(fostlib::http::user_agent::response(
+            "GET", fostlib::url("http://localhost/"), 200,
+            boost::make_shared<fostlib::binary_body>())),
+        "ecea064e38ede52b47cab6fb652af22b");
 }
 
 

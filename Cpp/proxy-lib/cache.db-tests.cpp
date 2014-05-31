@@ -24,18 +24,18 @@ FSL_TEST_FUNCTION(save_response) {
         boost::make_shared<fostlib::binary_body>());
     FSL_CHECK_EQ(
         proxy::save_entry(req, r),
-        boost::filesystem::wpath("e0") /
-            "e39d220ff38421b6dd61a998975b28"
+        boost::filesystem::wpath("d3") /
+            "c8eae015367cfdcd581ddbef8fa58f"
             "-d41d8cd98f00b204e9800998ecf8427e");
     std::shared_ptr<fostlib::jsondb> db(proxy::cache_db());
     fostlib::jsondb::local trans(*db);
-    FSL_CHECK_EQ(trans["file-db"]["e0"]["db"],
+    FSL_CHECK_EQ(trans["file-db"]["d3"]["db"],
         fostlib::coerce<fostlib::json>(
-            boost::filesystem::wpath("e0") / "file-db.json"));
+            boost::filesystem::wpath("d3") / "file-db.json"));
     FSL_CHECK_EQ(
         proxy::save_entry(req, r),
-        boost::filesystem::wpath("e0") /
-            "e39d220ff38421b6dd61a998975b28"
+        boost::filesystem::wpath("d3") /
+            "c8eae015367cfdcd581ddbef8fa58f"
             "-d41d8cd98f00b204e9800998ecf8427e");
 }
 
@@ -48,10 +48,10 @@ FSL_TEST_FUNCTION(retrieve_response) {
             fostlib::url("http://example.com/"), 200,
             boost::make_shared<fostlib::binary_body>()));
     fostlib::json entry(proxy::db_entry(
-        "e0e39d220ff38421b6dd61a998975b28"));
+        "d3c8eae015367cfdcd581ddbef8fa58f"));
     FSL_CHECK_NEQ(entry, fostlib::json());
     FSL_CHECK_EQ(entry["hash"],
-        fostlib::json("e0e39d220ff38421b6dd61a998975b28"));
+        fostlib::json("d3c8eae015367cfdcd581ddbef8fa58f"));
 }
 
 

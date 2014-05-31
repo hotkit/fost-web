@@ -30,10 +30,13 @@ namespace {
             auto info(std::move(
                 fostlib::log::info()
                     ("id", fostlib::guid())
+                    ("method", request.method())
                     ("location", location)
                     ("time", "begin", fostlib::timestamp::now())));
 
-            fostlib::json entry(proxy::db_entry(proxy::hash(request)));
+            fostlib::http::user_agent::request origin(
+                request.method(), location);
+            fostlib::json entry(proxy::db_entry(proxy::hash(origin)));
             info("cache", "entry", entry);
             if ( !entry.isnull() ) {
                 fostlib::json variant(entry["variant"]
@@ -65,13 +68,13 @@ namespace {
             fostlib::http::user_agent ua(base);
             fostlib::http::user_agent::request ua_req("GET", location);
             if ( request.data()->headers().exists("Accept") ) {
-                ua_req.headers().set("Accept",
+                origin.headers().set("Accept",
                     request.data()->headers()["Accept"]);
             } else {
-                ua_req.headers().set("Accept", "text/html");
+                origin.headers().set("Accept", "text/html");
             }
             std::auto_ptr< fostlib::http::user_agent::response >
-                response = ua(ua_req);
+                response = ua(origin);
             info("response", "status", response->status());
             info("response", "size", response->body()->data().size());
 
