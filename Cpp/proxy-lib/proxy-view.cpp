@@ -67,8 +67,15 @@ namespace {
             location.query() = request.query_string();
             auto info(std::move(
                 fostlib::log::info()
-                    ("method", request.method())
-                    ("location", location)));
+                    ("request", "method", request.method())
+                    ("request", "path-spec",
+                        fostlib::coerce<fostlib::nullable<boost::filesystem::wpath>>(
+                            request.file_spec()))
+                    ("request", "query-string",
+                        fostlib::coerce<fostlib::nullable<fostlib::string>>(
+                            request.query_string().as_string()))
+                    ("request", "headers", request.data()->headers())
+                    ("origin", "url", location)));
 
             fostlib::http::user_agent::request origin(
                 request.method(), location);
@@ -80,10 +87,22 @@ namespace {
                 info("cache", "variant", vhash);
                 fostlib::json variant(entry["variant"][vhash]);
                 if ( !variant.isnull() ) {
-                    info("cache", "hit", true);
-                    return return_variant(
-                        fostlib::coerce<fostlib::string>(entry["hash"]),
-                        vhash, variant);
+                    fostlib::timediff ttl(
+                        fostlib::coerce<fostlib::nullable<fostlib::timediff>>(
+                            configuration["ttl"]).value(fostlib::hours(1)));
+                    info("cache", "ttl", ttl);
+                    fostlib::timestamp expires(
+                        fostlib::coerce<fostlib::timestamp>(variant["updated"]) + ttl);
+                    info("cache", "expires", expires);
+                    if ( expires < fostlib::timestamp::now() ) {
+                        info("cache", "miss", "expired");
+                        return fetch_origin(request, origin);
+                    } else {
+                        info("cache", "hit", true);
+                        return return_variant(
+                            fostlib::coerce<fostlib::string>(entry["hash"]),
+                            vhash, variant);
+                    }
                 } else {
                     info("cache", "miss", "variant not found");
                 }

@@ -36,22 +36,35 @@ boost::filesystem::wpath proxy::save_entry(
     //     proxy::variant(response.headers())));
     const dbkeys keys(dblookup(h));
 
-    fostlib::json description;
     const boost::filesystem::wpath pathname(
         fostlib::coerce<boost::filesystem::wpath>(keys.first) /
         fostlib::coerce<boost::filesystem::wpath>(keys.second + "-" + vh));
-    fostlib::insert(description, "address", response.address());
-    fostlib::insert(description, "hash", h);
     fostlib::json variant;
-    fostlib::insert(variant, "created", fostlib::timestamp::now());
-    fostlib::insert(variant, "accessed", variant["created"]);
+    fostlib::insert(variant, "accessed", fostlib::timestamp::now());
+    fostlib::insert(variant, "updated", variant["accessed"]);
     fostlib::insert(variant, "pathname", pathname);
     fostlib::insert(variant, "response", "status", response.status());
     fostlib::insert(variant, "response", "headers", response.headers());
-    fostlib::insert(description, "variant", vh, variant);
     std::shared_ptr<fostlib::jsondb> db(cache_db(keys.first));
     fostlib::jsondb::local trans(*db);
-    trans.set(fostlib::jcursor("file") / keys.second, description);
+    fostlib::jcursor base_loc("file", keys.second);
+    if ( trans.has_key(base_loc) ) {
+        fostlib::jcursor variant_loc(base_loc, "variant", vh);
+        if ( trans.has_key(variant_loc) ) {
+            fostlib::insert(variant, "created", trans[variant_loc]["created"]);
+            trans.set(variant_loc, variant);
+        } else {
+            fostlib::insert(variant, "created", variant["accessed"]);
+            trans.set(variant_loc, variant);
+        }
+    } else {
+        fostlib::json description;
+        fostlib::insert(variant, "created", variant["accessed"]);
+        fostlib::insert(description, "address", response.address());
+        fostlib::insert(description, "hash", h);
+        fostlib::insert(description, "variant", vh, variant);
+        trans.set(base_loc, description);
+    }
     trans.commit();
     return pathname;
 }
