@@ -59,7 +59,7 @@ namespace proxy {
         const fostlib::http::user_agent::response &);
     /// Update an entry -- cache hit
     boost::filesystem::wpath update_entry(
-        const fostlib::http::user_agent::request &);
+        const fostlib::string &h, const fostlib::string &vh);
 
 
 }

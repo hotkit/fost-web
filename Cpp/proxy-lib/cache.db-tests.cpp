@@ -48,10 +48,10 @@ FSL_TEST_FUNCTION(update_response) {
             fostlib::url("http://example.com/"), 200,
             boost::make_shared<fostlib::binary_body>())));
     const boost::filesystem::wpath file(proxy::update_entry(
-        fostlib::http::user_agent::request("GET",
-            fostlib::url("http://example.com/"))));
+        "d3c8eae015367cfdcd581ddbef8fa58f",
+        "d41d8cd98f00b204e9800998ecf8427e"));
     std::shared_ptr<fostlib::jsondb> fdb(
-        proxy::cache_db(boost::filesystem::wpath("d3")));
+        proxy::cache_db(fostlib::string("d3")));
 }
 
 

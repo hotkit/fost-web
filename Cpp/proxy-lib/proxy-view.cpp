@@ -81,7 +81,9 @@ namespace {
                 fostlib::json variant(entry["variant"][vhash]);
                 if ( !variant.isnull() ) {
                     info("cache", "hit", true);
-                    return return_variant(variant, origin);
+                    return return_variant(
+                        fostlib::coerce<fostlib::string>(entry["hash"]),
+                        vhash, variant);
                 } else {
                     info("cache", "miss", "variant not found");
                 }
@@ -93,11 +95,11 @@ namespace {
 
         std::pair<boost::shared_ptr<fostlib::mime>, int >
                 return_variant(
-                    const fostlib::json &variant,
-                    const fostlib::http::user_agent::request &origin
+                    const fostlib::string &h, const fostlib::string &vh,
+                    const fostlib::json &variant
                 ) const {
             const boost::filesystem::wpath filename(
-                proxy::root() / proxy::update_entry(origin));
+                proxy::root() / proxy::update_entry(h, vh));
             fostlib::log::debug()
                 ("cache", "file", filename);
             return std::make_pair(

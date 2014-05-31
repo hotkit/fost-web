@@ -59,25 +59,16 @@ boost::filesystem::wpath proxy::save_entry(
 
 
 boost::filesystem::wpath proxy::update_entry(
-    const fostlib::http::user_agent::request &request
+    const fostlib::string &h, const fostlib::string &vh
 ) {
-    const fostlib::string h(fostlib::coerce<fostlib::string>(hash(request)));
-    const fostlib::string vh("d41d8cd98f00b204e9800998ecf8427e");
     const dbkeys keys(dblookup(h));
-
-    fostlib::log::debug()
-        ("hash", h)
-        ("variant", vh)
-        ("dbkeys", "first", keys.first)
-        ("dbkeys", "second", keys.second);
 
     std::shared_ptr<fostlib::jsondb> db(cache_db(keys.first));
     fostlib::jsondb::local trans(*db);
-    fostlib::jcursor dbloc("file");
-    dbloc /= keys.second;
-    trans.set(dbloc / "variant" / vh / "accessed", fostlib::timestamp::now());
+    fostlib::jcursor dbloc(fostlib::jcursor("file") / keys.second / "variant" / vh);
+    trans.set(dbloc / "accessed", fostlib::timestamp::now());
     trans.commit();
     return fostlib::coerce<boost::filesystem::wpath>(
-        trans[dbloc / "variant"/ vh / "pathname"]);
+        trans[dbloc / "pathname"]);
 }
 
