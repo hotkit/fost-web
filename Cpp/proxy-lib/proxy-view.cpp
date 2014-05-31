@@ -98,7 +98,7 @@ namespace {
                         try {
                             info("cache", "miss", "expired");
                             return fetch_origin(request, origin);
-                        } catch ( fostlib::exceptions::socket_error &e ) {
+                        } catch ( fostlib::exceptions::exception &e ) {
                             fostlib::log::error()
                                 ("exception", e.what())
                                 ("data", e.data());
@@ -160,6 +160,13 @@ namespace {
             fostlib::log::info()
                 ("response", "status", response->status())
                 ("response", "size", response->body()->data().size());
+
+            if ( response->status() >= 500 ) {
+                throw fostlib::exceptions::not_implemented(
+                    "No better handling for this status code "
+                        "returned from the origin",
+                    fostlib::coerce<fostlib::string>(response->status()));
+            }
 
             const boost::filesystem::wpath pathname =
                 proxy::root() / proxy::save_entry(request, *response);
