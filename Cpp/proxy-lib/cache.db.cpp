@@ -66,8 +66,6 @@ boost::filesystem::wpath proxy::update_entry(
     const dbkeys keys(dblookup(h));
 
     fostlib::log::debug()
-        ("request", "url", request.address())
-        ("request", "headers", request.data().headers())
         ("hash", h)
         ("variant", vh)
         ("dbkeys", "first", keys.first)
