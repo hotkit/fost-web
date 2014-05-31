@@ -81,26 +81,32 @@ namespace {
                 fostlib::json variant(entry["variant"][vhash]);
                 if ( !variant.isnull() ) {
                     info("cache", "hit", true);
-                    boost::filesystem::wpath filename(
-                        proxy::root() / proxy::update_entry(origin));
-                    info("cache", "file", filename);
-                    return std::make_pair(
-                        boost::make_shared<fostlib::file_body>(filename,
-                            fostlib::mime::mime_headers(),
-                            fostlib::coerce<fostlib::string>(
-                                variant["response"]["headers"]["Content-Type"])),
-                        fostlib::coerce<int>(variant["response"]["status"]));
+                    return return_variant(variant, origin);
                 } else {
                     info("cache", "miss", "variant not found");
-                    info("request", "variant",
-                        fostlib::coerce<fostlib::string>(
-                            proxy::variant(request.data()->headers())));
                 }
             }
 
             return fetch_origin(request, origin);
         }
 
+
+        std::pair<boost::shared_ptr<fostlib::mime>, int >
+                return_variant(
+                    const fostlib::json &variant,
+                    const fostlib::http::user_agent::request &origin
+                ) const {
+            const boost::filesystem::wpath filename(
+                proxy::root() / proxy::update_entry(origin));
+            fostlib::log::debug()
+                ("cache", "file", filename);
+            return std::make_pair(
+                boost::make_shared<fostlib::file_body>(filename,
+                    fostlib::mime::mime_headers(),
+                    fostlib::coerce<fostlib::string>(
+                        variant["response"]["headers"]["Content-Type"])),
+                fostlib::coerce<int>(variant["response"]["status"]));
+        }
 
         std::pair<boost::shared_ptr<fostlib::mime>, int >
                 fetch_origin(
