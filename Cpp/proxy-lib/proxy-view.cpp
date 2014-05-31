@@ -95,8 +95,18 @@ namespace {
                         fostlib::coerce<fostlib::timestamp>(variant["updated"]) + ttl);
                     info("cache", "expires", expires);
                     if ( expires < fostlib::timestamp::now() ) {
-                        info("cache", "miss", "expired");
-                        return fetch_origin(request, origin);
+                        try {
+                            info("cache", "miss", "expired");
+                            return fetch_origin(request, origin);
+                        } catch ( fostlib::exceptions::socket_error &e ) {
+                            fostlib::log::error()
+                                ("exception", e.what())
+                                ("data", e.data());
+                            info("cache", "hit", true);
+                            return return_variant(
+                                fostlib::coerce<fostlib::string>(entry["hash"]),
+                                vhash, variant);
+                        }
                     } else {
                         info("cache", "hit", true);
                         return return_variant(
