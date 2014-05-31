@@ -43,11 +43,11 @@ namespace {
                     [fostlib::coerce<fostlib::string>(
                         proxy::variant(request.data()->headers()))]);
                 if ( !variant.isnull() ) {
+                    proxy::update_entry(origin);
                     info("cache", "variant", variant);
                     info("cache", "hit", true);
                     boost::filesystem::wpath filename(
-                        proxy::root() / fostlib::coerce<boost::filesystem::wpath>(
-                                variant["pathname"]));
+                        proxy::root() / proxy::update_entry(origin));
                     info("cache", "file", filename);
                     info("time", "end", fostlib::timestamp::now());
                     info("time", "duration", started.elapsed());

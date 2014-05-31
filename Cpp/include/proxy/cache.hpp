@@ -57,6 +57,9 @@ namespace proxy {
     boost::filesystem::wpath save_entry(
         const fostlib::http::server::request &,
         const fostlib::http::user_agent::response &);
+    /// Update an entry -- cache hit
+    boost::filesystem::wpath update_entry(
+        const fostlib::http::user_agent::request &);
 
 
 }

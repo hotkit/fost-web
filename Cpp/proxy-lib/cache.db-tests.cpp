@@ -40,13 +40,28 @@ FSL_TEST_FUNCTION(save_response) {
 }
 
 
-FSL_TEST_FUNCTION(retrieve_response) {
+FSL_TEST_FUNCTION(update_response) {
     proxy::flush_cache();
-    proxy::save_entry(
+    FSL_CHECK_NOTHROW(proxy::save_entry(
         fostlib::http::server::request("GET", "/"),
         fostlib::http::user_agent::response("GET",
             fostlib::url("http://example.com/"), 200,
-            boost::make_shared<fostlib::binary_body>()));
+            boost::make_shared<fostlib::binary_body>())));
+    const boost::filesystem::wpath file(proxy::update_entry(
+        fostlib::http::user_agent::request("GET",
+            fostlib::url("http://example.com/"))));
+    std::shared_ptr<fostlib::jsondb> fdb(
+        proxy::cache_db(boost::filesystem::wpath("d3")));
+}
+
+
+FSL_TEST_FUNCTION(retrieve_response) {
+    proxy::flush_cache();
+    FSL_CHECK_NOTHROW(proxy::save_entry(
+        fostlib::http::server::request("GET", "/"),
+        fostlib::http::user_agent::response("GET",
+            fostlib::url("http://example.com/"), 200,
+            boost::make_shared<fostlib::binary_body>())));
     fostlib::json entry(proxy::db_entry(
         "d3c8eae015367cfdcd581ddbef8fa58f"));
     FSL_CHECK_NEQ(entry, fostlib::json());
