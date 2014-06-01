@@ -14,9 +14,8 @@ namespace {
 }
 
 
-fostlib::json proxy::db_entry(const fostlib::hex_string &hash) {
-    fostlib::string h(fostlib::coerce<fostlib::string>(hash));
-    const dbkeys keys(dblookup(h));
+fostlib::json proxy::db_entry(const fostlib::string &hash) {
+    const dbkeys keys(dblookup(hash));
     std::shared_ptr<fostlib::jsondb> db(cache_db(keys.first));
     if ( db ) {
         fostlib::jsondb::local trans(*db);
@@ -30,7 +29,7 @@ boost::filesystem::wpath proxy::save_entry(
     const fostlib::http::server::request &request,
     const fostlib::http::user_agent::response &response
 ) {
-    const fostlib::string h(fostlib::coerce<fostlib::string>(hash(response)));
+    const fostlib::string h(hash(response));
     const fostlib::string vh("d41d8cd98f00b204e9800998ecf8427e");
     // fostlib::string vh(fostlib::coerce<fostlib::string>(
     //     proxy::variant(response.headers())));

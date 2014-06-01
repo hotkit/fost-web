@@ -79,11 +79,12 @@ namespace {
 
             fostlib::http::user_agent::request origin(
                 request.method(), location);
-            fostlib::json entry(proxy::db_entry(proxy::hash(origin)));
+            fostlib::string hash(proxy::hash(origin));
+            fostlib::json entry(proxy::db_entry(hash));
             info("cache", "entry", entry);
             if ( !entry.isnull() ) {
-                fostlib::string vhash(fostlib::coerce<fostlib::string>(
-                        proxy::variant(request.data()->headers())));
+                fostlib::string vhash(
+                        proxy::variant(request.data()->headers()));
                 info("cache", "variant", vhash);
                 fostlib::json variant(entry["variant"][vhash]);
                 if ( !variant.isnull() ) {

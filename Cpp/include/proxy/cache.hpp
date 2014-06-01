@@ -16,14 +16,14 @@ namespace proxy {
 
 
     /// Return the cache address hash for the response
-    fostlib::hex_string hash(const fostlib::http::user_agent::request &);
+    fostlib::string hash(const fostlib::http::user_agent::request &);
     /// Return the cache address hash for the response
-    fostlib::hex_string hash(const fostlib::http::user_agent::response &);
+    fostlib::string hash(const fostlib::http::user_agent::response &);
 
     /// Return the variant hash for the set of headers
-    fostlib::hex_string variant(const fostlib::mime::mime_headers &);
+    fostlib::string variant(const fostlib::mime::mime_headers &);
     /// Return the variant hash for the headers given a Vary header
-    fostlib::hex_string variant(const fostlib::mime::mime_headers &,
+    fostlib::string variant(const fostlib::mime::mime_headers &,
         const fostlib::string &vary);
 
 
@@ -50,7 +50,7 @@ namespace proxy {
 
 
     /// Returns the cache DB entry for the hash
-    fostlib::json db_entry(const fostlib::hex_string &hash);
+    fostlib::json db_entry(const fostlib::string &hash);
 
 
     /// Save a response into the cache -- returns path to save body at
