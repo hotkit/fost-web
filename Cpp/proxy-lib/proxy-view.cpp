@@ -1,6 +1,7 @@
 #include <fost/timer>
 #include <fost/log>
 #include <proxy/cache.hpp>
+#include <proxy/stats.hpp>
 #include <proxy/views.hpp>
 #include <boost/filesystem/fstream.hpp>
 
@@ -59,6 +60,7 @@ namespace {
                 fostlib::http::server::request &request,
                 const fostlib::host &host) const {
             fostlib::log::scoped_sink< capture_copy > cc;
+
             fostlib::url base(
                 configuration.has_key("origin") ?
                     fostlib::coerce<fostlib::string>(configuration["origin"]) :
@@ -80,6 +82,7 @@ namespace {
             fostlib::http::user_agent::request origin(
                 request.method(), location);
             fostlib::string hash(proxy::hash(origin));
+            proxy::stats::request(hash, location);
             fostlib::json entry(proxy::db_entry(hash));
             info("cache", "entry", entry);
             if ( !entry.isnull() ) {
