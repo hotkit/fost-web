@@ -14,6 +14,8 @@ use-project fost-web : ../fost-web ;
 #Define this project
 fost-project proxy-lib
     :
+        <include>../fost-aws/Cpp/include
+        <include>../fost-beanbag/include
         <include>../fost-internet/Cpp/include
         <include>../fost-orm/Cpp/include
         <include>../fost-web/Cpp/include
