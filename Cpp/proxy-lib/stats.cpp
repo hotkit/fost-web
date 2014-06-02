@@ -54,4 +54,12 @@ namespace {
 
     const varanus::obor c_statistics("proxy.statistics", fetch_stats);
 
+
 }
+
+
+void proxy::stats::load(const json &old) {
+    boost::mutex::scoped_lock lock(g_mutex);
+    g_statistics = old;
+}
+

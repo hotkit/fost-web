@@ -29,6 +29,9 @@ namespace proxy {
     namespace stats {
 
 
+        void load(const fostlib::json &);
+
+
     }
 
 
