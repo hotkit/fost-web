@@ -32,7 +32,9 @@ namespace {
             }
             bool operator () (const fostlib::log::message &m) {
                 using namespace fostlib;
-                if ( capture && !m.body().isnull() ) {
+                if ( m.level() == fostlib::log::g_stats_level ) {
+                    return true;
+                } else if ( capture && !m.body().isnull() ) {
                     if ( m.level() >  level ) {
                         level = m.level();
                         name = m.name();
@@ -82,7 +84,11 @@ namespace {
             fostlib::http::user_agent::request origin(
                 request.method(), location);
             fostlib::string hash(proxy::hash(origin));
-            proxy::stats::request(hash, location);
+            fostlib::log::stats()
+                ("key", hash)
+                ("data", "resource", location)
+                ("data", "accessed", fostlib;:timestamp::now())
+                ("add", "requests", 1);
             fostlib::json entry(proxy::db_entry(hash));
             info("cache", "entry", entry);
             if ( !entry.isnull() ) {
@@ -101,28 +107,38 @@ namespace {
                     if ( expires < fostlib::timestamp::now() ) {
                         try {
                             info("cache", "miss", "expired");
-                            return fetch_origin(request, origin);
+                            fostlib::log::stats()("key", hash)
+                                ("add", "cache-misses-expired", 1);
+                            return fetch_origin(hash, request, origin);
                         } catch ( fostlib::exceptions::exception &e ) {
                             fostlib::log::error()
                                 ("exception", e.what())
                                 ("data", e.data());
                             info("cache", "hit", true);
+                            fostlib::log::stats()("key", hash)
+                                ("add", "cache-fallback-hits", 1);
                             return return_variant(
                                 fostlib::coerce<fostlib::string>(entry["hash"]),
                                 vhash, variant);
                         }
                     } else {
                         info("cache", "hit", true);
+                        fostlib::log::stats()("key", hash)
+                            ("add", "cache-hits", 1);
                         return return_variant(
                             fostlib::coerce<fostlib::string>(entry["hash"]),
                             vhash, variant);
                     }
                 } else {
                     info("cache", "miss", "variant not found");
+                    fostlib::log::stats()("key", hash)
+                        ("add", "cache-misses-variant-not-found", 1);
                 }
             }
 
-            return fetch_origin(request, origin);
+            fostlib::log::stats()("key", hash)
+                ("add", "cache-misses-not-found", 1);
+            return fetch_origin(hash, request, origin);
         }
 
 
@@ -145,6 +161,22 @@ namespace {
 
         std::pair<boost::shared_ptr<fostlib::mime>, int >
                 fetch_origin(
+                    const fostlib::string &hash,
+                    fostlib::http::server::request &request,
+                    fostlib::http::user_agent::request &ua_req
+                ) const {
+            try {
+                return _fetch_origin(hash, request, ua_req);
+            } catch ( fostlib::exceptions::socket_error & ) {
+                fostlib::log::stats()("key", hash)
+                    ("add", "origin-socket-error", 1);
+                throw;
+            }
+        }
+
+        std::pair<boost::shared_ptr<fostlib::mime>, int >
+                _fetch_origin(
+                    const fostlib::string &hash,
                     fostlib::http::server::request &request,
                     fostlib::http::user_agent::request &ua_req
                 ) const {
@@ -158,6 +190,8 @@ namespace {
                 ("", "Fetching URL from origin")
                 ("request", "url", ua_req.address())
                 ("request", "headers", ua_req.data().headers());
+            fostlib::log::stats()("key", hash)
+                ("add", "origin-requests", 1);
             fostlib::http::user_agent ua;
             std::auto_ptr< fostlib::http::user_agent::response >
                 response = ua(ua_req);
@@ -166,6 +200,8 @@ namespace {
                 ("response", "size", response->body()->data().size());
 
             if ( response->status() >= 500 ) {
+                fostlib::log::stats()("key", hash)
+                    ("add", "origin-500s", 1);
                 throw fostlib::exceptions::not_implemented(
                     "No better handling for this status code "
                         "returned from the origin",

@@ -17,6 +17,7 @@ fost-project proxy-lib
         <include>../fost-internet/Cpp/include
         <include>../fost-orm/Cpp/include
         <include>../fost-web/Cpp/include
+        <include>../varanus/Cpp/include
     ;
 
 
