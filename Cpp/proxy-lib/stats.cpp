@@ -37,7 +37,7 @@ namespace {
                         insert(g_statistics, key, itk, *it);
                     }
                 }
-                return true;
+                return false;
             } else {
                 return true;
             }
