@@ -87,7 +87,7 @@ namespace {
             fostlib::log::stats()
                 ("key", hash)
                 ("data", "resource", location)
-                ("data", "accessed", fostlib;:timestamp::now())
+                ("data", "accessed", fostlib::timestamp::now())
                 ("add", "requests", 1);
             fostlib::json entry(proxy::db_entry(hash));
             info("cache", "entry", entry);
@@ -165,11 +165,21 @@ namespace {
                     fostlib::http::server::request &request,
                     fostlib::http::user_agent::request &ua_req
                 ) const {
+            fostlib::timer taken;
             try {
-                return _fetch_origin(hash, request, ua_req);
+                std::pair<boost::shared_ptr<fostlib::mime>, int > result =
+                    _fetch_origin(hash, request, ua_req);
+                fostlib::log::stats()("key", hash)
+                    ("data", "origin-time-success", taken.elapsed());
+                return result;
             } catch ( fostlib::exceptions::socket_error & ) {
                 fostlib::log::stats()("key", hash)
+                    ("data", "origin-time-failed", taken.elapsed())
                     ("add", "origin-socket-error", 1);
+                throw;
+            } catch ( ... ) {
+                fostlib::log::stats()("key", hash)
+                    ("data", "origin-time-failed", taken.elapsed());
                 throw;
             }
         }
