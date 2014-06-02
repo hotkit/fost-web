@@ -36,6 +36,7 @@ namespace {
         boost::filesystem::wpath to(
             boost::filesystem::wpath("/app") /
             fostlib::coerce<boost::filesystem::wpath>(this_host) /
+            "db" / "host" /
             fostlib::coerce<boost::filesystem::wpath>(host) /
             fostlib::coerce<boost::filesystem::wpath>(
                 fostlib::timestamp::now()));
