@@ -22,8 +22,7 @@ namespace {
         timer taken;
         string content(bucket.get(
             coerce<boost::filesystem::wpath>(
-                coerce<nullable<string>>(config["location"])
-                    .value("/configuration.json"))));
+                config["location"])));
         json db_content(json::parse(content));
         insert(result, "downloaded", db_content);
         insert(result, "time-taken", taken.elapsed());
