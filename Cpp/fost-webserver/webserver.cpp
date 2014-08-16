@@ -32,7 +32,7 @@ FSL_MAIN(
 )( fostlib::ostream &o, fostlib::arguments &args ) {
     // Process command line arguments last
     args.commandSwitch("p", c_port.section(), c_port.name());
-    args.commandSwitch("h", c_port.section(), c_port.name());
+    args.commandSwitch("h", c_host.section(), c_host.name());
     args.commandSwitch("m", c_mime.section(), c_mime.name());
 
     // Load MIME types
@@ -46,7 +46,7 @@ FSL_MAIN(
             new dynlib(fostlib::coerce<fostlib::string>(*p))));
 
     // Bind server to host and port
-    http::server server(host(c_port.value()));
+    http::server server(host(c_host.value()));
     o << L"Answering requests on "
         L"http://" << server.binding() << L":" << server.port() << L"/" << std::endl;
 
