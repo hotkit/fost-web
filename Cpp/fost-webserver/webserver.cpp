@@ -18,11 +18,14 @@ using namespace fostlib;
 
 
 namespace {
-    setting< string > c_host(L"webserver", L"Server", L"Bind to", L"localhost");
-    setting< int > c_port(L"webserver", L"Server", L"Port", 8001);
-    setting< string > c_mime(L"webserver", L"Server", "MIME types",
-            L"Configuration/mime-types.json");
-    setting< json > c_load("webserver", "Server", "Load", json::array_t());
+    setting< string > c_host("webserver.cpp",
+        "webserver", "Bind to", "localhost");
+    setting< int > c_port("webserver.cpp",
+        "webserver", "Port", 8001);
+    setting< string > c_mime("webserver.cpp",
+        "webserver", "MIME types", "Configuration/mime-types.json");
+    setting< json > c_load("webserver.cpp",
+        "webserver", "Load", json::array_t());
 }
 
 
