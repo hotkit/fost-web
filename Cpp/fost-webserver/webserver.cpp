@@ -49,7 +49,7 @@ FSL_MAIN(
             new dynlib(fostlib::coerce<fostlib::string>(*p))));
 
     // Bind server to host and port
-    http::server server(host(c_host.value()));
+    http::server server(host(c_host.value()), c_port.value());
     o << L"Answering requests on "
         L"http://" << server.binding() << L":" << server.port() << L"/" << std::endl;
 
