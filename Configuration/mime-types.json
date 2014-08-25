@@ -1,11 +1,14 @@
 {
-
     ".txt": "text/plain",
 
     ".html":"text/html",
     ".htm": "text/html",
 
     ".asp": "text/xml",
+
+    ".css": "text/css",
+
+    ".js": "application/javascript",
 
     ".ico": "image/vnd.microsoft.icon",
     ".jpg": "image/jpg",
