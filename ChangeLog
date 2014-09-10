@@ -1,3 +1,12 @@
+2014-08-16  Kirit Saelensminde  <kirit@felspar.com>
+ Change the web server code to use the new JSON formatted configuration file options. Use command line parameters to control all of the port, host binding and the MIME type configuration.
+
+2014-05-31  Kirit Saelensminde  <kirit@felspar.com>
+ Remove logging from the router as it interferes with loaded views trying to manage logging options.
+
+2014-03-02  Kirit Saelensminde  <kirit@felspar.com>
+ Split out the top level HTTP parsing from the lower level routing of a request to a view.
+
 2012-08-02  Kirit Saelensminde  <kirit@felspar.com>
  Implemented a proper 301, 302, 303, 405, 500 and 501 responses.
 
