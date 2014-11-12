@@ -1,0 +1,10 @@
+
+fost-lib-autotest proxy-lib
+    : Cpp/proxy-lib
+    :
+        ../../../fost-aws/Cpp/fost-s3
+        ../../../fost-internet/Cpp/fost-inet
+        ../../../fost-orm/Cpp/fost-jsondb
+        ../../../fost-web/Cpp/fost-urlhandler
+        ../../../varanus/Cpp/obor
+    ;
