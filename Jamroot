@@ -7,11 +7,14 @@ include ../fost-base/fost.jam ;
 
 # Bring in the projects used
 use-project fost-base : ../fost-base ;
+use-project fost-internet : ../fost-internet ;
+use-project fost-orm : ../fost-orm ;
 
 #Define this project
-fost-project kirit-com
+fost-project mengmom
     :
         <include>../fost-internet/Cpp/include
+        <include>../fost-orm/Cpp/include
     ;
 
 # The parts of the system that need to be built
