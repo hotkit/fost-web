@@ -6,7 +6,7 @@
 */
 
 
-#include <fost/cache.hpp>
+#include <fost/http-cache.hpp>
 #include <fost/log>
 
 
@@ -25,14 +25,14 @@ namespace {
         return (undigit(c1) << 4) + undigit(c2);
     }
     boost::mutex g_mutex;
-    std::shared_ptr<fostlib::jsondb> g_dbp;
-    std::vector<std::shared_ptr<fostlib::jsondb>> g_sdbs;
+    boost::shared_ptr<fostlib::jsondb> g_dbp;
+    std::vector<boost::shared_ptr<fostlib::jsondb> > g_sdbs;
 
     void reset(boost::mutex::scoped_lock &,
         const boost::filesystem::wpath &cache_file) {
         fostlib::json cache;
         fostlib::insert(cache, "file-db", fostlib::json::object_t());
-        g_dbp = std::make_shared<fostlib::jsondb>(cache_file, cache);
+        g_dbp = boost::make_shared<fostlib::jsondb>(cache_file, cache);
         g_sdbs.clear();
         g_sdbs.resize(256);
     }
@@ -57,7 +57,7 @@ void fostlib::flush_cache() {
 }
 
 
-std::shared_ptr<fostlib::jsondb> fostlib::cache_db(
+boost::shared_ptr<fostlib::jsondb> fostlib::cache_db(
     const boost::filesystem::wpath &root,
     const fostlib::nullable<fostlib::string> &subdb
 ) {
@@ -90,7 +90,7 @@ std::shared_ptr<fostlib::jsondb> fostlib::cache_db(
                     boost::filesystem::create_directory(root / fdb_path));
             fostlib::json content;
             fostlib::insert(content, "file", fostlib::json::object_t());
-            g_sdbs[slot] = std::make_shared<fostlib::jsondb>(
+            g_sdbs[slot] = boost::make_shared<fostlib::jsondb>(
                 root / fdb_pathname, content);
             trans.insert(fostlib::jcursor("file-db") / subdb.value() / "db",
                 fostlib::coerce<fostlib::json>(fdb_pathname));
@@ -101,7 +101,7 @@ std::shared_ptr<fostlib::jsondb> fostlib::cache_db(
                 ("", "Loading database")
                 ("sub-db", subdb.value())
                 ("pathname", trans["file-db"][subdb.value()]["db"]);
-            g_sdbs[slot] = std::make_shared<fostlib::jsondb>(
+            g_sdbs[slot] = boost::make_shared<fostlib::jsondb>(
                 root / fostlib::coerce<boost::filesystem::wpath>(
                     trans["file-db"][subdb.value()]["db"]));
         }
