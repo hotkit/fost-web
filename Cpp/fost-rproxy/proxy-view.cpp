@@ -8,7 +8,7 @@
 
 #include <fost/timer>
 #include <fost/log>
-#include <fost/cache.hpp>
+#include <fost/http-cache.hpp>
 #include <fost/stats.hpp>
 #include <fost/views.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -77,17 +77,16 @@ namespace {
                     "http://www.wallofsport.com/");
             fostlib::url location(base, request.file_spec());
             location.query() = request.query_string();
-            auto info(std::move(
-                fostlib::log::info()
-                    ("request", "method", request.method())
-                    ("request", "path-spec",
-                        fostlib::coerce<fostlib::nullable<boost::filesystem::wpath>>(
-                            request.file_spec()))
-                    ("request", "query-string",
-                        fostlib::coerce<fostlib::nullable<fostlib::string>>(
-                            request.query_string().as_string()))
-                    ("request", "headers", request.data()->headers())
-                    ("origin", "url", location)));
+            fostlib::log::info()
+                ("request", "method", request.method())
+                ("request", "path-spec",
+                    fostlib::coerce<fostlib::nullable<boost::filesystem::wpath> >(
+                        request.file_spec()))
+                ("request", "query-string",
+                    fostlib::coerce<fostlib::nullable<fostlib::string> >(
+                        request.query_string().as_string()))
+                ("request", "headers", request.data()->headers())
+                ("origin", "url", location);
 
             fostlib::http::user_agent::request origin(
                 request.method(), location);
@@ -98,23 +97,23 @@ namespace {
                 ("data", "accessed", fostlib::timestamp::now())
                 ("add", "requests", 1);
             fostlib::json entry(fostlib::db_entry(hash));
-            info("cache", "entry", entry);
+            fostlib::log::info()("cache", "entry", entry);
             if ( !entry.isnull() ) {
                 fostlib::string vhash(
                         fostlib::variant(request.data()->headers()));
-                info("cache", "variant", vhash);
+                fostlib::log::info()("cache", "variant", vhash);
                 fostlib::json variant(entry["variant"][vhash]);
                 if ( !variant.isnull() ) {
                     fostlib::timediff ttl(
-                        fostlib::coerce<fostlib::nullable<fostlib::timediff>>(
+                        fostlib::coerce<fostlib::nullable<fostlib::timediff> >(
                             configuration["ttl"]).value(fostlib::hours(1)));
-                    info("cache", "ttl", ttl);
+                    fostlib::log::info()("cache", "ttl", ttl);
                     fostlib::timestamp expires(
                         fostlib::coerce<fostlib::timestamp>(variant["updated"]) + ttl);
-                    info("cache", "expires", expires);
+                    fostlib::log::info()("cache", "expires", expires);
                     if ( expires < fostlib::timestamp::now() ) {
                         try {
-                            info("cache", "miss", "expired");
+                            fostlib::log::info()("cache", "miss", "expired");
                             fostlib::log::stats()("key", hash)
                                 ("add", "cache-misses-expired", 1);
                             return fetch_origin(hash, request, origin);
@@ -122,7 +121,7 @@ namespace {
                             fostlib::log::error()
                                 ("exception", e.what())
                                 ("data", e.data());
-                            info("cache", "hit", true);
+                            fostlib::log::info()("cache", "hit", true);
                             fostlib::log::stats()("key", hash)
                                 ("add", "cache-fallback-hits", 1);
                             return return_variant(
@@ -130,7 +129,7 @@ namespace {
                                 vhash, variant);
                         }
                     } else {
-                        info("cache", "hit", true);
+                        fostlib::log::info()("cache", "hit", true);
                         fostlib::log::stats()("key", hash)
                             ("add", "cache-hits", 1);
                         return return_variant(
@@ -138,7 +137,7 @@ namespace {
                             vhash, variant);
                     }
                 } else {
-                    info("cache", "miss", "variant not found");
+                    fostlib::log::info()("cache", "miss", "variant not found");
                     fostlib::log::stats()("key", hash)
                         ("add", "cache-misses-variant-not-found", 1);
                 }
