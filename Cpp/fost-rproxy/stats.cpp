@@ -63,7 +63,7 @@ namespace {
 }
 
 
-void proxy::stats::load(const json &old) {
+void fostlib::stats::load(const json &old) {
     boost::mutex::scoped_lock lock(g_mutex);
     g_statistics = old;
 }
