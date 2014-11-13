@@ -1,7 +1,7 @@
 #include <fost/core>
 
 
-namespace proxy {
+namespace fostlib {
 
 
     /// Location for the cache data

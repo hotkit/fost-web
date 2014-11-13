@@ -1,7 +1,7 @@
 #include <fost/urlhandler>
 
 
-namespace proxy {
+namespace fostlib {
 
 
     namespace view {

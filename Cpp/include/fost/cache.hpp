@@ -4,7 +4,7 @@
 #include <fost/jsondb>
 
 
-namespace proxy {
+namespace fostlib {
 
 
     /// Location for the cache data

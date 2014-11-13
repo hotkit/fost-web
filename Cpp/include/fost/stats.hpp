@@ -23,7 +23,7 @@ namespace fostlib {
 }
 
 
-namespace proxy {
+namespace fostlib {
 
 
     namespace stats {
