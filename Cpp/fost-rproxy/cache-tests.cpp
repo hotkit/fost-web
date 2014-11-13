@@ -12,7 +12,7 @@
 
 namespace {
     const fostlib::setting<fostlib::string> test_cache(
-        "cache-tests.cpp", proxy::c_cache_dir,
+        "cache-tests.cpp", fostlib::c_cache_dir,
         fostlib::coerce<fostlib::string>(
             (boost::filesystem::temp_directory_path() /
                 boost::filesystem::unique_path()).wstring()));
