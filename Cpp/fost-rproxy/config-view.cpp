@@ -6,7 +6,7 @@
 */
 
 
-#include <proxy/views.hpp>
+#include <fost/views.hpp>
 
 
 namespace {

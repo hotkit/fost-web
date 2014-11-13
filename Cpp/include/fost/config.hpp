@@ -1,3 +1,11 @@
+/*
+    Copyright 2014 Felspar Co Ltd. http://support.felspar.com/
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
+*/
+
+
 #include <fost/core>
 
 
@@ -6,10 +14,6 @@ namespace fostlib {
 
     /// Location for the cache data
     extern const fostlib::setting<fostlib::string> c_cache_dir;
-    /// The S3 account name to use
-    extern const fostlib::setting<fostlib::string> c_account;
-    /// The bucket to fetch from and upload to
-    extern const fostlib::setting<fostlib::string> c_bucket;
 
 
 }

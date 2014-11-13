@@ -6,7 +6,7 @@
 */
 
 
-#include <proxy/config.hpp>
+#include <fost/config.hpp>
 
 
 const fostlib::setting<fostlib::string> proxy::c_cache_dir(
