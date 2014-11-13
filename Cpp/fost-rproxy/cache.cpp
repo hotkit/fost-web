@@ -1,4 +1,12 @@
-#include <proxy/cache.hpp>
+/*
+    Copyright 2014 Felspar Co Ltd. http://support.felspar.com/
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
+*/
+
+
+#include <fost/cache.hpp>
 #include <fost/log>
 
 
@@ -31,14 +39,14 @@ namespace {
 }
 
 
-boost::filesystem::wpath proxy::root() {
+boost::filesystem::wpath fostlib::root() {
     fostlib::utf8_string root(fostlib::coerce<fostlib::utf8_string>(
         c_cache_dir.value()));
     return root.underlying();
 }
 
 
-void proxy::flush_cache() {
+void fostlib::flush_cache() {
     boost::mutex::scoped_lock lock(g_mutex);
     boost::filesystem::wpath path(root());
     fostlib::log::info()
@@ -49,7 +57,7 @@ void proxy::flush_cache() {
 }
 
 
-std::shared_ptr<fostlib::jsondb> proxy::cache_db(
+std::shared_ptr<fostlib::jsondb> fostlib::cache_db(
     const boost::filesystem::wpath &root,
     const fostlib::nullable<fostlib::string> &subdb
 ) {

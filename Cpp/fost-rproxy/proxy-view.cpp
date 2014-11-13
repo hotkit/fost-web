@@ -1,8 +1,16 @@
+/*
+    Copyright 2014 Felspar Co Ltd. http://support.felspar.com/
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
+*/
+
+
 #include <fost/timer>
 #include <fost/log>
-#include <proxy/cache.hpp>
-#include <proxy/stats.hpp>
-#include <proxy/views.hpp>
+#include <fost/cache.hpp>
+#include <fost/stats.hpp>
+#include <fost/views.hpp>
 #include <boost/filesystem/fstream.hpp>
 
 
@@ -83,17 +91,17 @@ namespace {
 
             fostlib::http::user_agent::request origin(
                 request.method(), location);
-            fostlib::string hash(proxy::hash(origin));
+            fostlib::string hash(fostlib::hash(origin));
             fostlib::log::stats()
                 ("key", hash)
                 ("data", "resource", location)
                 ("data", "accessed", fostlib::timestamp::now())
                 ("add", "requests", 1);
-            fostlib::json entry(proxy::db_entry(hash));
+            fostlib::json entry(fostlib::db_entry(hash));
             info("cache", "entry", entry);
             if ( !entry.isnull() ) {
                 fostlib::string vhash(
-                        proxy::variant(request.data()->headers()));
+                        fostlib::variant(request.data()->headers()));
                 info("cache", "variant", vhash);
                 fostlib::json variant(entry["variant"][vhash]);
                 if ( !variant.isnull() ) {
@@ -148,7 +156,7 @@ namespace {
                     const fostlib::json &variant
                 ) const {
             const boost::filesystem::wpath filename(
-                proxy::root() / proxy::update_entry(h, vh));
+                fostlib::root() / fostlib::update_entry(h, vh));
             fostlib::log::debug()
                 ("cache", "file", filename);
             return std::make_pair(
@@ -219,7 +227,7 @@ namespace {
             }
 
             const boost::filesystem::wpath pathname =
-                proxy::root() / proxy::save_entry(request, *response);
+                fostlib::root() / fostlib::save_entry(request, *response);
             if ( response->body()->data().size() ) {
                 fostlib::log::debug()
                     ("saving", "pathname", pathname);
@@ -245,5 +253,5 @@ namespace {
 }
 
 
-const fostlib::urlhandler::view &proxy::view::c_proxy = c_proxy_view;
+const fostlib::urlhandler::view &fostlib::view::c_proxy = c_proxy_view;
 

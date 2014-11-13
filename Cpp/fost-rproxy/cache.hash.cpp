@@ -1,8 +1,16 @@
+/*
+    Copyright 2014 Felspar Co Ltd. http://support.felspar.com/
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
+*/
+
+
 #include <fost/crypto>
-#include <proxy/cache.hpp>
+#include <fost/cache.hpp>
 
 
-fostlib::string proxy::hash(
+fostlib::string fostlib::hash(
         const fostlib::http::user_agent::request &request) {
     fostlib::digester md5(fostlib::md5);
     md5 << request.method() <<
@@ -12,7 +20,7 @@ fostlib::string proxy::hash(
 }
 
 
-fostlib::string proxy::hash(
+fostlib::string fostlib::hash(
         const fostlib::http::user_agent::response &response) {
     fostlib::digester md5(fostlib::md5);
     md5 << response.method() <<
@@ -22,7 +30,7 @@ fostlib::string proxy::hash(
 }
 
 
-fostlib::string proxy::variant(
+fostlib::string fostlib::variant(
         const fostlib::mime::mime_headers &headers) {
     if ( headers.exists("Vary") ) {
         return variant(headers, headers["Vary"].value());
@@ -32,7 +40,7 @@ fostlib::string proxy::variant(
 }
 
 
-fostlib::string proxy::variant(
+fostlib::string fostlib::variant(
     const fostlib::mime::mime_headers &headers,
     const fostlib::string &vary
 ) {

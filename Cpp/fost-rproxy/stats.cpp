@@ -1,5 +1,12 @@
-#include <proxy/stats.hpp>
-#include <varanus/obor.hpp>
+/*
+    Copyright 2014 Felspar Co Ltd. http://support.felspar.com/
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
+*/
+
+
+#include <fost/stats.hpp>
 
 
 using namespace fostlib;
@@ -51,8 +58,6 @@ namespace {
         boost::mutex::scoped_lock lock(g_mutex);
         return g_statistics;
     }
-
-    const varanus::obor c_statistics("proxy.statistics", fetch_stats);
 
 
 }

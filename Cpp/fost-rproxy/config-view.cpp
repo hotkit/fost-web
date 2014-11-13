@@ -1,3 +1,11 @@
+/*
+    Copyright 2014 Felspar Co Ltd. http://support.felspar.com/
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
+*/
+
+
 #include <proxy/views.hpp>
 
 
@@ -25,5 +33,5 @@ namespace {
 }
 
 
-const fostlib::urlhandler::view &proxy::view::c_config = c_config_view;
+const fostlib::urlhandler::view &fostlib::view::c_config = c_config_view;
 

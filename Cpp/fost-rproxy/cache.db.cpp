@@ -1,4 +1,12 @@
-#include <proxy/cache.hpp>
+/*
+    Copyright 2014 Felspar Co Ltd. http://support.felspar.com/
+    Distributed under the Boost Software License, Version 1.0.
+    See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt
+*/
+
+
+#include <fost/cache.hpp>
 #include <fost/datetime>
 #include <fost/insert>
 #include <fost/log>
@@ -14,7 +22,7 @@ namespace {
 }
 
 
-fostlib::json proxy::db_entry(const fostlib::string &hash) {
+fostlib::json fostlib::db_entry(const fostlib::string &hash) {
     const dbkeys keys(dblookup(hash));
     std::shared_ptr<fostlib::jsondb> db(cache_db(keys.first));
     if ( db ) {
@@ -25,14 +33,14 @@ fostlib::json proxy::db_entry(const fostlib::string &hash) {
 }
 
 
-boost::filesystem::wpath proxy::save_entry(
+boost::filesystem::wpath fostlib::save_entry(
     const fostlib::http::server::request &request,
     const fostlib::http::user_agent::response &response
 ) {
     const fostlib::string h(hash(response));
     const fostlib::string vh("d41d8cd98f00b204e9800998ecf8427e");
     // fostlib::string vh(fostlib::coerce<fostlib::string>(
-    //     proxy::variant(response.headers())));
+    //     fostlib::variant(response.headers())));
     const dbkeys keys(dblookup(h));
 
     const boost::filesystem::wpath pathname(
@@ -69,7 +77,7 @@ boost::filesystem::wpath proxy::save_entry(
 }
 
 
-boost::filesystem::wpath proxy::update_entry(
+boost::filesystem::wpath fostlib::update_entry(
     const fostlib::string &h, const fostlib::string &vh
 ) {
     const dbkeys keys(dblookup(h));
