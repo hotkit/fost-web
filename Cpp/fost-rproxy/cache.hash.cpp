@@ -7,7 +7,7 @@
 
 
 #include <fost/crypto>
-#include <fost/cache.hpp>
+#include <fost/http-cache.hpp>
 
 
 fostlib::string fostlib::hash(
@@ -48,10 +48,10 @@ fostlib::string fostlib::variant(
     if ( !vary.empty() ) {
         const fostlib::string newline("\n"), separator(": ");
         fostlib::split_type names(fostlib::split(vary, ","));
-        for ( auto name : names ) {
-            if ( headers.exists(name) ) {
-                md5 << name << separator <<
-                    fostlib::coerce<fostlib::string>(headers[name]) << newline;
+        for ( fostlib::split_type::const_iterator name(names.begin()); name != names.end(); ++name ) {
+            if ( headers.exists(*name) ) {
+                md5 << *name << separator <<
+                    fostlib::coerce<fostlib::string>(headers[*name]) << newline;
             } else {
                 md5 << newline;
             }

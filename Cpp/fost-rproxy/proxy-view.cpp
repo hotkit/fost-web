@@ -71,10 +71,7 @@ namespace {
                 const fostlib::host &host) const {
             fostlib::log::scoped_sink< capture_copy > cc;
 
-            fostlib::url base(
-                configuration.has_key("origin") ?
-                    fostlib::coerce<fostlib::string>(configuration["origin"]) :
-                    "http://www.wallofsport.com/");
+            fostlib::url base(fostlib::coerce<fostlib::string>(configuration["origin"]));
             fostlib::url location(base, request.file_spec());
             location.query() = request.query_string();
             fostlib::log::info()

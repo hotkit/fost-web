@@ -16,12 +16,14 @@ FSL_TEST_SUITE(proxy);
 
 
 FSL_TEST_FUNCTION(can_get_page) {
+    fostlib::json config;
+    fostlib::insert(config, "origin", "http://www.kirit.com/");
     fostlib::http::server::request req(
-        "GET", "/images/logo-w.png");
+        "GET", "/_resources/buttercup/logo.png");
     std::pair<boost::shared_ptr<fostlib::mime>, int > response;
     FSL_CHECK_NOTHROW(
         response = fostlib::view::c_proxy(
-            fostlib::json(), "/images/logo-w.png",
+            config, "/_resources/buttercup/logo.png",
             req, fostlib::host()));
     FSL_CHECK_EQ(response.second, 200);
     FSL_CHECK_EQ(

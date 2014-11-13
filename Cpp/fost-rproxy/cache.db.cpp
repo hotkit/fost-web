@@ -6,7 +6,7 @@
 */
 
 
-#include <fost/cache.hpp>
+#include <fost/http-cache.hpp>
 #include <fost/datetime>
 #include <fost/insert>
 #include <fost/log>
@@ -22,9 +22,14 @@ namespace {
 }
 
 
+const fostlib::setting<fostlib::string> fostlib::c_cache_dir(
+    "cache.db.cpp", "rproxy", "Cache directory",
+    "/tmp/rproxy/", true);
+
+
 fostlib::json fostlib::db_entry(const fostlib::string &hash) {
     const dbkeys keys(dblookup(hash));
-    std::shared_ptr<fostlib::jsondb> db(cache_db(keys.first));
+    boost::shared_ptr<fostlib::jsondb> db(cache_db(keys.first));
     if ( db ) {
         fostlib::jsondb::local trans(*db);
         return trans["file"][keys.second];
@@ -52,7 +57,7 @@ boost::filesystem::wpath fostlib::save_entry(
     fostlib::insert(variant, "pathname", pathname);
     fostlib::insert(variant, "response", "status", response.status());
     fostlib::insert(variant, "response", "headers", response.headers());
-    std::shared_ptr<fostlib::jsondb> db(cache_db(keys.first));
+    boost::shared_ptr<fostlib::jsondb> db(cache_db(keys.first));
     fostlib::jsondb::local trans(*db);
     fostlib::jcursor base_loc("file", keys.second);
     if ( trans.has_key(base_loc) ) {
@@ -82,7 +87,7 @@ boost::filesystem::wpath fostlib::update_entry(
 ) {
     const dbkeys keys(dblookup(h));
 
-    std::shared_ptr<fostlib::jsondb> db(cache_db(keys.first));
+    boost::shared_ptr<fostlib::jsondb> db(cache_db(keys.first));
     fostlib::jsondb::local trans(*db);
     fostlib::jcursor dbloc(fostlib::jcursor("file") / keys.second / "variant" / vh);
     trans.set(dbloc / "accessed", fostlib::timestamp::now());
