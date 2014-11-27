@@ -1,0 +1,8 @@
+
+fost-lib-autotest fost-rproxy
+    : Cpp/fost-rproxy
+    :
+        ../../../fost-internet/Cpp/fost-inet
+        ../../../fost-orm/Cpp/fost-jsondb
+        ../../../fost-web/Cpp/fost-urlhandler
+    ;
