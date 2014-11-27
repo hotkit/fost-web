@@ -38,7 +38,19 @@ namespace {
                 views[current.first]["configuration"]);
             return true;
         } else {
-            return false;
+            fostlib::nullable<fostlib::json> view_setting(
+                fostlib::setting<fostlib::json>::value(
+                    fostlib::urlhandler::c_views.section(),
+                    fostlib::urlhandler::c_views.name() + "/" + current.first,
+                    fostlib::null));
+            if ( !view_setting.isnull() ) {
+                current = std::make_pair(
+                    fostlib::coerce<fostlib::string>(view_setting.value()["view"]),
+                    view_setting.value()["configuration"]);
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }
