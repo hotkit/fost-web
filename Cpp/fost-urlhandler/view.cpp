@@ -28,15 +28,40 @@ fostlib::urlhandler::view::~view() {
 }
 
 
+namespace {
+    bool next_view(
+        const fostlib::json &views, std::pair<fostlib::string, fostlib::json> &current
+    ) {
+        if ( views.has_key(current.first) ) {
+            current = std::make_pair(
+                fostlib::coerce<fostlib::string>(views[current.first]["view"]),
+                views[current.first]["configuration"]);
+            return true;
+        } else {
+            fostlib::nullable<fostlib::json> view_setting(
+                fostlib::setting<fostlib::json>::value(
+                    fostlib::urlhandler::c_views.section(),
+                    fostlib::urlhandler::c_views.name() + "/" + current.first,
+                    fostlib::null));
+            if ( !view_setting.isnull() ) {
+                current = std::make_pair(
+                    fostlib::coerce<fostlib::string>(view_setting.value()["view"]),
+                    view_setting.value()["configuration"]);
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+}
 std::pair<fostlib::string, fostlib::json> fostlib::urlhandler::view::find_view(
     const fostlib::string &view_name, const fostlib::json &view_config
 ) {
     fostlib::json views(c_views.value());
     std::pair<fostlib::string, fostlib::json> final(view_name, view_config);
-    while ( views.has_key(final.first) )
-        final = std::make_pair(
-            fostlib::coerce<fostlib::string>(views[final.first]["view"]),
-            views[final.first]["configuration"]);
+    while ( next_view(views, final) ) {
+        ;
+    }
     return final;
 }
 
