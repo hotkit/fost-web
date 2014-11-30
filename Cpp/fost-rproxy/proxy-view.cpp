@@ -230,7 +230,7 @@ namespace {
                 boost::filesystem::ofstream(pathname,
                         std::ios_base::out | std::ios_base::binary).
                     write(reinterpret_cast<const char *>(
-                            response->body()->data().data()),
+                            &response->body()->data()[0]),
                         response->body()->data().size());
             }
 
