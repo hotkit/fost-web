@@ -6,6 +6,7 @@
 */
 
 
+#include "fost-rproxy.hpp"
 #include <fost/crypto>
 #include <fost/http-cache.hpp>
 

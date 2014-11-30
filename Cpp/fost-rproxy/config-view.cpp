@@ -6,6 +6,7 @@
 */
 
 
+#include "fost-rproxy.hpp"
 #include <fost/views.hpp>
 
 
