@@ -32,7 +32,7 @@ namespace {
         const boost::filesystem::wpath &cache_file) {
         fostlib::json cache;
         fostlib::insert(cache, "file-db", fostlib::json::object_t());
-        g_dbp = boost::make_shared<fostlib::jsondb>(cache_file, cache);
+        g_dbp.reset(new fostlib::jsondb(cache_file, cache));
         g_sdbs.clear();
         g_sdbs.resize(256);
     }
@@ -90,8 +90,7 @@ boost::shared_ptr<fostlib::jsondb> fostlib::cache_db(
                     boost::filesystem::create_directory(root / fdb_path));
             fostlib::json content;
             fostlib::insert(content, "file", fostlib::json::object_t());
-            g_sdbs[slot] = boost::make_shared<fostlib::jsondb>(
-                root / fdb_pathname, content);
+            g_sdbs[slot].reset(new fostlib::jsondb(root / fdb_pathname, content));
             trans.insert(fostlib::jcursor("file-db") / subdb.value() / "db",
                 fostlib::coerce<fostlib::json>(fdb_pathname));
             trans.commit();
@@ -101,9 +100,9 @@ boost::shared_ptr<fostlib::jsondb> fostlib::cache_db(
                 ("", "Loading database")
                 ("sub-db", subdb.value())
                 ("pathname", trans["file-db"][subdb.value()]["db"]);
-            g_sdbs[slot] = boost::make_shared<fostlib::jsondb>(
+            g_sdbs[slot].reset(new fostlib::jsondb(
                 root / fostlib::coerce<boost::filesystem::wpath>(
-                    trans["file-db"][subdb.value()]["db"]));
+                    trans["file-db"][subdb.value()]["db"])));
         }
         return g_sdbs[slot];
     }

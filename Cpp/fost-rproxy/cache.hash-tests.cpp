@@ -25,7 +25,7 @@ FSL_TEST_FUNCTION(GET_simple_response) {
     FSL_CHECK_EQ(
         fostlib::hash(fostlib::http::user_agent::response(
             "GET", fostlib::url("http://localhost/"), 200,
-            boost::make_shared<fostlib::binary_body>())),
+            boost::shared_ptr<fostlib::binary_body>(new fostlib::binary_body))),
         "ecea064e38ede52b47cab6fb652af22b");
 }
 

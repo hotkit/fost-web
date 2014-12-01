@@ -156,10 +156,11 @@ namespace {
             fostlib::log::debug()
                 ("cache", "file", filename);
             return std::make_pair(
-                boost::make_shared<fostlib::file_body>(filename,
-                    fostlib::mime::mime_headers(),
-                    fostlib::coerce<fostlib::string>(
-                        variant["response"]["headers"]["Content-Type"])),
+                boost::shared_ptr<fostlib::file_body>(
+                    new fostlib::file_body(filename,
+                        fostlib::mime::mime_headers(),
+                        fostlib::coerce<fostlib::string>(
+                            variant["response"]["headers"]["Content-Type"]))),
                 fostlib::coerce<int>(variant["response"]["status"]));
         }
 
@@ -236,9 +237,8 @@ namespace {
 
             fostlib::mime::mime_headers headers;
             headers.set("Content-Type", response->headers()["Content-Type"]);
-            boost::shared_ptr<fostlib::mime> body =
-                boost::make_shared<fostlib::binary_body>(
-                    response->body()->data(), headers);
+            boost::shared_ptr<fostlib::mime> body(
+                new fostlib::binary_body(response->body()->data(), headers));
 
             return std::make_pair(body, response->status());
         }
