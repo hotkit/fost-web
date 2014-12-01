@@ -15,7 +15,9 @@ namespace fostlib {
     namespace view {
 
 
+        FOST_RPROXY_DECLSPEC
         extern const fostlib::urlhandler::view &c_config;
+        FOST_RPROXY_DECLSPEC
         extern const fostlib::urlhandler::view &c_proxy;
 
 

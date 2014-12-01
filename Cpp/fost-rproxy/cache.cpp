@@ -6,6 +6,7 @@
 */
 
 
+#include "fost-rproxy.hpp"
 #include <fost/http-cache.hpp>
 #include <fost/log>
 
