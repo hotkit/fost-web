@@ -41,9 +41,7 @@ namespace {
 
 
 boost::filesystem::wpath fostlib::root() {
-    fostlib::utf8_string root(fostlib::coerce<fostlib::utf8_string>(
-        c_cache_dir.value()));
-    return root.underlying();
+    return fostlib::coerce<boost::filesystem::wpath>(c_cache_dir.value());
 }
 
 
@@ -54,7 +52,7 @@ void fostlib::flush_cache() {
         ("root", path)
         ("removed", boost::filesystem::remove_all(path));
     boost::filesystem::create_directory(path);
-    reset(lock, path / "cache.json");
+    reset(lock, path / L"cache.json");
 }
 
 
