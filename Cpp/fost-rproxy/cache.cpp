@@ -62,7 +62,7 @@ boost::shared_ptr<fostlib::jsondb> fostlib::cache_db(
 ) {
     boost::mutex::scoped_lock lock(g_mutex);
 
-    boost::filesystem::wpath cache_file(root / "cache.json");
+    boost::filesystem::wpath cache_file(root / L"cache.json");
     if ( !g_dbp || g_dbp->filename().value() != cache_file ) {
         fostlib::log::warning()
             ("", "Need to load root cache database in RAM")
@@ -80,7 +80,7 @@ boost::shared_ptr<fostlib::jsondb> fostlib::cache_db(
         if ( trans["file-db"][subdb.value()].isnull() ) {
             boost::filesystem::wpath fdb_path(
                 fostlib::coerce<boost::filesystem::wpath>(subdb.value()));
-            boost::filesystem::wpath fdb_pathname(fdb_path / "file-db.json");
+            boost::filesystem::wpath fdb_pathname(fdb_path / L"file-db.json");
             fostlib::log::debug()
                 ("", "Creating sub database")
                 ("sub-db", subdb.value())
