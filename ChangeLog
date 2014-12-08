@@ -1,3 +1,6 @@
+2014-11-27  Kirit Saelensminde  <kirit@felspar.com>
+ Allow web server views to have their own specific setting values.
+
 2014-08-16  Kirit Saelensminde  <kirit@felspar.com>
  Change the web server code to use the new JSON formatted configuration file options. Use command line parameters to control all of the port, host binding and the MIME type configuration.
 
