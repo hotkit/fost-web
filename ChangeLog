@@ -1,3 +1,6 @@
+2015-02-25  Kirit Saelensminde  <kirit@felspar.com>
+ Added a generic 403 handler.
+
 2014-11-27  Kirit Saelensminde  <kirit@felspar.com>
  Allow web server views to have their own specific setting values.
 
