@@ -69,7 +69,7 @@ std::pair<fostlib::string, fostlib::json> fostlib::urlhandler::view::find_view(
 
 
 const fostlib::urlhandler::view &fostlib::urlhandler::view::view_for(
-        const fostlib::string &name
+    const fostlib::string &name
 ) {
     view_store::found_t found(views().find(name));
     if ( found.size() == 1 ) {

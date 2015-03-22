@@ -1,5 +1,5 @@
 /*
-    Copyright 2011-2014 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2015, Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -83,6 +83,9 @@ namespace fostlib {
         /// Used to return a standard 303 to the user
         FOST_URLHANDLER_DECLSPEC
             extern const view &response_303;
+        /// Used to return a standard 403 to the user
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_403;
         /// Used to return a standard 404 to the user
         FOST_URLHANDLER_DECLSPEC
             extern const view &response_404;
