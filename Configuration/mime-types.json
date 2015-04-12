@@ -13,5 +13,7 @@
     ".ico": "image/vnd.microsoft.icon",
     ".jpg": "image/jpg",
     ".jpeg": "image/jpg",
-    ".png": "image/png"
+    ".png": "image/png",
+
+    ".svg": "image/svg+xml"
 }

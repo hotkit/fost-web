@@ -1,3 +1,6 @@
+2015-04-12  Kirit Saelensminde  <kirit@felspar.com>
+ Add MIME type for SVG files.
+
 2015-02-25  Kirit Saelensminde  <kirit@felspar.com>
  Added a generic 403 handler.
 
