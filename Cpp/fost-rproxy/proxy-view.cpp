@@ -209,8 +209,7 @@ namespace {
             fostlib::log::stats()("key", hash)
                 ("add", "origin-requests", 1);
             fostlib::http::user_agent ua;
-            std::auto_ptr< fostlib::http::user_agent::response >
-                response = ua(ua_req);
+            auto response = ua(ua_req);
             fostlib::log::info()
                 ("response", "status", response->status())
                 ("response", "size", response->body()->data().size());

@@ -1,3 +1,6 @@
+2015-05-10  Kirit Saelensminde  <kirit@felspar.com>
+ Remove uses of auto_ptr.
+
 2015-04-12  Kirit Saelensminde  <kirit@felspar.com>
  Add MIME type for SVG files.
 
