@@ -1,3 +1,6 @@
+2015-09-07  Kirit Saelensminde  <kirit@felspar.com>
+ Add the ability for the static view to handle DELETE requests when it's configuration includes `"verbs": {"DELETE": true}`
+
 2015-05-10  Kirit Saelensminde  <kirit@felspar.com>
  Remove uses of auto_ptr.
 
