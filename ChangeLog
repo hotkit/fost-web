@@ -1,3 +1,6 @@
+2015-09-07  Kirit Saelensminde  <kirit@felspar.com>
+ Add the ability for the static view to handle DELETE requests when it's configuration includes `"verbs": {"DELETE": true}`
+
 2015-04-12  Kirit Saelensminde  <kirit@felspar.com>
  Add MIME type for SVG files.
 
