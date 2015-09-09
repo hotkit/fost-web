@@ -1,5 +1,5 @@
 /*
-    Copyright 2014 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2014-2015 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -13,6 +13,9 @@
 #include <fost/stats.hpp>
 #include <fost/views.hpp>
 #include <boost/filesystem/fstream.hpp>
+
+
+const fostlib::module fostlib::c_fost_rproxy(fostlib::c_fost, "rproxy");
 
 
 namespace {
@@ -36,7 +39,7 @@ namespace {
                 if ( level ) {
                     fostlib::insert(messages, "time", "end", fostlib::timestamp::now());
                     fostlib::insert(messages, "time", "duration", started.elapsed());
-                    fostlib::log::log(level, name, messages);
+                    fostlib::log::log(fostlib::c_fost_rproxy, level, name, messages);
                 }
             }
             bool operator () (const fostlib::log::message &m) {
@@ -75,7 +78,7 @@ namespace {
             fostlib::url base(fostlib::coerce<fostlib::string>(configuration["origin"]));
             fostlib::url location(base, request.file_spec());
             location.query() = request.query_string();
-            fostlib::log::info()
+            fostlib::log::info(fostlib::c_fost_rproxy)
                 ("request", "method", request.method())
                 ("request", "path-spec",
                     fostlib::coerce<fostlib::nullable<boost::filesystem::wpath> >(
@@ -89,59 +92,59 @@ namespace {
             fostlib::http::user_agent::request origin(
                 request.method(), location);
             fostlib::string hash(fostlib::hash(origin));
-            fostlib::log::stats()
+            fostlib::log::stats(fostlib::c_fost_rproxy)
                 ("key", hash)
                 ("data", "resource", location)
                 ("data", "accessed", fostlib::timestamp::now())
                 ("add", "requests", 1);
             fostlib::json entry(fostlib::db_entry(hash));
-            fostlib::log::info()("cache", "entry", entry);
+            fostlib::log::info(fostlib::c_fost_rproxy)("cache", "entry", entry);
             if ( !entry.isnull() ) {
                 fostlib::string vhash(
                         fostlib::variant(request.data()->headers()));
-                fostlib::log::info()("cache", "variant", vhash);
+                fostlib::log::info(fostlib::c_fost_rproxy)("cache", "variant", vhash);
                 fostlib::json variant(entry["variant"][vhash]);
                 if ( !variant.isnull() ) {
                     fostlib::timediff ttl(
                         fostlib::coerce<fostlib::nullable<fostlib::timediff> >(
                             configuration["ttl"]).value(fostlib::hours(1)));
-                    fostlib::log::info()("cache", "ttl", ttl);
+                    fostlib::log::info(fostlib::c_fost_rproxy)("cache", "ttl", ttl);
                     fostlib::timestamp expires(
                         fostlib::coerce<fostlib::timestamp>(variant["updated"]) + ttl);
-                    fostlib::log::info()("cache", "expires", expires);
+                    fostlib::log::info(fostlib::c_fost_rproxy)("cache", "expires", expires);
                     if ( expires < fostlib::timestamp::now() ) {
                         try {
-                            fostlib::log::info()("cache", "miss", "expired");
-                            fostlib::log::stats()("key", hash)
+                            fostlib::log::info(fostlib::c_fost_rproxy)("cache", "miss", "expired");
+                            fostlib::log::stats(fostlib::c_fost_rproxy)("key", hash)
                                 ("add", "cache-misses-expired", 1);
                             return fetch_origin(hash, request, origin);
                         } catch ( fostlib::exceptions::exception &e ) {
-                            fostlib::log::error()
+                            fostlib::log::error(fostlib::c_fost_rproxy)
                                 ("exception", e.what())
                                 ("data", e.data());
-                            fostlib::log::info()("cache", "hit", true);
-                            fostlib::log::stats()("key", hash)
+                            fostlib::log::info(fostlib::c_fost_rproxy)("cache", "hit", true);
+                            fostlib::log::stats(fostlib::c_fost_rproxy)("key", hash)
                                 ("add", "cache-fallback-hits", 1);
                             return return_variant(
                                 fostlib::coerce<fostlib::string>(entry["hash"]),
                                 vhash, variant);
                         }
                     } else {
-                        fostlib::log::info()("cache", "hit", true);
-                        fostlib::log::stats()("key", hash)
+                        fostlib::log::info(fostlib::c_fost_rproxy)("cache", "hit", true);
+                        fostlib::log::stats(fostlib::c_fost_rproxy)("key", hash)
                             ("add", "cache-hits", 1);
                         return return_variant(
                             fostlib::coerce<fostlib::string>(entry["hash"]),
                             vhash, variant);
                     }
                 } else {
-                    fostlib::log::info()("cache", "miss", "variant not found");
-                    fostlib::log::stats()("key", hash)
+                    fostlib::log::info(fostlib::c_fost_rproxy)("cache", "miss", "variant not found");
+                    fostlib::log::stats(fostlib::c_fost_rproxy)("key", hash)
                         ("add", "cache-misses-variant-not-found", 1);
                 }
             }
 
-            fostlib::log::stats()("key", hash)
+            fostlib::log::stats(fostlib::c_fost_rproxy)("key", hash)
                 ("add", "cache-misses-not-found", 1);
             return fetch_origin(hash, request, origin);
         }
@@ -154,7 +157,7 @@ namespace {
                 ) const {
             const boost::filesystem::wpath filename(
                 fostlib::root() / fostlib::update_entry(h, vh));
-            fostlib::log::debug()
+            fostlib::log::debug(fostlib::c_fost_rproxy)
                 ("cache", "file", filename);
             return std::make_pair(
                 boost::shared_ptr<fostlib::file_body>(
@@ -175,16 +178,16 @@ namespace {
             try {
                 std::pair<boost::shared_ptr<fostlib::mime>, int > result =
                     _fetch_origin(hash, request, ua_req);
-                fostlib::log::stats()("key", hash)
+                fostlib::log::stats(fostlib::c_fost_rproxy)("key", hash)
                     ("data", "origin-time-success", taken.elapsed());
                 return result;
             } catch ( fostlib::exceptions::socket_error & ) {
-                fostlib::log::stats()("key", hash)
+                fostlib::log::stats(fostlib::c_fost_rproxy)("key", hash)
                     ("data", "origin-time-failed", taken.elapsed())
                     ("add", "origin-socket-error", 1);
                 throw;
             } catch ( ... ) {
-                fostlib::log::stats()("key", hash)
+                fostlib::log::stats(fostlib::c_fost_rproxy)("key", hash)
                     ("data", "origin-time-failed", taken.elapsed());
                 throw;
             }
@@ -202,20 +205,20 @@ namespace {
             } else {
                 ua_req.headers().set("Accept", "text/html");
             }
-            fostlib::log::info()
+            fostlib::log::info(fostlib::c_fost_rproxy)
                 ("", "Fetching URL from origin")
                 ("request", "url", ua_req.address())
                 ("request", "headers", ua_req.data().headers());
-            fostlib::log::stats()("key", hash)
+            fostlib::log::stats(fostlib::c_fost_rproxy)("key", hash)
                 ("add", "origin-requests", 1);
             fostlib::http::user_agent ua;
             auto response = ua(ua_req);
-            fostlib::log::info()
+            fostlib::log::info(fostlib::c_fost_rproxy)
                 ("response", "status", response->status())
                 ("response", "size", response->body()->data().size());
 
             if ( response->status() >= 500 ) {
-                fostlib::log::stats()("key", hash)
+                fostlib::log::stats(fostlib::c_fost_rproxy)("key", hash)
                     ("add", "origin-500s", 1);
                 throw fostlib::exceptions::not_implemented(
                     "No better handling for this status code "
@@ -226,7 +229,7 @@ namespace {
             const boost::filesystem::wpath pathname =
                 fostlib::root() / fostlib::save_entry(request, *response);
             if ( response->body()->data().size() ) {
-                fostlib::log::debug()
+                fostlib::log::debug(fostlib::c_fost_rproxy)
                     ("saving", "pathname", pathname);
                 boost::filesystem::ofstream(pathname,
                         std::ios_base::out | std::ios_base::binary).
