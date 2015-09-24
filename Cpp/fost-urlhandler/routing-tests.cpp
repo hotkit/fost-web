@@ -1,5 +1,5 @@
 /*
-    Copyright 2011-2012 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2015 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -21,9 +21,8 @@ namespace {
 }
 
 FSL_TEST_FUNCTION(no_configuration) {
-    std::auto_ptr< fostlib::binary_body > headers(
-        new fostlib::binary_body());
-    fostlib::http::server::request req("GET", "/", headers,
+    fostlib::http::server::request req("GET", "/",
+        std::make_unique<fostlib::binary_body>(),
         no_configuration_status);
     FSL_CHECK(fostlib::urlhandler::service(req));
 }
@@ -43,9 +42,8 @@ FSL_TEST_FUNCTION(has_configuration) {
         "urlhandling/routing-tests.cpp",
         "webserver", "hosts", configuration);
 
-    std::auto_ptr< fostlib::binary_body > headers(
-        new fostlib::binary_body());
-    fostlib::http::server::request req("GET", "/", headers,
+    fostlib::http::server::request req("GET", "/",
+        std::make_unique<fostlib::binary_body>(),
         has_configuration_status);
     FSL_CHECK(fostlib::urlhandler::service(req));
 }
@@ -59,23 +57,20 @@ namespace {
     }
 }
 FSL_TEST_FUNCTION(path_must_start_with_slash) {
-    std::auto_ptr< fostlib::binary_body > headers(
-        new fostlib::binary_body());
-    fostlib::http::server::request req("GET", "path/to/file", headers,
+    fostlib::http::server::request req("GET", "path/to/file",
+        std::make_unique<fostlib::binary_body>(),
         directory_error);
     FSL_CHECK(fostlib::urlhandler::service(req));
 }
 FSL_TEST_FUNCTION(slashdotdot_not_allowed) {
-    std::auto_ptr< fostlib::binary_body > headers(
-        new fostlib::binary_body());
-    fostlib::http::server::request req("GET", "/..", headers,
+    fostlib::http::server::request req("GET", "/..",
+        std::make_unique<fostlib::binary_body>(),
         directory_error);
     FSL_CHECK(fostlib::urlhandler::service(req));
 }
 FSL_TEST_FUNCTION(dotdotslash_not_allowed) {
-    std::auto_ptr< fostlib::binary_body > headers(
-        new fostlib::binary_body());
-    fostlib::http::server::request req("GET", "../", headers,
+    fostlib::http::server::request req("GET", "../",
+        std::make_unique<fostlib::binary_body>(),
         directory_error);
     FSL_CHECK(fostlib::urlhandler::service(req));
 }
