@@ -8,6 +8,7 @@
 
 #include "fost-urlhandler.hpp"
 #include <fost/urlhandler.hpp>
+#include <fost/crypto>
 #include <fost/push_back>
 #include <fost/unicode>
 
@@ -21,6 +22,12 @@ const class response_static : public fostlib::urlhandler::view {
         static bool allow_delete(const fostlib::json &conf) {
             return conf.has_key("verbs") &&
                 fostlib::coerce<fostlib::nullable<bool>>(conf["verbs"]["DELETE"]).value(false);
+        }
+
+        fostlib::string etag(boost::filesystem::wpath filename) {
+            fostlib::digester hash(fostlib::md5);
+            hash << filename;
+            return fostlib::coerce<fostlib::string>(fostlib::coerce<fostlib::hex_string>(hash.digest()));
         }
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
