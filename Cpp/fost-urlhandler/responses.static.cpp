@@ -24,11 +24,12 @@ const class response_static : public fostlib::urlhandler::view {
                 fostlib::coerce<fostlib::nullable<bool>>(conf["verbs"]["DELETE"]).value(false);
         }
 
-        fostlib::string etag(boost::filesystem::wpath filename) {
+        static fostlib::string etag(boost::filesystem::wpath filename) {
             fostlib::digester hash(fostlib::md5);
             hash << filename;
             return fostlib::coerce<fostlib::string>(fostlib::coerce<fostlib::hex_string>(hash.digest()));
         }
+
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
             const fostlib::json &configuration,
@@ -45,10 +46,23 @@ const class response_static : public fostlib::urlhandler::view {
             if ( !boost::filesystem::exists(filename) )
                 return fostlib::urlhandler::response_404(fostlib::json(), path, req, host);
             if ( req.method() == "GET" || req.method() == "HEAD" ) {
-                boost::shared_ptr<fostlib::mime> response(
-                        new fostlib::file_body(filename, fostlib::mime::mime_headers(),
+                fostlib::string validator = etag(filename);
+                fostlib::empty_mime::mime_headers header;
+                header.set("ETag", validator);
+                if ( req.data()->headers().exists("If-None-Match") && (
+                     req.data()->headers()["If-None-Match"].value() == validator ||
+                     req.data()->headers()["If-None-Match"].value() == "\"" + validator + "\"" )) {
+                    boost::shared_ptr<fostlib::mime> response(
+                        new fostlib::text_body(req.data()->headers()["If-None-Match"].value(),
+                        header, L"text/html" ));
+                    return std::make_pair(response, 304);
+                } else {
+                    boost::shared_ptr<fostlib::mime> response(
+                        new fostlib::file_body(filename, header,
                             fostlib::urlhandler::mime_type(filename)));
-                return std::make_pair(response, 200);
+                    return std::make_pair(response, 200);
+                }
+
             } else if ( allow_delete(configuration) && req.method() == "DELETE" ) {
                 boost::filesystem::remove(filename);
                 boost::shared_ptr<fostlib::mime> response(
