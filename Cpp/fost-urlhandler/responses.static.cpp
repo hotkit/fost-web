@@ -24,7 +24,7 @@ const class response_static : public fostlib::urlhandler::view {
                 fostlib::coerce<fostlib::nullable<bool>>(conf["verbs"]["DELETE"]).value(false);
         }
 
-        static fostlib::string etag(boost::filesystem::wpath filename) {
+        static fostlib::string etag(const boost::filesystem::wpath &filename) {
             fostlib::digester hash(fostlib::md5);
             hash << filename;
             return fostlib::coerce<fostlib::string>(fostlib::coerce<fostlib::hex_string>(hash.digest()));
@@ -50,12 +50,12 @@ const class response_static : public fostlib::urlhandler::view {
                 fostlib::mime::mime_headers headers;
                 headers.set("ETag", "\"" + validator + "\"");
                 headers.set("Content-Type", fostlib::urlhandler::mime_type(filename));
-                if ( req.data()->headers().exists("If-None-Match") && (
-                     req.data()->headers()["If-None-Match"].value() == validator ||
-                     req.data()->headers()["If-None-Match"].value() == "\"" + validator + "\"" )) {
+                if ( req.data()->headers().exists("If-None-Match") &&
+                        (req.data()->headers()["If-None-Match"].value() == validator ||
+                            req.data()->headers()["If-None-Match"].value() == "\"" + validator + "\"") ) {
                     boost::shared_ptr<fostlib::mime> response(
-                        new fostlib::empty_mime(
-                        fostlib::mime::mime_headers(), fostlib::urlhandler::mime_type(filename)));
+                            new fostlib::empty_mime(
+                                fostlib::mime::mime_headers(), fostlib::urlhandler::mime_type(filename)));
                     response->headers() = headers;
                     return std::make_pair(response, 304);
                 } else {
