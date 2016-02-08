@@ -47,18 +47,20 @@ const class response_static : public fostlib::urlhandler::view {
                 return fostlib::urlhandler::response_404(fostlib::json(), path, req, host);
             if ( req.method() == "GET" || req.method() == "HEAD" ) {
                 fostlib::string validator = etag(filename);
-                fostlib::empty_mime::mime_headers header;
-                header.set("ETag", validator);
+                fostlib::mime::mime_headers headers;
+                headers.set("ETag", "\"" + validator + "\"");
+                headers.set("Content-Type", fostlib::urlhandler::mime_type(filename));
                 if ( req.data()->headers().exists("If-None-Match") && (
                      req.data()->headers()["If-None-Match"].value() == validator ||
                      req.data()->headers()["If-None-Match"].value() == "\"" + validator + "\"" )) {
                     boost::shared_ptr<fostlib::mime> response(
-                        new fostlib::text_body(req.data()->headers()["If-None-Match"].value(),
-                        header, L"text/html" ));
+                        new fostlib::empty_mime(
+                        fostlib::mime::mime_headers(), fostlib::urlhandler::mime_type(filename)));
+                    response->headers() = headers;
                     return std::make_pair(response, 304);
                 } else {
                     boost::shared_ptr<fostlib::mime> response(
-                        new fostlib::file_body(filename, header,
+                        new fostlib::file_body(filename, headers,
                             fostlib::urlhandler::mime_type(filename)));
                     return std::make_pair(response, 200);
                 }
