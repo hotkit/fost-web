@@ -1,4 +1,7 @@
-2016-02-10  Yothin Muangsommuk <yothin@proteus-tech.com>
+2016-02-28  Kirit Saelensminde  <kirit@felspar.com>
+ Allow multiple configuration files to be loaded by the web server and explicitly load up the logging options.
+
+2016-02-10  Yothin Muangsommuk  <yothin@proteus-tech.com>
  Added Date, Expires to static response headers.
 
 2016-02-08  Yothin Muangsommuk  <yothin@proteus-tech.com>
