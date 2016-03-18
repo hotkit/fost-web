@@ -8,7 +8,9 @@
 
 #include "fost-urlhandler.hpp"
 #include <fost/urlhandler.hpp>
+#include <fost/crypto>
 #include <fost/push_back>
+#include <fost/timestamp.hpp>
 #include <fost/unicode>
 
 
@@ -21,6 +23,18 @@ const class response_static : public fostlib::urlhandler::view {
         static bool allow_delete(const fostlib::json &conf) {
             return conf.has_key("verbs") &&
                 fostlib::coerce<fostlib::nullable<bool>>(conf["verbs"]["DELETE"]).value(false);
+        }
+
+        static fostlib::string etag(const boost::filesystem::wpath &filename) {
+            fostlib::digester hash(fostlib::md5);
+            hash << filename;
+            return fostlib::coerce<fostlib::string>(fostlib::coerce<fostlib::hex_string>(hash.digest()));
+        }
+
+        template<typename A> inline
+        static fostlib::string timestamp_to_string(const A &timestamp) {
+            return fostlib::coerce<fostlib::string>(
+                fostlib::coerce<fostlib::rfc1123_timestamp>(timestamp));
         }
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
@@ -38,10 +52,33 @@ const class response_static : public fostlib::urlhandler::view {
             if ( !boost::filesystem::exists(filename) )
                 return fostlib::urlhandler::response_404(fostlib::json(), path, req, host);
             if ( req.method() == "GET" || req.method() == "HEAD" ) {
-                boost::shared_ptr<fostlib::mime> response(
-                        new fostlib::file_body(filename, fostlib::mime::mime_headers(),
+                fostlib::mime::mime_headers headers;
+                auto now = fostlib::timestamp::now();
+                headers.set("Date", timestamp_to_string(now));
+                static const fostlib::jcursor expires_path{"response", "headers", "expires"};
+                if ( configuration.has_key(expires_path) ) {
+                    auto expire_duration =
+                        fostlib::coerce<fostlib::timediff>(configuration[expires_path]);
+                    headers.set("Expires", timestamp_to_string(now + expire_duration));
+                }
+                fostlib::string validator = etag(filename);
+                headers.set("ETag", "\"" + validator + "\"");
+                headers.set("Content-Type", fostlib::urlhandler::mime_type(filename));
+                if ( req.data()->headers().exists("If-None-Match") &&
+                        (req.data()->headers()["If-None-Match"].value() == validator ||
+                            req.data()->headers()["If-None-Match"].value() == "\"" + validator + "\"") ) {
+                    boost::shared_ptr<fostlib::mime> response(
+                            new fostlib::empty_mime(
+                                fostlib::mime::mime_headers(), fostlib::urlhandler::mime_type(filename)));
+                    response->headers() = headers;
+                    return std::make_pair(response, 304);
+                } else {
+                    boost::shared_ptr<fostlib::mime> response(
+                        new fostlib::file_body(filename, headers,
                             fostlib::urlhandler::mime_type(filename)));
-                return std::make_pair(response, 200);
+                    return std::make_pair(response, 200);
+                }
+
             } else if ( allow_delete(configuration) && req.method() == "DELETE" ) {
                 boost::filesystem::remove(filename);
                 boost::shared_ptr<fostlib::mime> response(
