@@ -18,6 +18,10 @@
 namespace fostlib {
 
 
+    extern const module c_fost_web;
+    extern const module c_fost_web_urlhandler;
+
+
     /// URL routing for requests
     namespace urlhandler {
 

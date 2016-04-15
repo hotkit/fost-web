@@ -1,5 +1,5 @@
 /*
-    Copyright 2014 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2014-2015, Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -48,7 +48,7 @@ boost::filesystem::wpath fostlib::root() {
 void fostlib::flush_cache() {
     boost::mutex::scoped_lock lock(g_mutex);
     boost::filesystem::wpath path(root());
-    fostlib::log::info()
+    fostlib::log::info(c_fost_web_rproxy)
         ("root", path)
         ("removed", boost::filesystem::remove_all(path));
     boost::filesystem::create_directory(path);
@@ -64,7 +64,7 @@ boost::shared_ptr<fostlib::jsondb> fostlib::cache_db(
 
     boost::filesystem::wpath cache_file(root / L"cache.json");
     if ( !g_dbp || g_dbp->filename().value() != cache_file ) {
-        fostlib::log::warning()
+        fostlib::log::warning(c_fost_web_rproxy)
             ("", "Need to load root cache database in RAM")
             ("create-directory", "path", root)
             ("create-directory", "result", boost::filesystem::create_directory(root))
@@ -72,7 +72,7 @@ boost::shared_ptr<fostlib::jsondb> fostlib::cache_db(
         reset(lock, cache_file);
     }
     if ( subdb.isnull() ) {
-        fostlib::log::debug("Returning the root database");
+        fostlib::log::debug(c_fost_web_rproxy, "Returning the root database");
         return g_dbp;
     } else {
         fostlib::jsondb::local trans(*g_dbp);
@@ -81,7 +81,7 @@ boost::shared_ptr<fostlib::jsondb> fostlib::cache_db(
             boost::filesystem::wpath fdb_path(
                 fostlib::coerce<boost::filesystem::wpath>(subdb.value()));
             boost::filesystem::wpath fdb_pathname(fdb_path / L"file-db.json");
-            fostlib::log::debug()
+            fostlib::log::debug(c_fost_web_rproxy)
                 ("", "Creating sub database")
                 ("sub-db", subdb.value())
                 ("fdb_pathname", fdb_pathname)
@@ -93,9 +93,9 @@ boost::shared_ptr<fostlib::jsondb> fostlib::cache_db(
             trans.insert(fostlib::jcursor("file-db") / subdb.value() / "db",
                 fostlib::coerce<fostlib::json>(fdb_pathname));
             trans.commit();
-            fostlib::log::debug("New database committed");
+            fostlib::log::debug(c_fost_web_rproxy, "New database committed");
         } else if ( !g_sdbs[slot] ) {
-            fostlib::log::debug()
+            fostlib::log::debug(c_fost_web_rproxy)
                 ("", "Loading database")
                 ("sub-db", subdb.value())
                 ("pathname", trans["file-db"][subdb.value()]["db"]);
