@@ -1,5 +1,5 @@
 /*
-    Copyright 2008-2014 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2008-2016 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -8,6 +8,7 @@
 
 #include "fost-urlhandler.hpp"
 #include <fost/urlhandler.hpp>
+#include <fost/log>
 
 
 std::pair<boost::shared_ptr<fostlib::mime>, int> fostlib::urlhandler::router(
@@ -30,6 +31,8 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
             req.file_spec().underlying().underlying()[0] != '/'
             || req.file_spec().underlying().underlying().find("/..") != std::string::npos
     ) {
+        fostlib::log::error(c_fost_web_urlhandler)
+            ("", "fostlib::urlhandler::service -- Bad request received, could not be parsed");
         fostlib::text_body response(
                     fostlib::string("400 Bad Request\n"),
                     fostlib::mime::mime_headers(), L"text/plain" );
@@ -51,12 +54,26 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
                 router(host(hostname), fostlib::coerce<fostlib::string>(view_config), req));
             req(*resource.first, resource.second);
         } catch ( fostlib::exceptions::exception &e ) {
+            fostlib::log::error(c_fost_web_urlhandler)
+                ("", "fostlib::urlhandler::service -- fostlib::exceptions::exception")
+                ("exception", coerce<json>(e));
             fostlib::text_body response(
                     fostlib::coerce<fostlib::string>(e),
                     fostlib::mime::mime_headers(), L"text/plain" );
-            req( response, 501 );
+            req(response, 500);
+        } catch ( std::exception &e ) {
+            fostlib::log::error(c_fost_web_urlhandler)
+                ("", "fostlib::urlhandler::service -- std::exception")
+                ("exception", e.what());
+            fostlib::text_body response(
+                    utf8_string(e.what()), fostlib::mime::mime_headers(), L"text/plain" );
+            req(response, 500);
         }
     } else {
+        fostlib::log::warning(c_fost_web_urlhandler)
+            ("", "fostlib::urlhandler::service -- No configured web site")
+            ("hostname", hostname)
+            ("config", host_config);
         fostlib::text_body response(
                 L"<html><body>No site found to service request</body></html>",
                 fostlib::mime::mime_headers(), L"text/html" );

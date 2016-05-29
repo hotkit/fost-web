@@ -1,3 +1,6 @@
+2016-05-29  Kirit Saelensminde  <kirit@felspar.com>
+ Improve error display and add logging of errors.
+
 2016-02-28  Kirit Saelensminde  <kirit@felspar.com>
  Allow multiple configuration files to be loaded by the web server and explicitly load up the logging options.
 
