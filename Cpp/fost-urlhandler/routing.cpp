@@ -64,7 +64,8 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
         } catch ( std::exception &e ) {
             fostlib::log::error(c_fost_web_urlhandler)
                 ("", "fostlib::urlhandler::service -- std::exception")
-                ("exception", e.what());
+                ("exception", "message", e.what())
+                ("exception", "type", typeid(e).name());
             fostlib::text_body response(
                     utf8_string(e.what()), fostlib::mime::mime_headers(), L"text/plain" );
             req(response, 500);
