@@ -1,3 +1,9 @@
+2016-06-11  Kirit Saelensminde  <kirit@felspar.com>
+ Show type information for caught `std::exception` instances.
+
+2016-05-29  Kirit Saelensminde  <kirit@felspar.com>
+ Improve error display and add logging of errors.
+
 2016-02-28  Kirit Saelensminde  <kirit@felspar.com>
  Allow multiple configuration files to be loaded by the web server and explicitly load up the logging options.
 
