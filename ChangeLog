@@ -1,4 +1,5 @@
 2016-07-15  Kirit Saelensminde  <kirit@felspar.com>
+ * Improve some diagnostic output whilst loading.
  * Include configuration files for various logging levels.
 
 2016-06-11  Kirit Saelensminde  <kirit@felspar.com>
