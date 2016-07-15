@@ -1,5 +1,8 @@
 
 install fost-web-config :
+        log-show-all.json
+        log-show-info.json
+        log-show-warning.json
         mime-types.json
         testserver-d.unix.json
         testserver-d.windows.json

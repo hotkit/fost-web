@@ -1,3 +1,6 @@
+2016-07-15  Kirit Saelensminde  <kirit@felspar.com>
+ * Include configuration files for various logging levels.
+
 2016-06-11  Kirit Saelensminde  <kirit@felspar.com>
  Show type information for caught `std::exception` instances.
 
