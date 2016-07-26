@@ -1,3 +1,6 @@
+2016-07-26  Kirit Saelensminde  <kirit@felspar.com>
+ Add a basic 401 response.
+
 2016-07-15  Kirit Saelensminde  <kirit@felspar.com>
  * Improve some diagnostic output whilst loading.
  * Include configuration files for various logging levels.
