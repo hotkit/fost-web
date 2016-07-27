@@ -54,27 +54,34 @@ namespace fostlib {
 
         /// A view class
         class FOST_URLHANDLER_DECLSPEC view : boost::noncopyable {
-            protected:
-                /// The name of the configuration that the handler should tie to
-                view(const fostlib::string &name);
-                /// Allow sub-classing to work properly
-                virtual ~view();
+        protected:
+            /// The name of the configuration that the handler should tie to
+            view(const fostlib::string &name);
+            /// Allow sub-classing to work properly
+            virtual ~view();
 
-            public:
-                /// Handle the request.
-                virtual std::pair<boost::shared_ptr<fostlib::mime>, int >
-                    operator () (const fostlib::json &configuration,
-                        const fostlib::string &path,
-                        fostlib::http::server::request &request,
-                        const fostlib::host &host) const = 0;
+        public:
+            /// Handle the request.
+            virtual std::pair<boost::shared_ptr<fostlib::mime>, int >
+                operator () (const fostlib::json &configuration,
+                    const fostlib::string &path,
+                    fostlib::http::server::request &request,
+                    const fostlib::host &host) const = 0;
 
-                /// Trace down the JSON for the view function and its configuration
-                static std::pair<fostlib::string, fostlib::json>
-                    find_view(const fostlib::string &view_name,
-                        const fostlib::json &view_config = fostlib::json());
+            /// Trace down the JSON for the view function and its configuration
+            static std::pair<fostlib::string, fostlib::json>
+                find_view(const fostlib::string &view_name,
+                    const fostlib::json &view_config = fostlib::json());
 
-                /// Return the view that matches the provided name
-                static const view &view_for(const fostlib::string &name);
+            /// Return the view that matches the provided name
+            static const view &view_for(const fostlib::string &name);
+
+            /// Execute a subview
+            static std::pair<boost::shared_ptr<fostlib::mime>, int >
+                execute(const fostlib::json &configuration,
+                    const fostlib::string &path,
+                    fostlib::http::server::request &request,
+                    const fostlib::host &host);
         };
 
 

@@ -1,3 +1,6 @@
+2016-07-27  Kirit Saelensminde  <kirit@felspar.com>
+ Add `execute` method to the view to make forwarding to embedded views easier.
+
 2016-07-26  Kirit Saelensminde  <kirit@felspar.com>
  Add a basic 401 response.
 
