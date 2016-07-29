@@ -85,6 +85,13 @@ namespace fostlib {
         };
 
 
+        /// Alter the requests parameters before processing
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &middleware_request;
+        /// Wrap a template around a response
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &middleware_template;
+
         /// Used to return a standard 301 to the user
         FOST_URLHANDLER_DECLSPEC
             extern const view &response_301;
