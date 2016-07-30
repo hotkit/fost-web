@@ -17,9 +17,9 @@ const class response_401 : public fostlib::urlhandler::view {
         }
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
-            const fostlib::json &config, const fostlib::string &,
+            const fostlib::json &config, const fostlib::string &path,
             fostlib::http::server::request &req,
-            const fostlib::host &
+            const fostlib::host &host
         ) const {
             if ( !config.has_key("schemes") )
                 throw fostlib::exceptions::not_implemented(__func__,
@@ -33,13 +33,16 @@ const class response_401 : public fostlib::urlhandler::view {
                 else
                     schemes += ", " + fostlib::coerce<fostlib::string>(m.key());
             }
-            fostlib::mime::mime_headers headers;
-            headers.set("WWW-Authenticate", schemes);
-            boost::shared_ptr<fostlib::mime> response(
-                    new fostlib::text_body(
-                        L"<html><head><title>Not authorized</title></head>"
-                            L"<body><h1>Not authorized</h1></body></html>",
-                        headers, L"text/html" ));
+            boost::shared_ptr<fostlib::mime> response;
+            if ( config["view"].isnull() ) {
+                response.reset(new fostlib::text_body(
+                    L"<html><head><title>Not authorized</title></head>"
+                        L"<body><h1>Not authorized</h1></body></html>",
+                    fostlib::mime::mime_headers(), "text/html" ));
+            } else {
+                response = execute(config, path, req, host).first;
+            }
+            response->headers().set("WWW-Authenticate", schemes);
             return std::make_pair(response, 401);
         }
 } c_response_401;
