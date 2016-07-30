@@ -26,8 +26,7 @@ namespace {
                 const fostlib::host &h
             ) const {
                 for ( auto h = configuration["headers"].begin(); h != configuration["headers"].end(); ++h ) {
-                    req.headers().set(fostlib::coerce<fostlib::string>(h.key()),
-                        fostlib::coerce<fostlib::string>(*h));
+                    req.headers().set(fostlib::coerce<fostlib::string>(h.key()), *h);
                 }
                 return execute(configuration, path, req, h);
             }
