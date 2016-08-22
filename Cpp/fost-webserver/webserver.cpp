@@ -43,8 +43,8 @@ FSL_MAIN(
     std::vector<fostlib::settings> configuration;
     configuration.reserve(args.size());
     for ( std::size_t arg{1}; arg != args.size(); ++arg ) {
+        o << "Loading config " << json(args[arg].value());
         auto filename = fostlib::coerce<boost::filesystem::path>(args[arg].value());
-        o << "Loading config " << filename << std::endl;
         configuration.emplace_back(std::move(filename));
     }
 
@@ -66,9 +66,11 @@ FSL_MAIN(
     // Load any shared objects
     fostlib::json so(c_load.value());
     std::vector< boost::shared_ptr<fostlib::dynlib> > dynlibs;
-    for ( fostlib::json::const_iterator p(so.begin()); p != so.end(); ++p )
+    for ( fostlib::json::const_iterator p(so.begin()); p != so.end(); ++p ) {
+        o << "Loading code plugin " << *p;
         dynlibs.push_back(boost::shared_ptr<fostlib::dynlib>(
             new dynlib(fostlib::coerce<fostlib::string>(*p))));
+    }
 
     // Bind server to host and port
     http::server server(host(c_host.value()), c_port.value());

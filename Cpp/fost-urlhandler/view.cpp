@@ -1,5 +1,5 @@
 /*
-    Copyright 2011-2014 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2016 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -80,6 +80,23 @@ const fostlib::urlhandler::view &fostlib::urlhandler::view::view_for(
         insert(exception.data(), "view-name", name);
         insert(exception.data(), "found", found.size());
         throw exception;
+    }
+}
+
+
+std::pair<boost::shared_ptr<fostlib::mime>, int > fostlib::urlhandler::view::execute(
+    const fostlib::json &configuration,
+    const fostlib::string &path,
+    fostlib::http::server::request &request,
+    const fostlib::host &host
+) {
+    if ( configuration.isobject() ) {
+        auto view_name = coerce<string>(configuration["view"]);
+        auto view_fn = find_view(view_name, configuration["configuration"]);
+        return view_for(view_fn.first)(view_fn.second, path, request, host);
+    } else {
+        throw fostlib::exceptions::not_implemented(__func__,
+            "Only implemented for JSON object configurations");
     }
 }
 

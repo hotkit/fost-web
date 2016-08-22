@@ -48,10 +48,10 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
             || host_config.has_key(fostlib::string()) ) {
         // Route the request to the right handler
         try {
-            fostlib::json view_config = host_config[
+            fostlib::json view_name = host_config[
                 host_config.has_key(hostname) ? hostname : fostlib::string()];
             std::pair<boost::shared_ptr<fostlib::mime>, int > resource(
-                router(host(hostname), fostlib::coerce<fostlib::string>(view_config), req));
+                router(host(hostname), fostlib::coerce<fostlib::string>(view_name), req));
             req(*resource.first, resource.second);
         } catch ( fostlib::exceptions::exception &e ) {
             fostlib::log::error(c_fost_web_urlhandler)
@@ -64,7 +64,8 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
         } catch ( std::exception &e ) {
             fostlib::log::error(c_fost_web_urlhandler)
                 ("", "fostlib::urlhandler::service -- std::exception")
-                ("exception", e.what());
+                ("exception", "message", e.what())
+                ("exception", "type", typeid(e).name());
             fostlib::text_body response(
                     utf8_string(e.what()), fostlib::mime::mime_headers(), L"text/plain" );
             req(response, 500);

@@ -1,3 +1,22 @@
+2016-07-30  Kirit Saelensminde  <kirit@felspar.com>
+ `fost.response.401` can now be given an inner view for the response data.
+
+2016-07-29  Kirit Saelensminde  <kirit@felspar.com>
+ Add middleware that can alter the request by adding headers to it.
+
+2016-07-27  Kirit Saelensminde  <kirit@felspar.com>
+ Add `execute` method to the view to make forwarding to embedded views easier.
+
+2016-07-26  Kirit Saelensminde  <kirit@felspar.com>
+ Add a basic 401 response.
+
+2016-07-15  Kirit Saelensminde  <kirit@felspar.com>
+ * Improve some diagnostic output whilst loading.
+ * Include configuration files for various logging levels.
+
+2016-06-11  Kirit Saelensminde  <kirit@felspar.com>
+ Show type information for caught `std::exception` instances.
+
 2016-05-29  Kirit Saelensminde  <kirit@felspar.com>
  Improve error display and add logging of errors.
 

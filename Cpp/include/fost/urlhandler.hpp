@@ -1,5 +1,5 @@
 /*
-    Copyright 2011-2015, Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2016, Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -54,29 +54,43 @@ namespace fostlib {
 
         /// A view class
         class FOST_URLHANDLER_DECLSPEC view : boost::noncopyable {
-            protected:
-                /// The name of the configuration that the handler should tie to
-                view(const fostlib::string &name);
-                /// Allow sub-classing to work properly
-                virtual ~view();
+        protected:
+            /// The name of the configuration that the handler should tie to
+            view(const fostlib::string &name);
+            /// Allow sub-classing to work properly
+            virtual ~view();
 
-            public:
-                /// Handle the request.
-                virtual std::pair<boost::shared_ptr<fostlib::mime>, int >
-                    operator () (const fostlib::json &configuration,
-                        const fostlib::string &path,
-                        fostlib::http::server::request &request,
-                        const fostlib::host &host) const = 0;
+        public:
+            /// Handle the request.
+            virtual std::pair<boost::shared_ptr<fostlib::mime>, int >
+                operator () (const fostlib::json &configuration,
+                    const fostlib::string &path,
+                    fostlib::http::server::request &request,
+                    const fostlib::host &host) const = 0;
 
-                /// Trace down the JSON for the view function and its configuration
-                static std::pair<fostlib::string, fostlib::json>
-                    find_view(const fostlib::string &view_name,
-                        const fostlib::json &view_config = fostlib::json());
+            /// Trace down the JSON for the view function and its configuration
+            static std::pair<fostlib::string, fostlib::json>
+                find_view(const fostlib::string &view_name,
+                    const fostlib::json &view_config = fostlib::json());
 
-                /// Return the view that matches the provided name
-                static const view &view_for(const fostlib::string &name);
+            /// Return the view that matches the provided name
+            static const view &view_for(const fostlib::string &name);
+
+            /// Execute a subview
+            static std::pair<boost::shared_ptr<fostlib::mime>, int >
+                execute(const fostlib::json &configuration,
+                    const fostlib::string &path,
+                    fostlib::http::server::request &request,
+                    const fostlib::host &host);
         };
 
+
+        /// Alter the requests parameters before processing
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &middleware_request;
+        /// Wrap a template around a response
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &middleware_template;
 
         /// Used to return a standard 301 to the user
         FOST_URLHANDLER_DECLSPEC
@@ -88,6 +102,8 @@ namespace fostlib {
         FOST_URLHANDLER_DECLSPEC
             extern const view &response_303;
         /// Used to return a standard 403 to the user
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_401;
         FOST_URLHANDLER_DECLSPEC
             extern const view &response_403;
         /// Used to return a standard 404 to the user

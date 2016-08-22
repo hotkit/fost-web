@@ -1,5 +1,5 @@
 /*
-    Copyright 2011-2012 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2016 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -11,6 +11,8 @@
 
 
 namespace {
+
+
     fostlib::nullable< fostlib::string > find_content(
             const fostlib::string &text, const fostlib::string &tag) {
         fostlib::string::size_type start(text.find("<" + tag));
@@ -22,6 +24,8 @@ namespace {
         }
         return fostlib::null;
     }
+
+
     void replace_content(
         fostlib::string &skin, const fostlib::string &block, const fostlib::string &with
     ) {
@@ -29,10 +33,9 @@ namespace {
         if ( start != fostlib::string::npos )
             skin.replace(start, block.length(), with);
     }
-}
 
 
-const class middleware_template : public fostlib::urlhandler::view {
+    const class middleware_template : public fostlib::urlhandler::view {
     public:
         middleware_template()
         : view("fost.middleware.template") {
@@ -73,5 +76,11 @@ const class middleware_template : public fostlib::urlhandler::view {
             } else
                 return wrapped;
         }
-} c_middleware_template;
+    } c_middleware_template;
+
+
+}
+
+
+const fostlib::urlhandler::view &fostlib::urlhandler::middleware_template = c_middleware_template;
 
