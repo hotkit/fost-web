@@ -1,5 +1,5 @@
 /*
-    Copyright 2011-2012 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2016 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -31,13 +31,8 @@ const class pathprefix : public fostlib::urlhandler::view {
                     longest = std::make_pair(length, key);
             }
 
-            std::pair<fostlib::string, fostlib::json> to_exec(
-                view::find_view(
-                    fostlib::coerce<fostlib::string>(configuration[longest.second])));
-
             if ( configuration.has_key(longest.second) )
-                return view::view_for(to_exec.first)(
-                    to_exec.second, path.substr(longest.first), req, h);
+                return execute(configuration[longest.second], path.substr(longest.first), req, h);
             else
                 return fostlib::urlhandler::response_404(fostlib::json(), path, req, h);
         }
