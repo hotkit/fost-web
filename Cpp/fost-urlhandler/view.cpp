@@ -95,8 +95,9 @@ std::pair<boost::shared_ptr<fostlib::mime>, int > fostlib::urlhandler::view::exe
         auto view_fn = find_view(view_name, configuration["configuration"]);
         return view_for(view_fn.first)(view_fn.second, path, request, host);
     } else {
-        throw fostlib::exceptions::not_implemented(__func__,
-            "Only implemented for JSON object configurations");
+        auto view_name = coerce<string>(configuration);
+        auto to_exec = find_view(view_name);
+        return view_for(to_exec.first)(to_exec.second, path, request, host);
     }
 }
 

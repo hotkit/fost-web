@@ -9,6 +9,9 @@
     ".css": "text/css",
 
     ".js": "application/javascript",
+    ".json": "appliccation/json",
+
+    ".csj": "application/csj",
 
     ".ico": "image/vnd.microsoft.icon",
     ".jpg": "image/jpg",
