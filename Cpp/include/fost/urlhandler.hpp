@@ -85,6 +85,9 @@ namespace fostlib {
         };
 
 
+        /// Log the request and results
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &middleware_logging;
         /// Alter the requests parameters before processing
         FOST_URLHANDLER_DECLSPEC
             extern const view &middleware_request;
