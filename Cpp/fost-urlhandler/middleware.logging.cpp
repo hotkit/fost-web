@@ -14,12 +14,15 @@
 
 namespace fostlib {
     namespace log {
-        FSL_DEFINE_LOGGING_LEVEL(request, 0x700u);
+        FSL_DEFINE_LOGGING_LEVEL(ok, 0x600u);
     }
 }
 
 
 namespace {
+
+
+    const fostlib::module c_rqlog(fostlib::c_fost_web_urlhandler, "logger");
 
 
     const class logging_middleware : public fostlib::urlhandler::view {
@@ -34,20 +37,40 @@ namespace {
                 fostlib::http::server::request &req,
                 const fostlib::host &h
             ) const {
-                auto logger = fostlib::log::request(fostlib::c_fost_web_urlhandler);
-                logger("", "HTTP Request");
-                logger
-                    ("request", "method", req.method())
-                    ("request", "path", req.file_spec().underlying().underlying().c_str())
-                    ("request", "bytes", req.data()->data().size());
-                if ( not req.query_string().as_string().isnull() ) {
-                    logger("request", "query", req.query_string().as_string().value().underlying().c_str());
+                auto addlog = [&req](auto &logger) {
+                        logger
+                            ("request", "method", req.method())
+                            ("request", "path", req.file_spec().underlying().underlying().c_str())
+                            ("request", "bytes", req.data()->data().size())
+                            ("request", "headers", req.headers());
+                        if ( not req.query_string().as_string().isnull() ) {
+                            logger("request", "query", req.query_string().as_string().value().underlying().c_str());
+                        }
+                    };
+                try {
+                    auto result = execute(configuration, path, req, h);
+                    if ( result.second >= 400 ) {
+                        auto logger = fostlib::log::warning(c_rqlog);
+                        logger("response", "status", result.second);
+                        addlog(logger);
+                    } else {
+                        auto logger = fostlib::log::ok(c_rqlog);
+                        logger("response", "status", result.second);
+                        addlog(logger);
+                    }
+                    return result;
+                } catch ( std::exception &e ) {
+                    auto logger = fostlib::log::error(c_rqlog);
+                    addlog(logger);
+                    logger
+                        ("exception", "message", e.what())
+                        ("exception", "type", typeid(e).name());
+                    throw;
+                } catch ( ... ) {
+                    auto logger = fostlib::log::error(c_rqlog);
+                    addlog(logger);
+                    throw;
                 }
-                auto result = execute(configuration, path, req, h);
-                logger
-                    ("request", "headers", req.headers())
-                    ("response", "status", result.second);
-                return result;
             }
     } c_middleware_logging;
 
