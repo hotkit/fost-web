@@ -49,12 +49,12 @@ namespace {
                     };
                 try {
                     auto result = execute(configuration, path, req, h);
-                    if ( result.second >= 400 ) {
-                        auto logger = fostlib::log::warning(c_rqlog);
+                    if ( result.second < 400 || result.second == 401 ) {
+                        auto logger = fostlib::log::ok(c_rqlog);
                         logger("response", "status", result.second);
                         addlog(logger);
                     } else {
-                        auto logger = fostlib::log::ok(c_rqlog);
+                        auto logger = fostlib::log::warning(c_rqlog);
                         logger("response", "status", result.second);
                         addlog(logger);
                     }
