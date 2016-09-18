@@ -58,8 +58,8 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
                 ("", "fostlib::urlhandler::service -- fostlib::exceptions::exception")
                 ("exception", coerce<json>(e));
             fostlib::text_body response(
-                    fostlib::coerce<fostlib::string>(e),
-                    fostlib::mime::mime_headers(), L"text/plain" );
+                    utf8_string("<html><body>An error occurred in the request</body></html>"),
+                    fostlib::mime::mime_headers(), L"text/html" );
             req(response, 500);
         } catch ( std::exception &e ) {
             fostlib::log::error(c_fost_web_urlhandler)
@@ -67,7 +67,8 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
                 ("exception", "message", e.what())
                 ("exception", "type", typeid(e).name());
             fostlib::text_body response(
-                    utf8_string(e.what()), fostlib::mime::mime_headers(), L"text/plain" );
+                utf8_string("<html><body>An error occurred in the request</body></html>"),
+                fostlib::mime::mime_headers(), L"text/html");
             req(response, 500);
         }
     } else {
@@ -82,3 +83,4 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
     }
     return true;
 }
+
