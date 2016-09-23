@@ -31,12 +31,19 @@ fostlib::urlhandler::view::~view() {
 
 
 namespace {
+    fostlib::string view_name(const fostlib::json &obj) {
+        if ( obj["view"].isnull() ) {
+            throw fostlib::exceptions::not_implemented(__func__,
+                "No view name was given in the configuration", obj);
+        }
+        return fostlib::coerce<fostlib::string>(obj["view"]);;
+    }
     bool next_view(
         const fostlib::json &views, std::pair<fostlib::string, fostlib::json> &current
     ) {
         if ( views.has_key(current.first) ) {
             current = std::make_pair(
-                fostlib::coerce<fostlib::string>(views[current.first]["view"]),
+                view_name(views[current.first]),
                 views[current.first]["configuration"]);
             return true;
         } else {
@@ -47,7 +54,7 @@ namespace {
                     fostlib::null));
             if ( !view_setting.isnull() ) {
                 current = std::make_pair(
-                    fostlib::coerce<fostlib::string>(view_setting.value()["view"]),
+                    view_name(view_setting.value()),
                     view_setting.value()["configuration"]);
                 return true;
             } else {
@@ -57,10 +64,10 @@ namespace {
     }
 }
 std::pair<fostlib::string, fostlib::json> fostlib::urlhandler::view::find_view(
-    const fostlib::string &view_name, const fostlib::json &view_config
+    const fostlib::string &view, const fostlib::json &view_config
 ) {
     fostlib::json views(c_views.value());
-    std::pair<fostlib::string, fostlib::json> final(view_name, view_config);
+    std::pair<fostlib::string, fostlib::json> final(view, view_config);
     while ( next_view(views, final) ) {
         ;
     }
@@ -91,12 +98,7 @@ std::pair<boost::shared_ptr<fostlib::mime>, int > fostlib::urlhandler::view::exe
     const fostlib::host &host
 ) {
     if ( configuration.isobject() ) {
-        if ( configuration["view"].isnull() ) {
-            throw exceptions::not_implemented(__func__,
-                "No view name was given in the configuration", configuration);
-        }
-        auto view_name = coerce<string>(configuration["view"]);
-        auto view_fn = find_view(view_name, configuration["configuration"]);
+        auto view_fn = find_view(view_name(configuration), configuration["configuration"]);
         return view_for(view_fn.first)(view_fn.second, path, request, host);
     } else {
         auto view_name = coerce<string>(configuration);
