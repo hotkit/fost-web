@@ -1,5 +1,6 @@
 2016-09-23  Kirit Saelensminde  <kirit@felspar.com>
- Removed the old `router` function as it's been replaced by `view::execute`.
+ * Improved error output where a view name is misconfigured.
+ * Removed the old `router` function as it's been replaced by `view::execute`.
 
 2016-09-17  Kirit Saelensminde  <kirit@felspar.com>
  Add a middleware that logs the HTTP request details and some response details.

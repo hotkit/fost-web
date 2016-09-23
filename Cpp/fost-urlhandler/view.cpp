@@ -91,6 +91,10 @@ std::pair<boost::shared_ptr<fostlib::mime>, int > fostlib::urlhandler::view::exe
     const fostlib::host &host
 ) {
     if ( configuration.isobject() ) {
+        if ( configuration["view"].isnull() ) {
+            throw exceptions::not_implemented(__func__,
+                "No view name was given in the configuration", configuration);
+        }
         auto view_name = coerce<string>(configuration["view"]);
         auto view_fn = find_view(view_name, configuration["configuration"]);
         return view_for(view_fn.first)(view_fn.second, path, request, host);
