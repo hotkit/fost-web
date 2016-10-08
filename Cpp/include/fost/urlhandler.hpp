@@ -88,6 +88,9 @@ namespace fostlib {
         FOST_URLHANDLER_DECLSPEC
             extern const view &middleware_template;
 
+        /// Return a 200 response to the user
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_200;
         /// Used to return a standard 301 to the user
         FOST_URLHANDLER_DECLSPEC
             extern const view &response_301;
