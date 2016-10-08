@@ -1,3 +1,6 @@
+2016-10-08  Kirit Saelensminde  <kirit@felspar.com>
+ Web view execution now gives a stack trace when an exception is thrown.
+
 2016-09-23  Kirit Saelensminde  <kirit@felspar.com>
  * Improved error output where a view name is misconfigured.
  * Removed the old `router` function as it's been replaced by `view::execute`.
