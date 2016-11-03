@@ -48,6 +48,15 @@ FSL_MAIN(
         configuration.emplace_back(std::move(filename));
     }
 
+    // Load any shared objects
+    fostlib::json so(c_load.value());
+    std::vector< boost::shared_ptr<fostlib::dynlib> > dynlibs;
+    for ( fostlib::json::const_iterator p(so.begin()); p != so.end(); ++p ) {
+        o << "Loading code plugin " << *p;
+        dynlibs.push_back(boost::shared_ptr<fostlib::dynlib>(
+            new dynlib(fostlib::coerce<fostlib::string>(*p))));
+    }
+
     // Process command line arguments last
     args.commandSwitch("p", c_port.section(), c_port.name());
     args.commandSwitch("h", c_host.section(), c_host.name());
@@ -62,15 +71,6 @@ FSL_MAIN(
 
     // Load MIME types
     urlhandler::load_mime_configuration(c_mime.value());
-
-    // Load any shared objects
-    fostlib::json so(c_load.value());
-    std::vector< boost::shared_ptr<fostlib::dynlib> > dynlibs;
-    for ( fostlib::json::const_iterator p(so.begin()); p != so.end(); ++p ) {
-        o << "Loading code plugin " << *p;
-        dynlibs.push_back(boost::shared_ptr<fostlib::dynlib>(
-            new dynlib(fostlib::coerce<fostlib::string>(*p))));
-    }
 
     // Bind server to host and port
     http::server server(host(c_host.value()), c_port.value());

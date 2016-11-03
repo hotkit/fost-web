@@ -1,3 +1,6 @@
+2016-11-03  Kirit Saelensminde  <kirit@felspar.com>
+ Load shared objects before setting up the logger so that optional loggers can be loaded.
+
 2016-10-08  Kirit Saelensminde  <kirit@felspar.com>
  * Add a generic 200 response.
  * Web view execution now gives a stack trace when an exception is thrown.
