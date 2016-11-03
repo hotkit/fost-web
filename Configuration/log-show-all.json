@@ -7,6 +7,9 @@
                     "log-level": 0,
                     "color": true
                 }
+            },
+            {
+                "name": "panoptes"
             }
         ]}
     }
