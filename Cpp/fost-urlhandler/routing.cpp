@@ -11,20 +11,6 @@
 #include <fost/log>
 
 
-std::pair<boost::shared_ptr<fostlib::mime>, int> fostlib::urlhandler::router(
-    const fostlib::host &requested_host,
-    const fostlib::string &viewname,
-    fostlib::http::server::request &req
-) {
-    std::pair<fostlib::string, fostlib::json> view_fn = view::find_view(viewname);
-
-    fostlib::string path(fostlib::coerce<fostlib::string>(
-        req.file_spec().underlying()).substr(1));
-
-    return view::view_for(view_fn.first)(view_fn.second, path, req, requested_host);
-}
-
-
 bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
     // Before doing anything else run some sanity checks on the request
     if (
@@ -46,12 +32,12 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
     fostlib::json host_config = c_hosts.value();
     if ( host_config.has_key(hostname)
             || host_config.has_key(fostlib::string()) ) {
-        // Route the request to the right handler
         try {
-            fostlib::json view_name = host_config[
+            // Route the request to the right handler
+            auto view_conf = host_config[
                 host_config.has_key(hostname) ? hostname : fostlib::string()];
-            std::pair<boost::shared_ptr<fostlib::mime>, int > resource(
-                router(host(hostname), fostlib::coerce<fostlib::string>(view_name), req));
+            auto path = coerce<string>(req.file_spec().underlying()).substr(1);
+            auto resource = view::execute(view_conf, path, req, host(hostname));
             req(*resource.first, resource.second);
         } catch ( fostlib::exceptions::exception &e ) {
             fostlib::log::error(c_fost_web_urlhandler)

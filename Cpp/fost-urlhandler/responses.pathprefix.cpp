@@ -9,8 +9,16 @@
 #include "fost-urlhandler.hpp"
 #include <fost/urlhandler.hpp>
 
+#include <fost/log>
 
-const class pathprefix : public fostlib::urlhandler::view {
+
+namespace {
+
+
+    const fostlib::module c_mod(fostlib::c_fost_web_urlhandler, "pathprefix");
+
+
+    const class pathprefix : public fostlib::urlhandler::view {
     public:
         pathprefix()
         : view("fost.view.pathprefix") {
@@ -22,6 +30,11 @@ const class pathprefix : public fostlib::urlhandler::view {
             fostlib::http::server::request &req,
             const fostlib::host &h
         ) const {
+            if ( not configuration.has_key("") ) {
+                fostlib::log::warning(c_mod)
+                    ("", "Missing default key. There should always be a view for \"\"")
+                    ("configuration", configuration);
+            }
             std::pair< std::size_t, fostlib::string> longest( 0, fostlib::string() );
             for ( fostlib::json::const_iterator p(configuration.begin());
                     p != configuration.end(); ++p ) {
@@ -36,6 +49,10 @@ const class pathprefix : public fostlib::urlhandler::view {
             else
                 return fostlib::urlhandler::response_404(fostlib::json(), path, req, h);
         }
-} c_pathprefix;
+    } c_pathprefix;
+
+
+}
+
 
 const fostlib::urlhandler::view &fostlib::urlhandler::view_pathprefix = c_pathprefix;

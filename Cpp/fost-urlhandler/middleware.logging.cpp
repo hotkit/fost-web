@@ -47,16 +47,20 @@ namespace {
                             logger("request", "query", req.query_string().as_string().value().underlying().c_str());
                         }
                     };
+                auto resplog = [&req, &addlog](auto &logger, const auto &result) {
+                        logger
+                            ("response", "status", result.second)
+                            ("response", "headers", result.first->headers());
+                        addlog(logger);
+                    };
                 try {
                     auto result = execute(configuration, path, req, h);
                     if ( result.second < 400 || result.second == 401 ) {
                         auto logger = fostlib::log::ok(c_rqlog);
-                        logger("response", "status", result.second);
-                        addlog(logger);
+                        resplog(logger, result);
                     } else {
                         auto logger = fostlib::log::warning(c_rqlog);
-                        logger("response", "status", result.second);
-                        addlog(logger);
+                        resplog(logger, result);
                     }
                     return result;
                 } catch ( std::exception &e ) {

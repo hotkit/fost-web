@@ -37,13 +37,6 @@ namespace fostlib {
         FOST_URLHANDLER_DECLSPEC
             bool service( fostlib::http::server::request &req );
 
-        /// The routing part of the web service
-        FOST_URLHANDLER_DECLSPEC
-            std::pair<boost::shared_ptr<fostlib::mime>, int >
-                router(const fostlib::host &requested_host,
-                    const fostlib::string &view_name,
-                    fostlib::http::server::request &req);
-
         /// Load MIME configuration data from the specified file
         FOST_URLHANDLER_DECLSPEC
             void load_mime_configuration(const fostlib::string &filename);
@@ -95,6 +88,9 @@ namespace fostlib {
         FOST_URLHANDLER_DECLSPEC
             extern const view &middleware_template;
 
+        /// Return a 200 response to the user
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &response_200;
         /// Used to return a standard 301 to the user
         FOST_URLHANDLER_DECLSPEC
             extern const view &response_301;

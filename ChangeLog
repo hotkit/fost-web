@@ -1,5 +1,16 @@
+2016-11-03  Kirit Saelensminde  <kirit@felspar.com>
+ Load shared objects before setting up the logger so that optional loggers can be loaded.
+
+2016-10-08  Kirit Saelensminde  <kirit@felspar.com>
+ * Add a generic 200 response.
+ * Web view execution now gives a stack trace when an exception is thrown.
+
+2016-09-23  Kirit Saelensminde  <kirit@felspar.com>
+ * Improved error output where a view name is misconfigured.
+ * Removed the old `router` function as it's been replaced by `view::execute`.
+
 2016-09-17  Kirit Saelensminde  <kirit@felspar.com>
- * Add a middleware that logs the HTTP request details and some response details.
+ Add a middleware that logs the HTTP request details and some response details.
 
 2016-09-04  Kirit Saelensminde  <kirit@felspar.com>
  `fost.view.pathprefix` can now take an embedded configuration.
