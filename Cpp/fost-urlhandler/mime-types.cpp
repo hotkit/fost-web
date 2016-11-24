@@ -1,5 +1,5 @@
 /*
-    Copyright 2011-2012 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2016 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -40,5 +40,5 @@ fostlib::string fostlib::urlhandler::mime_type(
     boost::filesystem::wpath extension = boost::filesystem::extension(filename);
     return fostlib::setting<fostlib::string>::value(
         fostlib::string("MIME"), fostlib::coerce<fostlib::string>(extension),
-            fostlib::null).value("text/plain");
+            fostlib::null).value_or("text/plain");
 }

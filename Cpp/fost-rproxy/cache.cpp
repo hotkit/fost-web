@@ -1,5 +1,5 @@
 /*
-    Copyright 2014-2015, Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2014-2016, Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -71,7 +71,7 @@ boost::shared_ptr<fostlib::jsondb> fostlib::cache_db(
             ("cache-file", cache_file);
         reset(lock, cache_file);
     }
-    if ( subdb.isnull() ) {
+    if ( not subdb ) {
         fostlib::log::debug(c_fost_web_rproxy, "Returning the root database");
         return g_dbp;
     } else {

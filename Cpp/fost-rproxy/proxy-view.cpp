@@ -1,5 +1,5 @@
 /*
-    Copyright 2014-2015 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2014-2016 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -107,7 +107,7 @@ namespace {
                 if ( !variant.isnull() ) {
                     fostlib::timediff ttl(
                         fostlib::coerce<fostlib::nullable<fostlib::timediff> >(
-                            configuration["ttl"]).value(fostlib::hours(1)));
+                            configuration["ttl"]).value_or(fostlib::hours(1)));
                     fostlib::log::info(fostlib::c_fost_rproxy)("cache", "ttl", ttl);
                     fostlib::timestamp expires(
                         fostlib::coerce<fostlib::timestamp>(variant["updated"]) + ttl);
