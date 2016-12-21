@@ -43,7 +43,7 @@ namespace {
                             ("request", "path", req.file_spec().underlying().underlying().c_str())
                             ("request", "bytes", req.data()->data().size())
                             ("request", "headers", req.headers());
-                        if ( not req.query_string().as_string().isnull() ) {
+                        if ( req.query_string().as_string() ) {
                             logger("request", "query", req.query_string().as_string().value().underlying().c_str());
                         }
                     };

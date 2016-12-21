@@ -1,5 +1,5 @@
 /*
-    Copyright 2011-2015 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2016 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -22,7 +22,7 @@ const class response_static : public fostlib::urlhandler::view {
 
         static bool allow_delete(const fostlib::json &conf) {
             return conf.has_key("verbs") &&
-                fostlib::coerce<fostlib::nullable<bool>>(conf["verbs"]["DELETE"]).value(false);
+                fostlib::coerce<fostlib::nullable<bool>>(conf["verbs"]["DELETE"]).value_or(false);
         }
 
         static fostlib::string etag(const boost::filesystem::wpath &filename) {

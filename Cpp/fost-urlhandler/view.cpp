@@ -52,7 +52,7 @@ namespace {
                     fostlib::urlhandler::c_views.section(),
                     fostlib::urlhandler::c_views.name() + "/" + current.first,
                     fostlib::null));
-            if ( !view_setting.isnull() ) {
+            if ( view_setting ) {
                 current = std::make_pair(
                     view_name(view_setting.value()),
                     view_setting.value()["configuration"]);

@@ -60,14 +60,11 @@ namespace {
                     fostlib::coerce<fostlib::string>(*wrapped.first));
 
                 fostlib::nullable<fostlib::string> title( find_content(content, "title") );
-                if ( !title.isnull() )
-                    replace_content(skin, "{{ element title }}",
+                if ( title ) replace_content(skin, "{{ element title }}",
                         L"<title>" + title.value() + L"</title>");
 
-                fostlib::nullable<fostlib::string> inner(
-                    find_content(content, "body") );
-                if ( !inner.isnull() )
-                    replace_content(skin, "{{ content body }}", inner.value());
+                fostlib::nullable<fostlib::string> inner(find_content(content, "body"));
+                if ( inner ) replace_content(skin, "{{ content body }}", inner.value());
 
                 boost::shared_ptr<fostlib::mime> response(
                         new fostlib::text_body(skin,
