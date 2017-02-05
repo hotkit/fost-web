@@ -1,5 +1,5 @@
 /*
-    Copyright 2014-2016 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2014-2017, Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -38,7 +38,7 @@ namespace {
                 capture = false;
                 if ( level ) {
                     fostlib::insert(messages, "time", "end", fostlib::timestamp::now());
-                    fostlib::insert(messages, "time", "duration", started.elapsed());
+                    fostlib::insert(messages, "time", "duration", started.seconds());
                     fostlib::log::log(fostlib::c_fost_rproxy, level, name, messages);
                 }
             }
@@ -179,16 +179,16 @@ namespace {
                 std::pair<boost::shared_ptr<fostlib::mime>, int > result =
                     _fetch_origin(hash, request, ua_req);
                 fostlib::log::stats(fostlib::c_fost_rproxy)("key", hash)
-                    ("data", "origin-time-success", taken.elapsed());
+                    ("data", "origin-time-success", taken.seconds());
                 return result;
             } catch ( fostlib::exceptions::socket_error & ) {
                 fostlib::log::stats(fostlib::c_fost_rproxy)("key", hash)
-                    ("data", "origin-time-failed", taken.elapsed())
+                    ("data", "origin-time-failed", taken.seconds())
                     ("add", "origin-socket-error", 1);
                 throw;
             } catch ( ... ) {
                 fostlib::log::stats(fostlib::c_fost_rproxy)("key", hash)
-                    ("data", "origin-time-failed", taken.elapsed());
+                    ("data", "origin-time-failed", taken.seconds());
                 throw;
             }
         }
