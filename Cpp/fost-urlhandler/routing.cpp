@@ -1,5 +1,5 @@
 /*
-    Copyright 2008-2016 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2008-2017 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -18,7 +18,11 @@ bool fostlib::urlhandler::service( fostlib::http::server::request &req ) {
             || req.file_spec().underlying().underlying().find("/..") != std::string::npos
     ) {
         fostlib::log::error(c_fost_web_urlhandler)
-            ("", "fostlib::urlhandler::service -- Bad request received, could not be parsed");
+            ("", "fostlib::urlhandler::service -- Bad request received, could not be parsed")
+            ("req", "method", req.method())
+            ("req", "file_spec", req.file_spec().underlying().underlying().c_str())
+            ("req", "query",
+                req.query_string().as_string().value_or(ascii_printable_string()).underlying().c_str());
         fostlib::text_body response(
                     fostlib::string("400 Bad Request\n"),
                     fostlib::mime::mime_headers(), L"text/plain" );
