@@ -1,5 +1,5 @@
 /*
-    Copyright 2016 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2016-2017 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -10,6 +10,8 @@
 #include <fost/urlhandler.hpp>
 
 #include <fost/log>
+
+#include <chrono>
 
 
 namespace fostlib {
@@ -37,8 +39,11 @@ namespace {
                 fostlib::http::server::request &req,
                 const fostlib::host &h
             ) const {
-                auto addlog = [&req](auto &logger) {
+                auto addlog = [&req, started = std::chrono::steady_clock::now()](auto &logger) {
                         logger
+                            ("time", "started", started)
+                            ("time", "seconds", std::chrono::duration<double>(
+                                std::chrono::steady_clock::now() - started).count())
                             ("request", "method", req.method())
                             ("request", "path", req.file_spec().underlying().underlying().c_str())
                             ("request", "bytes", req.data()->data().size())
