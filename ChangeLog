@@ -1,5 +1,5 @@
 2017-06-27  Kirit Saelensminde  <kirit@felspar.com>
- Logging middleware also records the processing start time and duration.
+ Logging middleware also records the processing duration.
 
 2017-01-03  Kirit Saelensminde  <kirit@felspar.com>
  Log better information about failed HTTP requests to the server.

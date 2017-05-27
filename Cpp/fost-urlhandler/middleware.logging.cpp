@@ -41,7 +41,6 @@ namespace {
             ) const {
                 auto addlog = [&req, started = std::chrono::steady_clock::now()](auto &logger) {
                         logger
-                            ("time", "started", started)
                             ("time", "seconds", std::chrono::duration<double>(
                                 std::chrono::steady_clock::now() - started).count())
                             ("request", "method", req.method())
