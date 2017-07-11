@@ -68,7 +68,7 @@ namespace {
 
                 boost::shared_ptr<fostlib::mime> response(
                         new fostlib::text_body(skin,
-                            fostlib::mime::mime_headers(), L"text/html" ));
+                            wrapped.first->headers(), L"text/html" ));
                 return std::make_pair(response, wrapped.second);
             } else
                 return wrapped;
