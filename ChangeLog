@@ -1,3 +1,9 @@
+2017-07-11  Kirit Saelensminde  <kirit@felspar.com>
+ The template middleware now uses the headers from the wrapped view instead of throwing them away.
+
+2017-06-27  Kirit Saelensminde  <kirit@felspar.com>
+ Logging middleware also records the processing duration.
+
 2017-01-03  Kirit Saelensminde  <kirit@felspar.com>
  Log better information about failed HTTP requests to the server.
 
