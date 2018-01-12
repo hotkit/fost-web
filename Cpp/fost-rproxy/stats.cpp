@@ -1,5 +1,5 @@
 /*
-    Copyright 2014-2015, Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2014-2018, Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -14,7 +14,7 @@ using namespace fostlib;
 
 
 namespace {
-    boost::mutex g_mutex;
+    std::mutex g_mutex;
     fostlib::json g_statistics = json::object_t();
 
     struct statistics {
@@ -23,7 +23,7 @@ namespace {
 
         bool operator () (const log::message &m) {
             if ( m.level() == fostlib::log::g_stats_level ) {
-                boost::mutex::scoped_lock lock(g_mutex);
+                std::lock_guard<std::mutex> lock(g_mutex);
                 string key(coerce<string>(m.body()["key"]));
                 for ( json::const_iterator it(m.body()["data"].begin());
                         it != m.body()["data"].end(); ++it ) {
@@ -56,7 +56,7 @@ namespace {
 
 
 //     json fetch_stats(const json &) {
-//         boost::mutex::scoped_lock lock(g_mutex);
+//         std::lock_guard<std::mutex> lock(g_mutex);
 //         return g_statistics;
 //     }
 
@@ -65,7 +65,7 @@ namespace {
 
 
 void fostlib::stats::load(const json &old) {
-    boost::mutex::scoped_lock lock(g_mutex);
+    std::lock_guard<std::mutex> lock(g_mutex);
     g_statistics = old;
 }
 
