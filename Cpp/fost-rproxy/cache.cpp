@@ -1,5 +1,5 @@
 /*
-    Copyright 2014-2016, Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2014-2018, Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -25,11 +25,11 @@ namespace {
     unsigned char unhex(char c1, char c2) {
         return (undigit(c1) << 4) + undigit(c2);
     }
-    boost::mutex g_mutex;
+    std::mutex g_mutex;
     boost::shared_ptr<fostlib::jsondb> g_dbp;
     std::vector<boost::shared_ptr<fostlib::jsondb> > g_sdbs;
 
-    void reset(boost::mutex::scoped_lock &,
+    void reset(std::lock_guard<std::mutex> &,
         const boost::filesystem::wpath &cache_file) {
         fostlib::json cache;
         fostlib::insert(cache, "file-db", fostlib::json::object_t());
@@ -46,7 +46,7 @@ boost::filesystem::wpath fostlib::root() {
 
 
 void fostlib::flush_cache() {
-    boost::mutex::scoped_lock lock(g_mutex);
+    std::lock_guard<std::mutex> lock(g_mutex);
     boost::filesystem::wpath path(root());
     fostlib::log::info(c_fost_web_rproxy)
         ("root", path)
@@ -60,7 +60,7 @@ boost::shared_ptr<fostlib::jsondb> fostlib::cache_db(
     const boost::filesystem::wpath &root,
     const fostlib::nullable<fostlib::string> &subdb
 ) {
-    boost::mutex::scoped_lock lock(g_mutex);
+    std::lock_guard<std::mutex> lock(g_mutex);
 
     boost::filesystem::wpath cache_file(root / L"cache.json");
     if ( !g_dbp || g_dbp->filename().value() != cache_file ) {
