@@ -1,5 +1,5 @@
 /*
-    Copyright 2016-2017 Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2016-2018 Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -40,23 +40,23 @@ namespace {
                 const fostlib::host &h
             ) const {
                 auto addlog = [&req, started = std::chrono::steady_clock::now()](auto &logger) {
-                        logger
-                            ("time", "seconds", std::chrono::duration<double>(
-                                std::chrono::steady_clock::now() - started).count())
-                            ("request", "method", req.method())
-                            ("request", "path", req.file_spec().underlying().underlying().c_str())
-                            ("request", "bytes", req.data()->data().size())
-                            ("request", "headers", req.headers());
-                        if ( req.query_string().as_string() ) {
-                            logger("request", "query", req.query_string().as_string().value().underlying().c_str());
-                        }
-                    };
-                auto resplog = [&req, &addlog](auto &logger, const auto &result) {
-                        logger
-                            ("response", "status", result.second)
-                            ("response", "headers", result.first->headers());
-                        addlog(logger);
-                    };
+                    logger
+                        ("time", "seconds", std::chrono::duration<double>(
+                            std::chrono::steady_clock::now() - started).count())
+                        ("request", "method", req.method())
+                        ("request", "path", req.file_spec().underlying().underlying().c_str())
+                        ("request", "bytes", req.data()->data().size())
+                        ("request", "headers", req.headers());
+                    if ( req.query_string().as_string() ) {
+                        logger("request", "query", req.query_string().as_string().value().underlying().c_str());
+                    }
+                };
+                auto resplog = [&addlog](auto &logger, const auto &result) {
+                    logger
+                        ("response", "status", result.second)
+                        ("response", "headers", result.first->headers());
+                    addlog(logger);
+                };
                 try {
                     auto result = execute(configuration, path, req, h);
                     if ( result.second < 400 || result.second == 401 ) {
