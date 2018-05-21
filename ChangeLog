@@ -1,3 +1,6 @@
+2018-05-20  Kirit Saelensminde  <kirit@felspar.com>
+ Add a pathname view and a file serving view.
+
 2017-07-11  Kirit Saelensminde  <kirit@felspar.com>
  The template middleware now uses the headers from the wrapped view instead of throwing them away.
 
