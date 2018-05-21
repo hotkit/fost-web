@@ -1,6 +1,7 @@
 add_library(fost-urlhandler
         config.cpp
         fost-urlhandler.cpp
+        file.cpp
         middleware.logging.cpp
         middleware.request.cpp
         middleware.template.cpp
@@ -18,6 +19,7 @@ add_library(fost-urlhandler
         responses.500.cpp
         responses.501.cpp
         responses.503.cpp
+        responses.pathname.cpp
         responses.pathprefix.cpp
         responses.static.cpp
         routing.cpp
