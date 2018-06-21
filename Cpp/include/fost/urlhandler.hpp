@@ -1,5 +1,5 @@
 /*
-    Copyright 2011-2016, Felspar Co Ltd. http://support.felspar.com/
+    Copyright 2011-2018, Felspar Co Ltd. http://support.felspar.com/
     Distributed under the Boost Software License, Version 1.0.
     See accompanying file LICENSE_1_0.txt or copy at
         http://www.boost.org/LICENSE_1_0.txt
@@ -77,6 +77,12 @@ namespace fostlib {
                     const fostlib::host &host);
         };
 
+        /// Serves a file from disk providing etag, modified etc. and
+        /// properly handling `If-None-Match` headers.
+        std::pair<boost::shared_ptr<fostlib::mime>, int> serve_file(
+            const fostlib::json &configuration,
+            fostlib::http::server::request &req,
+            const boost::filesystem::path &filename);
 
         /// Log the request and results
         FOST_URLHANDLER_DECLSPEC
@@ -134,6 +140,9 @@ namespace fostlib {
         /// Runs the view found at the location with the longest prefix
         FOST_URLHANDLER_DECLSPEC
             extern const view &view_pathprefix;
+        /// Serves the view found based on an exact match of the URL
+        FOST_URLHANDLER_DECLSPEC
+            extern const view &view_pathname;
 
 
     }
