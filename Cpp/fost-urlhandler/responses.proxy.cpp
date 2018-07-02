@@ -18,7 +18,7 @@ namespace {
     const class proxy_view final : public fostlib::urlhandler::view {
     public:
         proxy_view()
-        : view("fost.proxy") {
+        : view("fost.proxy.transparent") {
         }
 
 
@@ -27,7 +27,7 @@ namespace {
             const fostlib::string &path,
             fostlib::http::server::request &request,
             const fostlib::host &host
-        ) const {
+        ) const override {
             fostlib::timer time;
             auto info = fostlib::log::info(fostlib::c_fost_web_urlhandler);
             info("id", fostlib::guid())
@@ -42,20 +42,12 @@ namespace {
 
             fostlib::http::user_agent ua(base);
             fostlib::http::user_agent::request proxy(request.method(), location, request.data());
-            info("proxy", "request", "headers", proxy.headers());
-            auto response = ua(proxy);
-            info("proxy", "response", "status", response->status())
-                ("proxy", "response", "headers", response->headers());
-
-            fostlib::mime::mime_headers headers;
-            headers.set("Content-Type", response->headers()["Content-Type"]);
-            headers.set("Date", response->headers()["Date"]);
-            headers.set("Link", response->headers()["Link"]);
-            boost::shared_ptr<fostlib::mime> body =
-                boost::make_shared<fostlib::binary_body>(
-                    response->body()->data(), headers);
+            auto response =ua(proxy);
+            auto body{response->body()};
             info("response", "headers", body->headers());
+            info("repsonse", "status", response->status());
             info("time", time.seconds());
+
             return std::make_pair(body, response->status());
         }
 
