@@ -22,6 +22,7 @@ add_library(fost-urlhandler
         responses.file.cpp
         responses.pathname.cpp
         responses.pathprefix.cpp
+        responses.proxy.cpp
         responses.static.cpp
         routing.cpp
         view.cpp
