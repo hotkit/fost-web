@@ -31,7 +31,6 @@ namespace {
             fostlib::timer time;
             auto info = fostlib::log::info(fostlib::c_fost_web_urlhandler);
             info("id", fostlib::guid())
-                ("request", "headers", request.headers())
                 ("request", "path", "full", request.file_spec())
                 ("request", "path", "outstanding", path);
 
@@ -44,7 +43,6 @@ namespace {
             fostlib::http::user_agent::request proxy(request.method(), location, request.data());
             auto response =ua(proxy);
             auto body{response->body()};
-            info("response", "headers", body->headers());
             info("repsonse", "status", response->status());
             info("time", time.seconds());
 
