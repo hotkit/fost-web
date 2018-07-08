@@ -29,6 +29,7 @@ add_library(fost-urlhandler
     )
 target_include_directories(fost-urlhandler PUBLIC ../include)
 target_link_libraries(fost-urlhandler fost-inet)
+set_target_properties(fost-urlhandler PROPERTIES DEBUG_POSTFIX "-d")
 install(TARGETS fost-urlhandler LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 
 add_library(fost-urlhandler-smoke STATIC EXCLUDE_FROM_ALL
