@@ -17,23 +17,21 @@ namespace {
 
 
     const class pathname : public fostlib::urlhandler::view {
-    public:
-        pathname()
-        : view("fost.view.pathname") {
-        }
+      public:
+        pathname() : view("fost.view.pathname") {}
 
-        std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
-            const fostlib::json &configuration,
-            const fostlib::string &path,
-            fostlib::http::server::request &req,
-            const fostlib::host &h
-        ) const {
-            if ( configuration.has_key(path) ) {
+        std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
+                const fostlib::json &configuration,
+                const fostlib::string &path,
+                fostlib::http::server::request &req,
+                const fostlib::host &h) const {
+            if (configuration.has_key(path)) {
                 /// The path is fully consumed by this view because it
                 /// matches in its entirety
                 return execute(configuration[path], "", req, h);
             } else {
-                return fostlib::urlhandler::response_404(fostlib::json(), path, req, h);
+                return fostlib::urlhandler::response_404(
+                        fostlib::json(), path, req, h);
             }
         }
     } c_pathname;
@@ -42,5 +40,5 @@ namespace {
 }
 
 
-const fostlib::urlhandler::view &fostlib::urlhandler::view_pathname = c_pathname;
-
+const fostlib::urlhandler::view &fostlib::urlhandler::view_pathname =
+        c_pathname;

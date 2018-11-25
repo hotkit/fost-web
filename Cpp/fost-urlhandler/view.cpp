@@ -14,7 +14,7 @@
 
 
 namespace {
-    typedef fostlib::threadsafe_store<fostlib::urlhandler::view*> view_store;
+    typedef fostlib::threadsafe_store<fostlib::urlhandler::view *> view_store;
     view_store &views() {
         static view_store store;
         return store;
@@ -32,30 +32,33 @@ fostlib::urlhandler::view::~view() {
 
 namespace {
     fostlib::string view_name(const fostlib::json &obj) {
-        if ( obj["view"].isnull() ) {
-            throw fostlib::exceptions::not_implemented(__func__,
-                "No view name was given in the configuration", obj);
+        if (obj["view"].isnull()) {
+            throw fostlib::exceptions::not_implemented(
+                    __func__, "No view name was given in the configuration",
+                    obj);
         }
-        return fostlib::coerce<fostlib::string>(obj["view"]);;
+        return fostlib::coerce<fostlib::string>(obj["view"]);
+        ;
     }
     bool next_view(
-        const fostlib::json &views, std::pair<fostlib::string, fostlib::json> &current
-    ) {
-        if ( views.has_key(current.first) ) {
+            const fostlib::json &views,
+            std::pair<fostlib::string, fostlib::json> &current) {
+        if (views.has_key(current.first)) {
             current = std::make_pair(
-                view_name(views[current.first]),
-                views[current.first]["configuration"]);
+                    view_name(views[current.first]),
+                    views[current.first]["configuration"]);
             return true;
         } else {
             fostlib::nullable<fostlib::json> view_setting(
-                fostlib::setting<fostlib::json>::value(
-                    fostlib::urlhandler::c_views.section(),
-                    fostlib::urlhandler::c_views.name() + "/" + current.first,
-                    fostlib::null));
-            if ( view_setting ) {
+                    fostlib::setting<fostlib::json>::value(
+                            fostlib::urlhandler::c_views.section(),
+                            fostlib::urlhandler::c_views.name() + "/"
+                                    + current.first,
+                            fostlib::null));
+            if (view_setting) {
                 current = std::make_pair(
-                    view_name(view_setting.value()),
-                    view_setting.value()["configuration"]);
+                        view_name(view_setting.value()),
+                        view_setting.value()["configuration"]);
                 return true;
             } else {
                 return false;
@@ -64,26 +67,22 @@ namespace {
     }
 }
 std::pair<fostlib::string, fostlib::json> fostlib::urlhandler::view::find_view(
-    const fostlib::string &view, const fostlib::json &view_config
-) {
+        const fostlib::string &view, const fostlib::json &view_config) {
     fostlib::json views(c_views.value());
     std::pair<fostlib::string, fostlib::json> final(view, view_config);
-    while ( next_view(views, final) ) {
-        ;
-    }
+    while (next_view(views, final)) { ; }
     return final;
 }
 
 
-const fostlib::urlhandler::view &fostlib::urlhandler::view::view_for(
-    const fostlib::string &name
-) {
+const fostlib::urlhandler::view &
+        fostlib::urlhandler::view::view_for(const fostlib::string &name) {
     view_store::found_t found(views().find(name));
-    if ( found.size() == 1 ) {
+    if (found.size() == 1) {
         return *found[0];
     } else {
         fostlib::exceptions::unexpected_nil exception(
-            "Where zero or more than 1 views are found");
+                "Where zero or more than 1 views are found");
         insert(exception.data(), "view-name", name);
         insert(exception.data(), "found", found.size());
         throw exception;
@@ -91,24 +90,24 @@ const fostlib::urlhandler::view &fostlib::urlhandler::view::view_for(
 }
 
 
-std::pair<boost::shared_ptr<fostlib::mime>, int > fostlib::urlhandler::view::execute(
-    const fostlib::json &configuration,
-    const fostlib::string &path,
-    fostlib::http::server::request &request,
-    const fostlib::host &host
-) {
+std::pair<boost::shared_ptr<fostlib::mime>, int>
+        fostlib::urlhandler::view::execute(
+                const fostlib::json &configuration,
+                const fostlib::string &path,
+                fostlib::http::server::request &request,
+                const fostlib::host &host) {
     try {
-        if ( configuration.isobject() ) {
-            auto view_fn = find_view(view_name(configuration), configuration["configuration"]);
+        if (configuration.isobject()) {
+            auto view_fn = find_view(
+                    view_name(configuration), configuration["configuration"]);
             return view_for(view_fn.first)(view_fn.second, path, request, host);
         } else {
             auto view_name = coerce<string>(configuration);
             auto to_exec = find_view(view_name);
             return view_for(to_exec.first)(to_exec.second, path, request, host);
         }
-    } catch ( fostlib::exceptions::exception &e ) {
+    } catch (fostlib::exceptions::exception &e) {
         push_back(e.data(), "fost-web", "execute", "stacktrace", configuration);
         throw;
     }
 }
-

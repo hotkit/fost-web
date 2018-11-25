@@ -13,49 +13,50 @@
 
 
 const class response_static : public fostlib::urlhandler::view {
-    public:
-        response_static()
-        : view("fost.static") {
-        }
+  public:
+    response_static() : view("fost.static") {}
 
-        static bool allow_delete(const fostlib::json &conf) {
-            return conf.has_key("verbs") &&
-                fostlib::coerce<fostlib::nullable<bool>>(conf["verbs"]["DELETE"]).value_or(false);
-        }
+    static bool allow_delete(const fostlib::json &conf) {
+        return conf.has_key("verbs")
+                && fostlib::coerce<fostlib::nullable<bool>>(
+                           conf["verbs"]["DELETE"])
+                           .value_or(false);
+    }
 
-        std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
+    std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
             const fostlib::json &configuration,
             const fostlib::string &path,
             fostlib::http::server::request &req,
-            const fostlib::host &host
-        ) const {
-            boost::filesystem::wpath root(
-                fostlib::coerce<boost::filesystem::wpath>(configuration["root"]));
-            boost::filesystem::wpath filename = root /
-                fostlib::coerce<boost::filesystem::wpath>(path);
-            if ( boost::filesystem::is_directory(filename) )
-                filename /= L"index.html";
-            if ( !boost::filesystem::exists(filename) )
-                return fostlib::urlhandler::response_404(fostlib::json(), path, req, host);
-            if ( req.method() == "GET" || req.method() == "HEAD" ) {
-                return fostlib::urlhandler::serve_file(configuration, req, filename);
-            } else if ( allow_delete(configuration) && req.method() == "DELETE" ) {
-                boost::filesystem::remove(filename);
-                boost::shared_ptr<fostlib::mime> response(
-                        new fostlib::text_body(
-                            L"<html><head><title>Resource deleted</title></head>"
-                                L"<body><h1>Resource deleted</h1></body></html>",
-                            fostlib::mime::mime_headers(), L"text/html" ));
-                return std::make_pair(response, 200);
-            } else {
-                fostlib::json c405;
-                fostlib::push_back(c405, "allow", "GET");
-                fostlib::push_back(c405, "allow", "HEAD");
-                if ( allow_delete(configuration) )
-                    fostlib::push_back(c405, "allow", "DELETE");
-                return fostlib::urlhandler::response_405(c405, path, req, host);
-            }
+            const fostlib::host &host) const {
+        boost::filesystem::wpath root(fostlib::coerce<boost::filesystem::wpath>(
+                configuration["root"]));
+        boost::filesystem::wpath filename =
+                root / fostlib::coerce<boost::filesystem::wpath>(path);
+        if (boost::filesystem::is_directory(filename))
+            filename /= L"index.html";
+        if (!boost::filesystem::exists(filename))
+            return fostlib::urlhandler::response_404(
+                    fostlib::json(), path, req, host);
+        if (req.method() == "GET" || req.method() == "HEAD") {
+            return fostlib::urlhandler::serve_file(
+                    configuration, req, filename);
+        } else if (allow_delete(configuration) && req.method() == "DELETE") {
+            boost::filesystem::remove(filename);
+            boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
+                    L"<html><head><title>Resource deleted</title></head>"
+                    L"<body><h1>Resource deleted</h1></body></html>",
+                    fostlib::mime::mime_headers(), L"text/html"));
+            return std::make_pair(response, 200);
+        } else {
+            fostlib::json c405;
+            fostlib::push_back(c405, "allow", "GET");
+            fostlib::push_back(c405, "allow", "HEAD");
+            if (allow_delete(configuration))
+                fostlib::push_back(c405, "allow", "DELETE");
+            return fostlib::urlhandler::response_405(c405, path, req, host);
         }
+    }
 } c_response_static;
 
-const fostlib::urlhandler::view &fostlib::urlhandler::static_server =c_response_static;
+const fostlib::urlhandler::view &fostlib::urlhandler::static_server =
+        c_response_static;

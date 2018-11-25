@@ -11,23 +11,21 @@
 
 
 const class response_412 : public fostlib::urlhandler::view {
-    public:
-        response_412()
-        : view("fost.response.412") {
-        }
+  public:
+    response_412() : view("fost.response.412") {}
 
-        std::pair<boost::shared_ptr<fostlib::mime>, int> operator () (
-            const fostlib::json &, const fostlib::string &,
+    std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
+            const fostlib::json &,
+            const fostlib::string &,
             fostlib::http::server::request &req,
-            const fostlib::host &
-        ) const {
-            boost::shared_ptr<fostlib::mime> response(
-                    new fostlib::text_body(
-                        L"<html><head><title>Precondition failed</title></head>"
-                            L"<body><h1>Precondition failed</h1></body></html>",
-                        fostlib::mime::mime_headers(), L"text/html" ));
-            return std::make_pair(response, 412);
-        }
+            const fostlib::host &) const {
+        boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
+                L"<html><head><title>Precondition failed</title></head>"
+                L"<body><h1>Precondition failed</h1></body></html>",
+                fostlib::mime::mime_headers(), L"text/html"));
+        return std::make_pair(response, 412);
+    }
 } c_response_412;
 
-const fostlib::urlhandler::view &fostlib::urlhandler::response_412 =c_response_412;
+const fostlib::urlhandler::view &fostlib::urlhandler::response_412 =
+        c_response_412;
