@@ -32,13 +32,15 @@ target_link_libraries(fost-urlhandler fost-inet)
 set_target_properties(fost-urlhandler PROPERTIES DEBUG_POSTFIX "-d")
 install(TARGETS fost-urlhandler LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 
-add_library(fost-urlhandler-smoke STATIC EXCLUDE_FROM_ALL
-        responses.301-tests.cpp
-        responses.302-tests.cpp
-        responses.303-tests.cpp
-        responses.405-tests.cpp
-        routing-tests.cpp
-        view-tests.cpp
-    )
-target_link_libraries(fost-urlhandler-smoke fost-urlhandler)
-smoke_test(fost-urlhandler-smoke)
+if(TARGET check)
+    add_library(fost-urlhandler-smoke STATIC EXCLUDE_FROM_ALL
+            responses.301-tests.cpp
+            responses.302-tests.cpp
+            responses.303-tests.cpp
+            responses.405-tests.cpp
+            routing-tests.cpp
+            view-tests.cpp
+        )
+    target_link_libraries(fost-urlhandler-smoke fost-urlhandler)
+    smoke_test(fost-urlhandler-smoke)
+endif()
