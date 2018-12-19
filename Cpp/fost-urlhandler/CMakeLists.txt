@@ -25,10 +25,11 @@ add_library(fost-urlhandler
         responses.proxy.cpp
         responses.static.cpp
         routing.cpp
+        schema.validate.cpp
         view.cpp
     )
 target_include_directories(fost-urlhandler PUBLIC ../include)
-target_link_libraries(fost-urlhandler fost-inet)
+target_link_libraries(fost-urlhandler fost-inet f5-json-schema)
 set_target_properties(fost-urlhandler PROPERTIES DEBUG_POSTFIX "-d")
 install(TARGETS fost-urlhandler LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 
@@ -39,6 +40,7 @@ if(TARGET check)
             responses.303-tests.cpp
             responses.405-tests.cpp
             routing-tests.cpp
+            schema.validate-tests.cpp
             view-tests.cpp
         )
     target_link_libraries(fost-urlhandler-smoke fost-urlhandler)
