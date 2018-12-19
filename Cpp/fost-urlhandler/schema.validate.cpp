@@ -10,7 +10,6 @@
 #include <fost/urlhandler.hpp>
 
 #include <fost/insert>
-#include <fost/log>
 #include <f5/json/assertions.hpp>
 #include <f5/json/schema.hpp>
 
@@ -30,10 +29,8 @@ const class schema_validation : public fostlib::urlhandler::view {
                 fostlib::coerce<fostlib::utf8_string>(req.data()->data()));
         fostlib::json body = fostlib::json::parse(body_str);
         f5::json::schema s{fostlib::url{}, config["schema"]};
-        if (auto valid = s.validate(body); not valid) {
-            const bool pretty =
-                    fostlib::coerce<fostlib::nullable<bool>>(config["pretty"])
-                            .value_or(true);
+        auto valid = s.validate(body);
+        if (not valid) {
             fostlib::json result;
             fostlib::insert(result, "schema", config["schema"]);
             auto e{(f5::json::validation::result::error)std::move(valid)};
@@ -42,7 +39,7 @@ const class schema_validation : public fostlib::urlhandler::view {
             fostlib::insert(
                     result, "error", "in-data", fostlib::jcursor{} / e.dpos);
             boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
-                    fostlib::json::unparse(result, pretty),
+                    fostlib::json::unparse(result, true),
                     fostlib::mime::mime_headers(), L"application/json"));
             return std::make_pair(response, 422);
         }
