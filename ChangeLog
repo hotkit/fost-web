@@ -1,3 +1,6 @@
+2018-12-20  Tle Ekkul  <e.aryuth@gmail.com>
+ Add fost.schema.validate view
+
 2018-05-20  Kirit Saelensminde  <kirit@felspar.com>
  Add a pathname view and a file serving view.
 
