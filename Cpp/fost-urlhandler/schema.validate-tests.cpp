@@ -40,7 +40,8 @@ FSL_TEST_FUNCTION(invalid_json_body) {
 FSL_TEST_FUNCTION(valid_json_body) {
     fostlib::json config;
     fostlib::insert(config, "schema", "type", "object");
-    fostlib::insert(config, "schema", "properties", "name", "type", "boolean");
+    fostlib::insert(config, "schema", "properties", "is_valid", "type", "boolean");
+    fostlib::insert(config, "valid", "fost.response.200");
     fostlib::mime::mime_headers headers;
     auto body = std::make_unique<fostlib::binary_body>(
             fostlib::coerce<std::vector<unsigned char>>(
@@ -49,5 +50,5 @@ FSL_TEST_FUNCTION(valid_json_body) {
     std::pair<boost::shared_ptr<fostlib::mime>, int> response(
             fostlib::urlhandler::schema_validation(
                     config, "/", req, fostlib::host()));
-    FSL_CHECK_EQ(response.second, 422);
+    FSL_CHECK_EQ(response.second, 200);
 }
