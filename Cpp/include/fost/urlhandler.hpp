@@ -137,6 +137,10 @@ namespace fostlib {
         FOST_URLHANDLER_DECLSPEC
         extern const view &static_server;
 
+        /// request body JSON Schema validation
+        FOST_URLHANDLER_DECLSPEC
+        extern const view &schema_validation;
+
         /// Runs the view found at the location with the longest prefix
         FOST_URLHANDLER_DECLSPEC
         extern const view &view_pathprefix;
