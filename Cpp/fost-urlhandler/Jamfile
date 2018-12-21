@@ -1,8 +1,0 @@
-
-fost-lib-autotest fost-urlhandler
-    :
-        Cpp/fost-urlhandler
-    :
-        ../../../fost-base/Cpp/fost-crypto
-        ../../../fost-internet/Cpp/fost-inet
-    ;

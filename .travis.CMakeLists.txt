@@ -10,4 +10,5 @@ add_subdirectory(f5-threading)
 add_subdirectory(fost-base)
 add_subdirectory(fost-internet)
 add_subdirectory(.. fost-web)
+add_subdirectory(json-schema)
 
