@@ -84,6 +84,10 @@ namespace fostlib {
                 fostlib::http::server::request &req,
                 const boost::filesystem::path &filename);
 
+        /// status condition view
+        FOST_URLHANDLER_DECLSPEC
+        extern const view &control_status_condition;
+
         /// Log the request and results
         FOST_URLHANDLER_DECLSPEC
         extern const view &middleware_logging;
