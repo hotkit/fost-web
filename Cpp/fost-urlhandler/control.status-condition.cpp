@@ -33,7 +33,12 @@ const class control_status_condition : public fostlib::urlhandler::view {
             }
             return if_response;
         }
-        return execute(config["else"], path, req, host);
+        if (config.has_key("else")) {
+            return execute(config["else"], path, req, host);
+        }
+        throw fostlib::exceptions::not_implemented(
+                __PRETTY_FUNCTION__,
+                "else condition in fost.contro.status-condition not defined");
     }
 } c_control_status_condition;
 
