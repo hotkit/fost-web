@@ -1,5 +1,5 @@
 /**
-    Copyright 2014-2018 Felspar Co Ltd. <http://support.felspar.com/>
+    Copyright 2014-2019 Felspar Co Ltd. <http://support.felspar.com/>
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -33,7 +33,7 @@ namespace {
 
             fostlib::url base(
                     fostlib::coerce<fostlib::string>(configuration["base"]));
-            fostlib::url location(base, request.file_spec());
+            fostlib::url location(base, path);
             location.query(request.query_string());
             info("proxy", "url", location);
 

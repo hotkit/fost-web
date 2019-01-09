@@ -1,3 +1,6 @@
+2019-01-09  Sem  <cloudtimewater@gmail.com>
+ Fix fost.proxy.transparent. Pass the correct path.
+
 2018-12-26  Tle Ekkul  <e.aryuth@gmail.com>
  Add fost.control.status-condition view
 
