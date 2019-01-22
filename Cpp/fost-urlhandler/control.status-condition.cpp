@@ -1,8 +1,8 @@
-/*
-    Copyright 2018 Felspar Co Ltd. http://odin.felspar.com/
+/**
+    Copyright 2018-2019 Felspar Co Ltd. <http://support.felspar.com/>
+
     Distributed under the Boost Software License, Version 1.0.
-    See accompanying file LICENSE_1_0.txt or copy at
-        http://www.boost.org/LICENSE_1_0.txt
+    See <http://www.boost.org/LICENSE_1_0.txt>
 */
 
 
@@ -13,34 +13,44 @@
 #include <f5/json/assertions.hpp>
 #include <f5/json/schema.hpp>
 
-const class control_status_condition : public fostlib::urlhandler::view {
-  public:
-    control_status_condition() : view("fost.control.status-condition") {}
 
-    std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
-            const fostlib::json &config,
-            const fostlib::string &path,
-            fostlib::http::server::request &req,
-            const fostlib::host &host) const {
-        auto if_response = execute(config["if"], path, req, host);
-        auto if_status_code = if_response.second;
-        fostlib::string then_view = "then." + std::to_string(if_status_code);
-        if (config.has_key(then_view)) {
-            return execute(config[then_view], path, req, host);
-        } else if (if_status_code < 400) {
-            if (config.has_key("then")) {
-                return execute(config["then"], path, req, host);
+namespace {
+
+
+    const class control_status_condition : public fostlib::urlhandler::view {
+      public:
+        control_status_condition() : view("fost.control.status-condition") {}
+
+        std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
+                const fostlib::json &config,
+                const fostlib::string &path,
+                fostlib::http::server::request &req,
+                const fostlib::host &host) const {
+            auto if_response = execute(config["if"], path, req, host);
+            auto if_status_code = if_response.second;
+            fostlib::string then_view =
+                    "then." + std::to_string(if_status_code);
+            if (config.has_key(then_view)) {
+                return execute(config[then_view], path, req, host);
+            } else if (if_status_code < 400) {
+                if (config.has_key("then")) {
+                    return execute(config["then"], path, req, host);
+                }
+                return if_response;
             }
-            return if_response;
+            if (config.has_key("else")) {
+                return execute(config["else"], path, req, host);
+            }
+            throw fostlib::exceptions::not_implemented(
+                    __PRETTY_FUNCTION__,
+                    "'else' condition in fost.control.status-condition not "
+                    "defined",
+                    config);
         }
-        if (config.has_key("else")) {
-            return execute(config["else"], path, req, host);
-        }
-        throw fostlib::exceptions::not_implemented(
-                __PRETTY_FUNCTION__,
-                "else condition in fost.contro.status-condition not defined");
-    }
-} c_control_status_condition;
+    } c_control_status_condition;
+
+
+}
 
 const fostlib::urlhandler::view &fostlib::urlhandler::control_status_condition =
         c_control_status_condition;
