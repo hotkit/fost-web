@@ -27,6 +27,7 @@ add_library(fost-urlhandler
         responses.static.cpp
         routing.cpp
         schema.validate.cpp
+        test.throw.cpp
         view.cpp
     )
 target_include_directories(fost-urlhandler PUBLIC ../include)
@@ -43,6 +44,7 @@ if(TARGET check)
             responses.405-tests.cpp
             routing-tests.cpp
             schema.validate-tests.cpp
+            test.throw.tests.cpp
             view-tests.cpp
         )
     target_link_libraries(fost-urlhandler-smoke fost-urlhandler)
