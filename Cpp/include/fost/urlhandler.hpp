@@ -93,9 +93,13 @@ namespace fostlib {
 
         /// ## Control flow views
 
-        /// status condition view
+        /// Routing to new views based on status condition
         FOST_URLHANDLER_DECLSPEC
         extern const view &control_status_condition;
+        /// Catching exceptions and routing to different views
+        FOST_URLHANDLER_DECLSPEC
+        extern const view &control_exception_catch;
+
 
         /// Runs the view found at the location with the longest prefix
         FOST_URLHANDLER_DECLSPEC
