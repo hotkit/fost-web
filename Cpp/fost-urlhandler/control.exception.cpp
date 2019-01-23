@@ -8,9 +8,14 @@
 
 #include "fost-urlhandler.hpp"
 #include <fost/urlhandler.hpp>
+#include <fost/log>
 
 
 namespace {
+
+
+    const fostlib::module c_catch{fostlib::c_fost_web_urlhandler,
+                                  "control.exception.catch"};
 
 
     const class catch_exception final : public fostlib::urlhandler::view {
@@ -22,14 +27,27 @@ namespace {
                 const fostlib::string &path,
                 fostlib::http::server::request &req,
                 const fostlib::host &host) const override {
-            return view::execute(config["try"], path, req, host);
-//             throw fostlib::exceptions::not_implemented(__PRETTY_FUNCTION__);
+            try {
+                return view::execute(config["try"], path, req, host);
+            } catch (const std::exception &e) {
+                auto logger{fostlib::log::debug(c_catch)};
+                logger("caught", e.what());
+                logger("typeid", typeid(e).name());
+                if (config["catch"].isobject()) {
+                    if (not config["catch"]["std::exception"].isnull()) {
+                        return view::execute(
+                                config["catch"]["std::exception"], path, req,
+                                host);
+                    }
+                }
+                throw;
+            }
         }
 
-    } C_catch_exception;
+    } c_catch_exception;
 
 
 }
 
 const fostlib::urlhandler::view &fostlib::urlhandler::control_exception_catch =
-        C_catch_exception;
+        c_catch_exception;

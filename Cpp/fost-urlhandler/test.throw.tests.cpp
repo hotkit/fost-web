@@ -9,6 +9,8 @@
 #include <fost/urlhandler>
 #include <fost/test>
 
+#include <stdexcept>
+
 
 FSL_TEST_SUITE(throw_exception);
 
@@ -20,7 +22,7 @@ FSL_TEST_FUNCTION(empty_config) {
         auto const response{fostlib::urlhandler::test_throw(
                 config, "", req, fostlib::host{})};
         FSL_CHECK(false);
-    } catch (std::invalid_argument &) {}
+    } catch (const std::invalid_argument &) {}
 }
 
 
@@ -32,7 +34,7 @@ FSL_TEST_FUNCTION(logic_error) {
         auto const response{fostlib::urlhandler::test_throw(
                 config, "", req, fostlib::host{})};
         FSL_CHECK(false);
-    } catch (std::logic_error &e) {
+    } catch (const std::logic_error &e) {
         FSL_CHECK_EQ(
                 e.what(),
                 std::string{"Test exception message from test.throw"});
@@ -42,7 +44,7 @@ FSL_TEST_FUNCTION(logic_error) {
         auto const response{fostlib::urlhandler::test_throw(
                 config, "", req, fostlib::host{})};
         FSL_CHECK(false);
-    } catch (std::logic_error &e) {
+    } catch (const std::logic_error &e) {
         FSL_CHECK_EQ(e.what(), std::string{"Message set"});
     }
 }
