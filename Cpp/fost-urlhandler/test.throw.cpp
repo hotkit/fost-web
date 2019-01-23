@@ -35,7 +35,7 @@ namespace {
                                         "Test exception message from "
                                         "test.throw");
                 if (config["exception"] == "std::logic_error") {
-                    throw std::logic_error{static_cast<std::string>(message)};
+                    throw std::logic_error{message.std_str()};
                 } else {
                     throw fostlib::exceptions::not_implemented(
                             __PRETTY_FUNCTION__);
