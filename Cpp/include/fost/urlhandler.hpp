@@ -1,8 +1,8 @@
-/*
-    Copyright 2011-2018, Felspar Co Ltd. http://support.felspar.com/
+/**
+    Copyright 2011-2019, Felspar Co Ltd. <http://support.felspar.com/>
+
     Distributed under the Boost Software License, Version 1.0.
-    See accompanying file LICENSE_1_0.txt or copy at
-        http://www.boost.org/LICENSE_1_0.txt
+    See <http://www.boost.org/LICENSE_1_0.txt>
 */
 
 
@@ -84,9 +84,32 @@ namespace fostlib {
                 fostlib::http::server::request &req,
                 const boost::filesystem::path &filename);
 
-        /// status condition view
+
+        /// ## Test views
+
+        /// Throw an exception
+        FOST_URLHANDLER_DECLSPEC
+        extern const view &test_throw;
+
+        /// ## Control flow views
+
+        /// Routing to new views based on status condition
         FOST_URLHANDLER_DECLSPEC
         extern const view &control_status_condition;
+        /// Catching exceptions and routing to different views
+        FOST_URLHANDLER_DECLSPEC
+        extern const view &control_exception_catch;
+
+
+        /// Runs the view found at the location with the longest prefix
+        FOST_URLHANDLER_DECLSPEC
+        extern const view &view_pathprefix;
+        /// Serves the view found based on an exact match of the URL
+        FOST_URLHANDLER_DECLSPEC
+        extern const view &view_pathname;
+
+
+        /// ## Middleware
 
         /// Log the request and results
         FOST_URLHANDLER_DECLSPEC
@@ -97,6 +120,13 @@ namespace fostlib {
         /// Wrap a template around a response
         FOST_URLHANDLER_DECLSPEC
         extern const view &middleware_template;
+
+        /// request body JSON Schema validation
+        FOST_URLHANDLER_DECLSPEC
+        extern const view &schema_validation;
+
+
+        /// ## Standard responses
 
         /// Return a 200 response to the user
         FOST_URLHANDLER_DECLSPEC
@@ -137,20 +167,12 @@ namespace fostlib {
         FOST_URLHANDLER_DECLSPEC
         extern const view &response_503;
 
+
+        /// ## Serving files
+
         /// Returns static files
         FOST_URLHANDLER_DECLSPEC
         extern const view &static_server;
-
-        /// request body JSON Schema validation
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &schema_validation;
-
-        /// Runs the view found at the location with the longest prefix
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &view_pathprefix;
-        /// Serves the view found based on an exact match of the URL
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &view_pathname;
 
 
     }

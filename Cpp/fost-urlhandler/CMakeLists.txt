@@ -1,5 +1,6 @@
 add_library(fost-urlhandler
         config.cpp
+        control.exception.cpp
         control.status-condition.cpp
         file.cpp
         fost-urlhandler.cpp
@@ -27,6 +28,7 @@ add_library(fost-urlhandler
         responses.static.cpp
         routing.cpp
         schema.validate.cpp
+        test.throw.cpp
         view.cpp
     )
 target_include_directories(fost-urlhandler PUBLIC ../include)
@@ -36,6 +38,7 @@ install(TARGETS fost-urlhandler LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 
 if(TARGET check)
     add_library(fost-urlhandler-smoke STATIC EXCLUDE_FROM_ALL
+            control.exception.tests.cpp
             control.status-condition-tests.cpp
             responses.301-tests.cpp
             responses.302-tests.cpp
@@ -43,6 +46,7 @@ if(TARGET check)
             responses.405-tests.cpp
             routing-tests.cpp
             schema.validate-tests.cpp
+            test.throw.tests.cpp
             view-tests.cpp
         )
     target_link_libraries(fost-urlhandler-smoke fost-urlhandler)

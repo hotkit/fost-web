@@ -1,3 +1,6 @@
+2019-01-23  Kirit Saelensminde  <kirit@felspar.com>
+ Add `test.throw` view to help with testing and `control.exception.catch` for running alternative views when exceptions are thrown.
+
 2019-01-09  Sem  <cloudtimewater@gmail.com>
  Fix fost.proxy.transparent. Pass the correct path.
 
