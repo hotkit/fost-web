@@ -1,3 +1,6 @@
+2019-03-05  Kirit Saelensminde  <kirit@felspar.com>
+ The `test.throw` view now allows new exception throwers to be added.
+
 2019-01-23  Kirit Saelensminde  <kirit@felspar.com>
  Add `test.throw` view to help with testing and `control.exception.catch` for running alternative views when exceptions are thrown.
 
