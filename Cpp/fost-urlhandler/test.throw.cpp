@@ -7,6 +7,7 @@
 
 
 #include "fost-urlhandler.hpp"
+#include <fost/test-throw-view.hpp>
 #include <fost/urlhandler.hpp>
 #include <f5/threading/map.hpp>
 
@@ -69,3 +70,9 @@ namespace {
 
 const fostlib::urlhandler::view &fostlib::urlhandler::test_throw =
         c_throw_exception;
+
+
+fostlib::urlhandler::test_throw_plugin::test_throw_plugin(fostlib::string n, test_throw_plugin_fn f) {
+    g_pthrowers->emplace_if_not_found(std::move(n), std::move(f));
+}
+
