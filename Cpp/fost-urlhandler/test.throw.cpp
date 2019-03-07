@@ -7,12 +7,23 @@
 
 
 #include "fost-urlhandler.hpp"
+#include <fost/test-throw-view.hpp>
 #include <fost/urlhandler.hpp>
+#include <f5/threading/map.hpp>
 
 #include <stdexcept>
 
 
 namespace {
+
+
+    auto const g_pthrowers = [](){
+        auto map = std::make_unique<f5::tsmap<fostlib::string, std::function<void(fostlib::string)>>>();
+        map->emplace_if_not_found("std::logic_error", [](fostlib::string msg){
+            throw std::logic_error{static_cast<std::string>(msg)};
+        });
+        return map;
+    }();
 
 
     const class throw_exception final : public fostlib::urlhandler::view {
@@ -34,19 +45,34 @@ namespace {
                                 .value_or(
                                         "Test exception message from "
                                         "test.throw");
-                if (config["exception"] == "std::logic_error") {
-                    throw std::logic_error{message.std_str()};
+                if (config.has_key("exception")) {
+                    auto const exception_name = fostlib::coerce<fostlib::string>(config["exception"]);
+                    auto const pthrower = g_pthrowers->find(exception_name);
+                    if(pthrower) {
+                        pthrower(message);
+                        throw fostlib::exceptions::not_implemented(
+                            __PRETTY_FUNCTION__, "Exception thrower didn't throw", exception_name);
+                    } else {
+                        throw fostlib::exceptions::not_implemented(
+                            __PRETTY_FUNCTION__, "Exception name not found", exception_name);
+                    }
                 } else {
                     throw fostlib::exceptions::not_implemented(
-                            __PRETTY_FUNCTION__);
+                            __PRETTY_FUNCTION__, "No exception name given to be thrown");
                 }
             }
         }
 
-    } C_throw_exception;
+    } c_throw_exception;
 
 
 }
 
 const fostlib::urlhandler::view &fostlib::urlhandler::test_throw =
-        C_throw_exception;
+        c_throw_exception;
+
+
+fostlib::urlhandler::test_throw_plugin::test_throw_plugin(fostlib::string n, test_throw_plugin_fn f) {
+    g_pthrowers->emplace_if_not_found(std::move(n), std::move(f));
+}
+
