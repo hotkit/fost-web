@@ -79,7 +79,13 @@ const fostlib::urlhandler::view &fostlib::urlhandler::test_throw =
         c_throw_exception;
 
 
-fostlib::urlhandler::test_throw_plugin::test_throw_plugin(fostlib::string n, test_throw_plugin_fn f) {
+fostlib::urlhandler::test_throw_plugin::test_throw_plugin(
+        fostlib::string n, test_throw_plugin_fn f)
+: name{n} {
     g_pthrowers->emplace_if_not_found(std::move(n), std::move(f));
 }
 
+
+fostlib::urlhandler::test_throw_plugin::~test_throw_plugin() {
+    g_pthrowers->remove(name);
+}
