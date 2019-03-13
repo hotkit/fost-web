@@ -21,8 +21,11 @@ namespace fostlib::urlhandler {
 
     struct test_throw_plugin {
         test_throw_plugin(fostlib::string name, test_throw_plugin_fn);
+        ~test_throw_plugin();
+
+      private:
+        string name;
     };
 
 
 }
-
