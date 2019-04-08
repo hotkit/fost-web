@@ -43,7 +43,7 @@ namespace fostlib {
 
         /// Return the MIME type for the given file extension
         FOST_URLHANDLER_DECLSPEC
-        fostlib::string mime_type(const boost::filesystem::wpath &filename);
+        fostlib::string mime_type(const fostlib::fs::path &filename);
 
         /// A view class
         class FOST_URLHANDLER_DECLSPEC view : boost::noncopyable {
@@ -82,7 +82,7 @@ namespace fostlib {
         std::pair<boost::shared_ptr<fostlib::mime>, int> serve_file(
                 const fostlib::json &configuration,
                 fostlib::http::server::request &req,
-                const boost::filesystem::path &filename);
+                const fostlib::fs::path &filename);
 
 
         /// ## Test views

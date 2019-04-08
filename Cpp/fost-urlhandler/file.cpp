@@ -1,8 +1,8 @@
-/*
-    Copyright 2011-2018 Felspar Co Ltd. http://support.felspar.com/
+/**
+    Copyright 2011-2019 Felspar Co Ltd. <http://support.felspar.com/>
+
     Distributed under the Boost Software License, Version 1.0.
-    See accompanying file LICENSE_1_0.txt or copy at
-        http://www.boost.org/LICENSE_1_0.txt
+    See <http://www.boost.org/LICENSE_1_0.txt>
 */
 
 #include "fost-urlhandler.hpp"
@@ -12,7 +12,7 @@
 
 
 namespace {
-    fostlib::string etag(const boost::filesystem::path &filename) {
+    fostlib::string etag(const fostlib::fs::path &filename) {
         fostlib::digester hash(fostlib::md5);
         hash << filename;
         return fostlib::coerce<fostlib::string>(
@@ -30,7 +30,7 @@ namespace {
 std::pair<boost::shared_ptr<fostlib::mime>, int> fostlib::urlhandler::serve_file(
         const fostlib::json &configuration,
         fostlib::http::server::request &req,
-        const boost::filesystem::path &filename) {
+        const fostlib::fs::path &filename) {
     fostlib::mime::mime_headers headers;
     auto now = fostlib::timestamp::now();
     headers.set("Date", timestamp_to_string(now));

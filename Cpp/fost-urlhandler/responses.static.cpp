@@ -1,9 +1,9 @@
-/*
-    Copyright 2011-2018 Felspar Co Ltd. http://support.felspar.com/
+/**
+    Copyright 2011-2019 Felspar Co Ltd. <http://support.felspar.com/>
+
     Distributed under the Boost Software License, Version 1.0.
-    See accompanying file LICENSE_1_0.txt or copy at
-        http://www.boost.org/LICENSE_1_0.txt
-*/
+    See <http://www.boost.org/LICENSE_1_0.txt>
+ */
 
 
 #include "fost-urlhandler.hpp"
@@ -28,20 +28,19 @@ const class response_static : public fostlib::urlhandler::view {
             const fostlib::string &path,
             fostlib::http::server::request &req,
             const fostlib::host &host) const {
-        boost::filesystem::wpath root(fostlib::coerce<boost::filesystem::wpath>(
-                configuration["root"]));
-        boost::filesystem::wpath filename =
-                root / fostlib::coerce<boost::filesystem::wpath>(path);
-        if (boost::filesystem::is_directory(filename))
-            filename /= L"index.html";
-        if (!boost::filesystem::exists(filename))
+        fostlib::fs::wpath root(
+                fostlib::coerce<fostlib::fs::wpath>(configuration["root"]));
+        fostlib::fs::wpath filename =
+                root / fostlib::coerce<fostlib::fs::wpath>(path);
+        if (fostlib::fs::is_directory(filename)) { filename /= L"index.html"; }
+        if (!fostlib::fs::exists(filename))
             return fostlib::urlhandler::response_404(
                     fostlib::json(), path, req, host);
         if (req.method() == "GET" || req.method() == "HEAD") {
             return fostlib::urlhandler::serve_file(
                     configuration, req, filename);
         } else if (allow_delete(configuration) && req.method() == "DELETE") {
-            boost::filesystem::remove(filename);
+            fostlib::fs::remove(filename);
             boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
                     L"<html><head><title>Resource deleted</title></head>"
                     L"<body><h1>Resource deleted</h1></body></html>",

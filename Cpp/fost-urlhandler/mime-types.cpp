@@ -1,8 +1,8 @@
-/*
-    Copyright 2011-2016 Felspar Co Ltd. http://support.felspar.com/
+/**
+    Copyright 2011-2019 Felspar Co Ltd. <http://support.felspar.com/>
+
     Distributed under the Boost Software License, Version 1.0.
-    See accompanying file LICENSE_1_0.txt or copy at
-        http://www.boost.org/LICENSE_1_0.txt
+    See <http://www.boost.org/LICENSE_1_0.txt>
 */
 
 
@@ -25,7 +25,7 @@ namespace {
 void fostlib::urlhandler::load_mime_configuration(
         const fostlib::string &filename) {
     fostlib::string db_data(fostlib::utf::load_file(
-            fostlib::coerce<boost::filesystem::wpath>(filename)));
+            fostlib::coerce<fostlib::fs::wpath>(filename)));
     fostlib::json db_json(fostlib::json::parse(db_data));
     for (fostlib::json::const_iterator jc(db_json.begin()); jc != db_json.end();
          ++jc)
@@ -35,8 +35,8 @@ void fostlib::urlhandler::load_mime_configuration(
 }
 
 fostlib::string fostlib::urlhandler::mime_type(
-        const boost::filesystem::wpath &filename) {
-    boost::filesystem::wpath extension = boost::filesystem::extension(filename);
+        const fostlib::fs::wpath &filename) {
+    fostlib::fs::wpath extension = fostlib::fs::extension(filename);
     return fostlib::setting<fostlib::string>::value(
                    fostlib::string("MIME"),
                    fostlib::coerce<fostlib::string>(extension), fostlib::null)

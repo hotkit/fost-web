@@ -1,8 +1,8 @@
-/*
-    Copyright 2008-2016 Felspar Co Ltd. http://support.felspar.com/
+/**
+    Copyright 2008-2019 Felspar Co Ltd. <http://support.felspar.com/>
+
     Distributed under the Boost Software License, Version 1.0.
-    See accompanying file LICENSE_1_0.txt or copy at
-        http://www.boost.org/LICENSE_1_0.txt
+    See <http://www.boost.org/LICENSE_1_0.txt>
 */
 
 
@@ -50,7 +50,7 @@ FSL_MAIN(
     for (std::size_t arg{1}; arg != args.size(); ++arg) {
         o << "Loading config " << json(args[arg].value());
         auto filename =
-                fostlib::coerce<boost::filesystem::path>(args[arg].value());
+                fostlib::coerce<fostlib::fs::path>(args[arg].value());
         configuration.emplace_back(std::move(filename));
     }
 

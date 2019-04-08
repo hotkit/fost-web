@@ -1,8 +1,8 @@
-/*
-    Copyright 2011-2017 Felspar Co Ltd. http://support.felspar.com/
+/**
+    Copyright 2011-2019 Felspar Co Ltd. <http://support.felspar.com/>
+
     Distributed under the Boost Software License, Version 1.0.
-    See accompanying file LICENSE_1_0.txt or copy at
-        http://www.boost.org/LICENSE_1_0.txt
+    See <http://www.boost.org/LICENSE_1_0.txt>
 */
 
 
@@ -54,7 +54,7 @@ namespace {
             if (wrapped.first->headers()["Content-Type"].value()
                 == "text/html") {
                 fostlib::string skin(fostlib::utf::load_file(
-                        fostlib::coerce<boost::filesystem::wpath>(
+                        fostlib::coerce<fostlib::fs::wpath>(
                                 configuration["template"])));
                 fostlib::string content(
                         fostlib::coerce<fostlib::string>(*wrapped.first));
