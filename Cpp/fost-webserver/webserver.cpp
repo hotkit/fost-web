@@ -49,18 +49,17 @@ FSL_MAIN(
     configuration.reserve(args.size());
     for (std::size_t arg{1}; arg != args.size(); ++arg) {
         o << "Loading config " << json(args[arg].value());
-        auto filename =
-                fostlib::coerce<fostlib::fs::path>(args[arg].value());
+        auto filename = fostlib::coerce<fostlib::fs::path>(args[arg].value());
         configuration.emplace_back(std::move(filename));
     }
 
     // Load any shared objects
     fostlib::json so(c_load.value());
-    std::vector<boost::shared_ptr<fostlib::dynlib>> dynlibs;
+    std::vector<std::shared_ptr<fostlib::dynlib>> dynlibs;
     for (fostlib::json::const_iterator p(so.begin()); p != so.end(); ++p) {
         o << "Loading code plugin " << *p;
-        dynlibs.push_back(boost::shared_ptr<fostlib::dynlib>(
-                new dynlib(fostlib::coerce<fostlib::string>(*p))));
+        dynlibs.push_back(std::make_shared<fostlib::dynlib>(
+                fostlib::coerce<fostlib::string>(*p)));
     }
 
     // Process command line arguments last
