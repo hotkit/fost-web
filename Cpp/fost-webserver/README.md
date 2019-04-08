@@ -6,7 +6,7 @@ The Fost webserver makes use of the views defined within the fost-urlhandler lib
 
 The web server command line typically looks something like this:
 
-    fost-webserver [-m mime-config.json] [-h binding-ip] [-p port-number] \
+    fost-webserver [-C directory] [-m mime-config.json] [-h binding-ip] [-p port-number] \
         configfile1.json [configfile2.json [configfile2.json ...]]
 
 One or more configuration files typically tell it information about virtual hosts and which views to mount at which URLs (see below). By default the web server will bind to localhost only and to port 8001. The host binding can be overridden with `-h`, e.g. `-h 0` binds to all IP numbers. The port number can be changed with `-p`.
@@ -23,6 +23,8 @@ Configuration files are loaded in the order presented and the options `-m`, `-h`
             "Setting 2": ....
         }
     }
+
+The `-C` option can be used to set a new working directory for the web server. When set this is the first action taken.
 
 [TODO: Link to documentation on the settings database.]
 

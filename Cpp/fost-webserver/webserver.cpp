@@ -19,6 +19,8 @@ using namespace fostlib;
 
 namespace {
     const setting<string>
+            c_cwd("webserver.cpp", "webserver", "Change directory", "");
+    const setting<string>
             c_host("webserver.cpp", "webserver", "Bind to", "localhost");
     const setting<int> c_port("webserver.cpp", "webserver", "Port", 8001);
     const setting<string>
@@ -44,6 +46,11 @@ FSL_MAIN(
         L"webserver",
         L"Threaded HTTP server\nCopyright (C) 2002-2016, Felspar Co. Ltd.")
 (fostlib::ostream &o, fostlib::arguments &args) {
+    args.commandSwitch("C", c_cwd.section(), c_cwd.name());
+    if (not c_cwd.value().empty()) {
+        fostlib::fs::current_path(
+                fostlib::coerce<fostlib::fs::path>(c_cwd.value()));
+    }
     // Load the configuration files we've been given on the command line
     std::vector<fostlib::settings> configuration;
     configuration.reserve(args.size());
