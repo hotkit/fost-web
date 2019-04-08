@@ -43,7 +43,14 @@ std::pair<boost::shared_ptr<fostlib::mime>, int> fostlib::urlhandler::serve_file
     }
     fostlib::string validator = etag(filename);
     headers.set("ETag", "\"" + validator + "\"");
-    headers.set("Content-Type", fostlib::urlhandler::mime_type(filename));
+    auto mimetype = fostlib::urlhandler::mime_type(filename);
+    if (mimetype.starts_with("text/")) {
+        fostlib::headers_base::content ct{std::move(mimetype)};
+        ct.subvalue("charset", "utf8");
+        headers.set("Content-Type", std::move(ct));
+    } else {
+        headers.set("Content-Type", std::move(mimetype));
+    }
     if (req.data()->headers().exists("If-None-Match")
         && (req.data()->headers()["If-None-Match"].value() == validator
             || req.data()->headers()["If-None-Match"].value()
