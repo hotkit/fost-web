@@ -1,3 +1,7 @@
+2019-04-09  Kirit Saelensminde  <kirit@felspar.com>
+ * The web server takes a `-C` option which changes its current directory
+ * Text files ('text/` Content-Type) are served as UTF8.
+
 2019-03-05  Kirit Saelensminde  <kirit@felspar.com>
  The `test.throw` view now allows new exception throwers to be added.
 
