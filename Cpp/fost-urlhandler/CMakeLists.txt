@@ -2,7 +2,6 @@ add_library(fost-urlhandler
         config.cpp
         control.exception.cpp
         control.status-condition.cpp
-        file.cpp
         fost-urlhandler.cpp
         middleware.logging.cpp
         middleware.request.cpp
