@@ -28,10 +28,10 @@ const class response_static : public fostlib::urlhandler::view {
             const fostlib::string &path,
             fostlib::http::server::request &req,
             const fostlib::host &host) const {
-        fostlib::fs::wpath root(
-                fostlib::coerce<fostlib::fs::wpath>(configuration["root"]));
-        fostlib::fs::wpath filename =
-                root / fostlib::coerce<fostlib::fs::wpath>(path);
+        fostlib::fs::path root(
+                fostlib::coerce<fostlib::fs::path>(configuration["root"]));
+        fostlib::fs::path filename =
+                root / fostlib::coerce<fostlib::fs::path>(path);
         if (fostlib::fs::is_directory(filename)) {
             if (configuration.has_key("index")) {
                 filename /= fostlib::coerce<fostlib::fs::path>(
