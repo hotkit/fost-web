@@ -32,7 +32,14 @@ const class response_static : public fostlib::urlhandler::view {
                 fostlib::coerce<fostlib::fs::wpath>(configuration["root"]));
         fostlib::fs::wpath filename =
                 root / fostlib::coerce<fostlib::fs::wpath>(path);
-        if (fostlib::fs::is_directory(filename)) { filename /= L"index.html"; }
+        if (fostlib::fs::is_directory(filename)) {
+            if (configuration.has_key("index")) {
+                filename /= fostlib::coerce<fostlib::fs::path>(
+                        configuration["index"]);
+            } else {
+                filename /= "index.html";
+            }
+        }
         if (!fostlib::fs::exists(filename)) {
             return fostlib::urlhandler::response_404(
                     fostlib::json(), path, req, host);
