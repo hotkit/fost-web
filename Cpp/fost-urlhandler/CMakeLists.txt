@@ -43,6 +43,7 @@ if(TARGET check)
             responses.302-tests.cpp
             responses.303-tests.cpp
             responses.405-tests.cpp
+            responses.static.tests.cpp
             routing-tests.cpp
             schema.validate-tests.cpp
             test.throw.tests.cpp
