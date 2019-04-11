@@ -100,7 +100,11 @@ namespace {
                 fostlib::json entry;
                 if (fostlib::fs::is_directory(node.path())) {
                     fostlib::insert(entry, "directory", true);
-                    fostlib::insert(entry, "path", fostlib::coerce<fostlib::string>(node.path().filename()) + "/");
+                    fostlib::insert(
+                            entry, "path",
+                            fostlib::coerce<fostlib::string>(
+                                    node.path().filename())
+                                    + "/");
                 } else {
                     fostlib::insert(entry, "directory", false);
                     fostlib::insert(entry, "path", node.path().filename());
