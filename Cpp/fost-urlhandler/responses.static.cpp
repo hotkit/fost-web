@@ -8,6 +8,7 @@
 
 #include "fost-urlhandler.hpp"
 #include <fost/urlhandler.hpp>
+#include <fost/insert>
 #include <fost/push_back>
 #include <fost/unicode>
 
@@ -45,6 +46,12 @@ namespace {
                 fostlib::http::server::request &req,
                 const fostlib::host &host,
                 const fostlib::fs::path &dirname) const {
+            if (not static_cast<f5::u8view>(req.file_spec()).ends_with("/")) {
+                fostlib::json redirect;
+                fostlib::insert(redirect, "location", req.file_spec() + "/");
+                return fostlib::urlhandler::response_302(
+                        redirect, path, req, host);
+            }
             auto filename = dirname;
             if (configuration.has_key("index")) {
                 filename /= fostlib::coerce<fostlib::fs::path>(

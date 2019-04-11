@@ -107,3 +107,14 @@ FSL_TEST_FUNCTION(custom_default_file_not_found) {
     FSL_CHECK_EQ(status, 403);
     FSL_CHECK_EQ(resp->headers()["Content-Type"].value(), "text/html");
 }
+
+
+/// Directory redirects without trailing slash
+FSL_TEST_FUNCTION(directory_redirect) {
+    auto conf = setup();
+    fostlib::http::server::request req("GET", "/empty");
+    auto [resp, status] = fostlib::urlhandler::static_server(
+            conf, "empty", req, fostlib::host{});
+    FSL_CHECK_EQ(status, 302);
+    FSL_CHECK_EQ(resp->headers()["Location"].value(), "/empty/");
+}
