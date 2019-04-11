@@ -121,7 +121,7 @@ FSL_TEST_FUNCTION(directory_redirect) {
 
 
 /// Can customise the directory serving view
-FSL_TEST_FUNCTION(directory_view) {
+FSL_TEST_FUNCTION(directory_view_forbidden) {
     auto conf = setup();
     fostlib::insert(conf, "directory", "view", "fost.response.500");
     fostlib::http::server::request req("GET", "/empty/");
@@ -129,4 +129,15 @@ FSL_TEST_FUNCTION(directory_view) {
             conf, "empty/", req, fostlib::host{});
     FSL_CHECK_EQ(status, 500);
     FSL_CHECK_EQ(resp->headers()["Content-Type"].value(), "text/html");
+}
+
+/// Forgetting root directory throws
+FSL_TEST_FUNCTION(directory_view_no_root) {
+    auto conf = setup();
+    fostlib::insert(conf, "directory", "view", "fost.static.directory.json");
+    fostlib::http::server::request req("GET", "/empty/");
+    FSL_CHECK_EXCEPTION(
+            fostlib::urlhandler::static_server(
+                    conf, "empty/", req, fostlib::host{}),
+            fostlib::exceptions::not_implemented &);
 }

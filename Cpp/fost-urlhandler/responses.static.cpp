@@ -25,6 +25,11 @@ namespace {
                 const fostlib::string &path,
                 fostlib::http::server::request &req,
                 const fostlib::host &host) const {
+            if (not configuration.has_key("root")) {
+                throw fostlib::exceptions::not_implemented(
+                        __PRETTY_FUNCTION__,
+                        "Must specify a root folder when serving a directory");
+            }
             fostlib::fs::path root(
                     fostlib::coerce<fostlib::fs::path>(configuration["root"]));
             fostlib::fs::path filename =
