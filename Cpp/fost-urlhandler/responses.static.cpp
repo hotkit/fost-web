@@ -29,7 +29,8 @@ namespace {
             fostlib::fs::path filename =
                     root / fostlib::coerce<fostlib::fs::path>(path);
             if (fostlib::fs::is_directory(filename)) {
-                return serve_directory(configuration, filename, req);
+                return serve_directory(
+                        configuration, path, req, host, filename);
             } else {
                 throw fostlib::exceptions::not_implemented(
                         __PRETTY_FUNCTION__,
@@ -40,8 +41,10 @@ namespace {
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> serve_directory(
                 const fostlib::json &configuration,
-                const fostlib::fs::path &dirname,
-                fostlib::http::server::request &req) const {
+                const fostlib::string &path,
+                fostlib::http::server::request &req,
+                const fostlib::host &host,
+                const fostlib::fs::path &dirname) const {
             auto filename = dirname;
             if (configuration.has_key("index")) {
                 filename /= fostlib::coerce<fostlib::fs::path>(
@@ -54,7 +57,8 @@ namespace {
                         configuration, req, filename);
             }
             /// There is no index file in this directory
-            throw fostlib::exceptions::not_implemented(__PRETTY_FUNCTION__);
+            return fostlib::urlhandler::response_403(
+                    fostlib::json{}, path, req, host);
         }
     } c_directory;
 
@@ -81,7 +85,7 @@ namespace {
                     root / fostlib::coerce<fostlib::fs::path>(path);
             if (fostlib::fs::is_directory(filename)) {
                 return c_directory.serve_directory(
-                        configuration, filename, req);
+                        configuration, path, req, host, filename);
             } else {
                 if (not fostlib::fs::exists(filename)) {
                     return fostlib::urlhandler::response_404(
