@@ -141,3 +141,16 @@ FSL_TEST_FUNCTION(directory_view_no_root) {
                     conf, "empty/", req, fostlib::host{}),
             fostlib::exceptions::not_implemented &);
 }
+
+
+/// Empty directory gives empty JSON when served as JSON
+FSL_TEST_FUNCTION(directory_view_json) {
+    auto conf = setup();
+    fostlib::insert(conf, "directory", "view", "fost.static.directory.json");
+    fostlib::insert(conf, "directory", "configuration", "root", conf["root"]);
+    fostlib::http::server::request req("GET", "/empty/");
+    auto [resp, status] = fostlib::urlhandler::static_server(
+            conf, "empty/", req, fostlib::host{});
+    FSL_CHECK_EQ(status, 200);
+    FSL_CHECK_EQ(content(*resp), "{}");
+}

@@ -18,7 +18,7 @@ namespace {
 
     const class directory : public fostlib::urlhandler::view {
       public:
-        directory() : view{"fost.static.directory"} {}
+        directory(f5::u8string name) : view{name} {}
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
                 const fostlib::json &configuration,
@@ -69,10 +69,38 @@ namespace {
                         configuration, req, filename);
             }
             /// There is no index file in this directory
+            return listing(configuration, path, req, host, dirname);
+        }
+
+        virtual std::pair<boost::shared_ptr<fostlib::mime>, int>
+                listing(const fostlib::json &configuration,
+                        const fostlib::string &path,
+                        fostlib::http::server::request &req,
+                        const fostlib::host &host,
+                        const fostlib::fs::path &) const {
             return fostlib::urlhandler::response_403(
                     fostlib::json{}, path, req, host);
         }
-    } c_directory;
+    } c_directory{"fost.static.directory"};
+
+
+    const class directory_json : public directory {
+      public:
+        directory_json() : directory("fost.static.directory.json") {}
+
+        std::pair<boost::shared_ptr<fostlib::mime>, int>
+                listing(const fostlib::json &configuration,
+                        const fostlib::string &path,
+                        fostlib::http::server::request &req,
+                        const fostlib::host &host,
+                        const fostlib::fs::path &directory) const {
+            fostlib::json files = fostlib::json::object_t{};
+            boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
+                    fostlib::json::unparse(files, false),
+                    fostlib::mime::mime_headers(), "application/json"));
+            return std::make_pair(response, 200);
+        }
+    } c_directory_json;
 
 
     const class response_static : public fostlib::urlhandler::view {
