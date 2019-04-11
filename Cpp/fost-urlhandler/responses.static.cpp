@@ -95,6 +95,21 @@ namespace {
                         const fostlib::host &host,
                         const fostlib::fs::path &directory) const {
             fostlib::json files = fostlib::json::object_t{};
+            for (auto const &node :
+                 fostlib::fs::directory_iterator(directory)) {
+                fostlib::json entry;
+                if (fostlib::fs::is_directory(node.path())) {
+                    fostlib::insert(entry, "directory", true);
+                    fostlib::insert(entry, "path", fostlib::coerce<fostlib::string>(node.path().filename()) + "/");
+                } else {
+                    fostlib::insert(entry, "directory", false);
+                    fostlib::insert(entry, "path", node.path().filename());
+                }
+                fostlib::insert(
+                        files,
+                        fostlib::coerce<fostlib::string>(node.path().filename()),
+                        entry);
+            }
             boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
                     fostlib::json::unparse(files, false),
                     fostlib::mime::mime_headers(), "application/json"));

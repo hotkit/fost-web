@@ -144,7 +144,7 @@ FSL_TEST_FUNCTION(directory_view_no_root) {
 
 
 /// Empty directory gives empty JSON when served as JSON
-FSL_TEST_FUNCTION(directory_view_json) {
+FSL_TEST_FUNCTION(empty_directory_view_json) {
     auto conf = setup();
     fostlib::insert(conf, "directory", "view", "fost.static.directory.json");
     fostlib::insert(conf, "directory", "configuration", "root", conf["root"]);
@@ -152,5 +152,29 @@ FSL_TEST_FUNCTION(directory_view_json) {
     auto [resp, status] = fostlib::urlhandler::static_server(
             conf, "empty/", req, fostlib::host{});
     FSL_CHECK_EQ(status, 200);
+    FSL_CHECK_EQ(resp->headers()["Content-Type"].value(), "application/json");
     FSL_CHECK_EQ(content(*resp), "{}");
+}
+
+
+/// Folders with files give us a listing
+FSL_TEST_FUNCTION(directory_view_json) {
+    auto conf = setup();
+    fostlib::insert(conf, "directory", "view", "fost.static.directory.json");
+    fostlib::insert(conf, "directory", "configuration", "root", conf["root"]);
+    fostlib::insert(
+            conf, "directory", "configuration", "index", "non-existant.txt");
+    fostlib::http::server::request req("GET", "/");
+    auto [resp, status] =
+            fostlib::urlhandler::static_server(conf, "", req, fostlib::host{});
+    FSL_CHECK_EQ(status, 200);
+    FSL_CHECK_EQ(resp->headers()["Content-Type"].value(), "application/json");
+    auto const listing = fostlib::json::parse(content(*resp));
+    FSL_CHECK_EQ(listing.size(), 3);
+    FSL_CHECK(listing.has_key("index.html"));
+    FSL_CHECK_EQ(listing["index.html"]["directory"], fostlib::json{false});
+    FSL_CHECK_EQ(listing["index.html"]["path"], "index.html");
+    FSL_CHECK(listing.has_key("empty"));
+    FSL_CHECK_EQ(listing["empty"]["directory"], fostlib::json{true});
+    FSL_CHECK_EQ(listing["empty"]["path"], "empty/");
 }
