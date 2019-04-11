@@ -1,3 +1,6 @@
+2019-04-11  Kirit Saelensminde  <kirit@felspar.com>
+ Add JSON directory listing view and ability to choose directory listing view for the static file server.
+
 2019-04-09  Kirit Saelensminde  <kirit@felspar.com>
  * The web server takes a `-C` option which changes its current directory
  * Text files ('text/` Content-Type) are served as UTF8.
