@@ -91,8 +91,12 @@ namespace {
             fostlib::fs::path filename =
                     root / fostlib::coerce<fostlib::fs::path>(path);
             if (fostlib::fs::is_directory(filename)) {
-                return c_directory.serve_directory(
-                        configuration, path, req, host, filename);
+                if (configuration.has_key("directory")) {
+                    return execute(configuration["directory"], path, req, host);
+                } else {
+                    return c_directory.serve_directory(
+                            configuration, path, req, host, filename);
+                }
             } else {
                 if (not fostlib::fs::exists(filename)) {
                     return fostlib::urlhandler::response_404(

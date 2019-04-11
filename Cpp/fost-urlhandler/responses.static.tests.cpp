@@ -118,3 +118,15 @@ FSL_TEST_FUNCTION(directory_redirect) {
     FSL_CHECK_EQ(status, 302);
     FSL_CHECK_EQ(resp->headers()["Location"].value(), "/empty/");
 }
+
+
+/// Can customise the directory serving view
+FSL_TEST_FUNCTION(directory_view) {
+    auto conf = setup();
+    fostlib::insert(conf, "directory", "view", "fost.response.500");
+    fostlib::http::server::request req("GET", "/empty/");
+    auto [resp, status] = fostlib::urlhandler::static_server(
+            conf, "empty/", req, fostlib::host{});
+    FSL_CHECK_EQ(status, 500);
+    FSL_CHECK_EQ(resp->headers()["Content-Type"].value(), "text/html");
+}
