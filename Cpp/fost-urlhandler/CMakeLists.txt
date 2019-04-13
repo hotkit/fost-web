@@ -32,6 +32,7 @@ if(TARGET check)
     add_library(fost-urlhandler-smoke STATIC EXCLUDE_FROM_ALL
             control.exception.tests.cpp
             control.status-condition-tests.cpp
+            responses.tests.cpp
             responses.301-tests.cpp
             responses.302-tests.cpp
             responses.303-tests.cpp
