@@ -7,7 +7,7 @@ add_library(fost-urlhandler
         middleware.request.cpp
         middleware.template.cpp
         mime-types.cpp
-        responses.200.cpp
+        responses.cpp
         responses.301.cpp
         responses.302.cpp
         responses.303.cpp
