@@ -12,7 +12,6 @@ add_library(fost-urlhandler
         responses.302.cpp
         responses.303.cpp
         responses.401.cpp
-        responses.403.cpp
         responses.404.cpp
         responses.405.cpp
         responses.410.cpp
