@@ -1,5 +1,5 @@
 /**
-    Copyright 2016-2019 Felspar Co Ltd. <http://support.felspar.com/>
+    Copyright 2011-2019 Felspar Co Ltd. <http://support.felspar.com/>
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -15,17 +15,18 @@ namespace {
 
     class response : public fostlib::urlhandler::view {
         int status;
+        f5::u8string message;
 
       public:
         response(int s)
-        : view{"fost.response." + std::to_string(s)}, status{s} {}
+        : view{"fost.response." + std::to_string(s)},
+          status{s},
+          message{fostlib::http::server::status_text(s)} {}
+        response(int s, f5::u8string m) : response(s) { message = m; }
 
         f5::u8string html() const {
-            return f5::u8string{"<html><head><title>"}
-            + fostlib::http::server::status_text(status)
-                    + "</title></head><body><h1>"
-                    + fostlib::http::server::status_text(status)
-                    + "</h1></body></html>";
+            return "<html><head><title>" + message + "</title></head><body><h1>"
+                    + message + "</h1></body></html>";
         }
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
@@ -43,8 +44,26 @@ namespace {
 }
 
 
+/**
+ * ## List of generic responses
+ */
+
+
 const fostlib::urlhandler::view &fostlib::urlhandler::response_200 =
         response{200};
 
 const fostlib::urlhandler::view &fostlib::urlhandler::response_403 =
         response{403};
+const fostlib::urlhandler::view &fostlib::urlhandler::response_404 =
+        response{404, "Resource not found"};
+const fostlib::urlhandler::view &fostlib::urlhandler::response_410 =
+        response{410};
+const fostlib::urlhandler::view &fostlib::urlhandler::response_412 =
+        response{412};
+
+const fostlib::urlhandler::view &fostlib::urlhandler::response_500 =
+        response{500};
+const fostlib::urlhandler::view &fostlib::urlhandler::response_501 =
+        response{501};
+const fostlib::urlhandler::view &fostlib::urlhandler::response_503 =
+        response{503};

@@ -12,13 +12,7 @@ add_library(fost-urlhandler
         responses.302.cpp
         responses.303.cpp
         responses.401.cpp
-        responses.404.cpp
         responses.405.cpp
-        responses.410.cpp
-        responses.412.cpp
-        responses.500.cpp
-        responses.501.cpp
-        responses.503.cpp
         responses.file.cpp
         responses.pathname.cpp
         responses.pathprefix.cpp
