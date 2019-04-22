@@ -18,6 +18,10 @@ namespace {
         f5::u8string message;
 
       public:
+        response()
+        : view{"fost.response"},
+          status{200},
+          message{fostlib::http::server::status_text(200)} {}
         response(int s)
         : view{"fost.response." + std::to_string(s)},
           status{s},
@@ -48,6 +52,8 @@ namespace {
  * ## List of generic responses
  */
 
+const fostlib::urlhandler::view &fostlib::urlhandler::response_generic =
+        response{};
 
 const fostlib::urlhandler::view &fostlib::urlhandler::response_200 =
         response{200};

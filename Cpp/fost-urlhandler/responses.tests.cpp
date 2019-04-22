@@ -28,3 +28,11 @@ FSL_TEST_FUNCTION(500) {
             fostlib::json{"fost.response.500"}, "", req, fostlib::host{});
     FSL_CHECK_EQ(status, 500);
 }
+
+
+FSL_TEST_FUNCTION(200) {
+    fostlib::http::server::request req("GET", "/");
+    auto [response, status] = fostlib::urlhandler::view::execute(
+            fostlib::json{"fost.response"}, "", req, fostlib::host{});
+    FSL_CHECK_EQ(status, 200);
+}
