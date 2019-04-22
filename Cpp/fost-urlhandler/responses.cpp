@@ -28,19 +28,29 @@ namespace {
           message{fostlib::http::server::status_text(s)} {}
         response(int s, f5::u8string m) : response(s) { message = m; }
 
-        f5::u8string html() const {
-            return "<html><head><title>" + message + "</title></head><body><h1>"
-                    + message + "</h1></body></html>";
+        boost::shared_ptr<fostlib::mime> html(f5::u8string msg) const {
+            f5::u8string resp_msg = "<html><head><title>" + msg
+                    + "</title></head><body><h1>" + msg + "</h1></body></html>";
+            boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
+                    resp_msg, fostlib::mime::mime_headers(), "text/html"));
+            return response;
         }
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
-                const fostlib::json &,
+                const fostlib::json &config,
                 const fostlib::string &,
                 fostlib::http::server::request &,
                 const fostlib::host &) const {
-            boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
-                    html(), fostlib::mime::mime_headers(), "text/html"));
-            return std::make_pair(response, status);
+            int response_status{status};
+            f5::u8string resp_msg{message};
+            if (config.has_key("status")) {
+                response_status = fostlib::coerce<int>(config["status"]);
+            }
+            if (config.has_key("message")) {
+                resp_msg = fostlib::coerce<f5::u8string>(config["message"]);
+            }
+
+            return std::make_pair(html(resp_msg), response_status);
         }
     };
 
