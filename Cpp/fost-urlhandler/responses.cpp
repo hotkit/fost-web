@@ -36,6 +36,13 @@ namespace {
             return response;
         }
 
+        boost::shared_ptr<fostlib::mime> json(fostlib::json json) const {
+            boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
+                    fostlib::json::unparse(json, true),
+                    fostlib::mime::mime_headers(), "application/json"));
+            return response;
+        }
+
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
                 const fostlib::json &config,
                 const fostlib::string &,
@@ -49,6 +56,9 @@ namespace {
                 return std::make_pair(
                         html(fostlib::coerce<f5::u8string>(config["message"])),
                         response_status);
+            }
+            if (config.has_key("json")) {
+                return std::make_pair(json(config["json"]), response_status);
             }
 
             return std::make_pair(html(message), response_status);
