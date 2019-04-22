@@ -42,15 +42,16 @@ namespace {
                 fostlib::http::server::request &,
                 const fostlib::host &) const {
             int response_status{status};
-            f5::u8string resp_msg{message};
             if (config.has_key("status")) {
                 response_status = fostlib::coerce<int>(config["status"]);
             }
             if (config.has_key("message")) {
-                resp_msg = fostlib::coerce<f5::u8string>(config["message"]);
+                return std::make_pair(
+                        html(fostlib::coerce<f5::u8string>(config["message"])),
+                        response_status);
             }
 
-            return std::make_pair(html(resp_msg), response_status);
+            return std::make_pair(html(message), response_status);
         }
     };
 
