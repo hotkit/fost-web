@@ -1,8 +1,8 @@
-/*
-    Copyright 2008-2016 Felspar Co Ltd. http://support.felspar.com/
+/**
+    Copyright 2008-2019 Felspar Co Ltd. <http://support.felspar.com/>
+
     Distributed under the Boost Software License, Version 1.0.
-    See accompanying file LICENSE_1_0.txt or copy at
-        http://www.boost.org/LICENSE_1_0.txt
+    See <http://www.boost.org/LICENSE_1_0.txt>
 */
 
 
@@ -18,6 +18,8 @@ using namespace fostlib;
 
 
 namespace {
+    const setting<string>
+            c_cwd("webserver.cpp", "webserver", "Change directory", "");
     const setting<string>
             c_host("webserver.cpp", "webserver", "Bind to", "localhost");
     const setting<int> c_port("webserver.cpp", "webserver", "Port", 8001);
@@ -44,23 +46,27 @@ FSL_MAIN(
         L"webserver",
         L"Threaded HTTP server\nCopyright (C) 2002-2016, Felspar Co. Ltd.")
 (fostlib::ostream &o, fostlib::arguments &args) {
+    args.commandSwitch("C", c_cwd.section(), c_cwd.name());
+    if (not c_cwd.value().empty()) {
+        fostlib::fs::current_path(
+                fostlib::coerce<fostlib::fs::path>(c_cwd.value()));
+    }
     // Load the configuration files we've been given on the command line
     std::vector<fostlib::settings> configuration;
     configuration.reserve(args.size());
     for (std::size_t arg{1}; arg != args.size(); ++arg) {
         o << "Loading config " << json(args[arg].value());
-        auto filename =
-                fostlib::coerce<boost::filesystem::path>(args[arg].value());
+        auto filename = fostlib::coerce<fostlib::fs::path>(args[arg].value());
         configuration.emplace_back(std::move(filename));
     }
 
     // Load any shared objects
     fostlib::json so(c_load.value());
-    std::vector<boost::shared_ptr<fostlib::dynlib>> dynlibs;
+    std::vector<std::shared_ptr<fostlib::dynlib>> dynlibs;
     for (fostlib::json::const_iterator p(so.begin()); p != so.end(); ++p) {
         o << "Loading code plugin " << *p;
-        dynlibs.push_back(boost::shared_ptr<fostlib::dynlib>(
-                new dynlib(fostlib::coerce<fostlib::string>(*p))));
+        dynlibs.push_back(std::make_shared<fostlib::dynlib>(
+                fostlib::coerce<fostlib::string>(*p)));
     }
 
     // Process command line arguments last

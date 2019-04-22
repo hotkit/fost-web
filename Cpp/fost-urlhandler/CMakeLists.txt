@@ -2,25 +2,17 @@ add_library(fost-urlhandler
         config.cpp
         control.exception.cpp
         control.status-condition.cpp
-        file.cpp
         fost-urlhandler.cpp
         middleware.logging.cpp
         middleware.request.cpp
         middleware.template.cpp
         mime-types.cpp
-        responses.200.cpp
+        responses.cpp
         responses.301.cpp
         responses.302.cpp
         responses.303.cpp
         responses.401.cpp
-        responses.403.cpp
-        responses.404.cpp
         responses.405.cpp
-        responses.410.cpp
-        responses.412.cpp
-        responses.500.cpp
-        responses.501.cpp
-        responses.503.cpp
         responses.file.cpp
         responses.pathname.cpp
         responses.pathprefix.cpp
@@ -40,10 +32,12 @@ if(TARGET check)
     add_library(fost-urlhandler-smoke STATIC EXCLUDE_FROM_ALL
             control.exception.tests.cpp
             control.status-condition-tests.cpp
+            responses.tests.cpp
             responses.301-tests.cpp
             responses.302-tests.cpp
             responses.303-tests.cpp
             responses.405-tests.cpp
+            responses.static.tests.cpp
             routing-tests.cpp
             schema.validate-tests.cpp
             test.throw.tests.cpp
