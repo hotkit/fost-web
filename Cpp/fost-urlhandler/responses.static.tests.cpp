@@ -17,20 +17,19 @@ namespace {
     fostlib::setting<fostlib::string> const c_mime_html{
             "responses.static.tests.cpp", "MIME", ".html", "text/html"};
 
-    /// We need to write the files we're going to test against
-    /// to a suitable location
-    fostlib::fs::path const c_file_root{fostlib::unique_filename()};
-
 
     /// Set up the tests. Most of this only needs to be run once,
     /// but it doesn't matter if it runs multiple times
     fostlib::json setup() {
-        fostlib::fs::create_directory(c_file_root);
-        fostlib::fs::create_directory(c_file_root / "empty");
-        fostlib::utf::save_file(c_file_root / "index.html", "html");
-        fostlib::utf::save_file(c_file_root / "index.txt", "text");
+        auto const root = fostlib::coerce<fostlib::fs::path>(
+                                  fostlib::test::c_files_folder.value())
+                / "static-files";
+        fostlib::fs::create_directories(root);
+        fostlib::fs::create_directory(root / "empty");
+        fostlib::utf::save_file(root / "index.html", "html");
+        fostlib::utf::save_file(root / "index.txt", "text");
         fostlib::json conf;
-        fostlib::insert(conf, "root", c_file_root);
+        fostlib::insert(conf, "root", root);
         return conf;
     }
 
