@@ -1,8 +1,8 @@
-/*
-    Copyright 2008-2017 Felspar Co Ltd. http://support.felspar.com/
+/**
+    Copyright 2008-2019, Felspar Co Ltd. <http://support.felspar.com/>
+
     Distributed under the Boost Software License, Version 1.0.
-    See accompanying file LICENSE_1_0.txt or copy at
-        http://www.boost.org/LICENSE_1_0.txt
+    See <http://www.boost.org/LICENSE_1_0.txt>
 */
 
 
@@ -13,21 +13,17 @@
 
 bool fostlib::urlhandler::service(fostlib::http::server::request &req) {
     // Before doing anything else run some sanity checks on the request
-    if (req.file_spec().underlying().underlying()[0] != '/'
-        || req.file_spec().underlying().underlying().find("/..")
-                != std::string::npos) {
-        fostlib::log::error(c_fost_web_urlhandler)(
-                "",
-                "fostlib::urlhandler::service -- Bad request received, could "
-                "not be parsed")("req", "method", req.method())(
-                "req", "file_spec",
-                req.file_spec().underlying().underlying().c_str())(
-                "req", "query",
-                req.query_string()
-                        .as_string()
-                        .value_or(ascii_printable_string())
-                        .underlying()
-                        .c_str());
+    auto const rfsw = static_cast<std::string>(
+            req.file_spec()); // TODO Should be string view
+    if (rfsw[0] != '/' || rfsw.find("/..") != std::string::npos) {
+        auto log = fostlib::log::error(c_fost_web_urlhandler);
+        log("",
+            "fostlib::urlhandler::service -- Bad request received, could "
+            "not be parsed");
+        log("req", "method", req.method());
+        log("req", "file_spec", req.file_spec());
+        log("req", "query",
+            req.query_string().as_string().value_or(ascii_printable_string()));
         fostlib::text_body response(
                 fostlib::string("400 Bad Request\n"),
                 fostlib::mime::mime_headers(), L"text/plain");

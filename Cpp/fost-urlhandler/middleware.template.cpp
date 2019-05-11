@@ -31,8 +31,9 @@ namespace {
             const fostlib::string &block,
             const fostlib::string &with) {
         fostlib::string::size_type start = skin.find(block);
-        if (start != fostlib::string::npos)
-            skin.replace(start, block.length(), with);
+        if (start != fostlib::string::npos) {
+            skin.replace(start, block.code_points(), with);
+        }
     }
 
 

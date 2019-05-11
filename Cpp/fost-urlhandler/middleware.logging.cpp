@@ -1,8 +1,8 @@
-/*
-    Copyright 2016-2018 Felspar Co Ltd. http://support.felspar.com/
+/**
+    Copyright 2016-2019, Felspar Co Ltd. <http://support.felspar.com/>
+
     Distributed under the Boost Software License, Version 1.0.
-    See accompanying file LICENSE_1_0.txt or copy at
-        http://www.boost.org/LICENSE_1_0.txt
+    See <http://www.boost.org/LICENSE_1_0.txt>
 */
 
 
@@ -41,18 +41,13 @@ namespace {
                 logger("time", "seconds",
                        std::chrono::duration<double>(
                                std::chrono::steady_clock::now() - started)
-                               .count())("request", "method", req.method())(
-                        "request", "path",
-                        req.file_spec().underlying().underlying().c_str())(
-                        "request", "bytes", req.data()->data().size())(
-                        "request", "headers", req.headers());
+                               .count())("request", "method", req.method());
+                logger("request", "path", req.file_spec());
+                logger("request", "bytes", req.data()->data().size());
+                logger("request", "headers", req.headers());
                 if (req.query_string().as_string()) {
                     logger("request", "query",
-                           req.query_string()
-                                   .as_string()
-                                   .value()
-                                   .underlying()
-                                   .c_str());
+                           req.query_string().as_string().value());
                 }
             };
             auto resplog = [&addlog](auto &logger, const auto &result) {
