@@ -1,8 +1,8 @@
-/*
-    Copyright 2011-2016 Felspar Co Ltd. http://support.felspar.com/
+/**
+    Copyright 2011-2019, Felspar Co Ltd. <http://support.felspar.com/>
+
     Distributed under the Boost Software License, Version 1.0.
-    See accompanying file LICENSE_1_0.txt or copy at
-        http://www.boost.org/LICENSE_1_0.txt
+    See <http://www.boost.org/LICENSE_1_0.txt>
 */
 
 
@@ -38,9 +38,10 @@ namespace {
             for (fostlib::json::const_iterator p(configuration.begin());
                  p != configuration.end(); ++p) {
                 fostlib::string key = fostlib::coerce<fostlib::string>(p.key());
-                std::size_t length = key.length();
-                if (path.substr(0, length) == key && length > longest.first)
+                std::size_t length = key.code_points();
+                if (path.substr(0, length) == key && length > longest.first) {
                     longest = std::make_pair(length, key);
+                }
             }
 
             if (configuration.has_key(longest.second))
