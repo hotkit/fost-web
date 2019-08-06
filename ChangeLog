@@ -1,3 +1,6 @@
+2019-08-06  Pattarawut Imamnuaysup  <pattarawut@hot-now.com>
+ Add a return for status condition control when an if condition fails without else condition
+
 2019-04-11  Kirit Saelensminde  <kirit@felspar.com>
  Add JSON directory listing view and ability to choose directory listing view for the static file server.
 
