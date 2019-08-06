@@ -56,3 +56,13 @@ FSL_TEST_FUNCTION(execute_else_if_more_than_400) {
                     config, "/", req, fostlib::host())};
     FSL_CHECK_EQ(response.second, 200);
 }
+
+FSL_TEST_FUNCTION(return_response_if_more_than_400_without_else) {
+    fostlib::json config;
+    fostlib::insert(config, "if", "fost.response.404");
+    fostlib::http::server::request req;
+    std::pair<boost::shared_ptr<fostlib::mime>, int> response{
+            fostlib::urlhandler::control_status_condition(
+                    config, "/", req, fostlib::host())};
+    FSL_CHECK_EQ(response.second, 404);
+}

@@ -41,11 +41,7 @@ namespace {
             if (config.has_key("else")) {
                 return execute(config["else"], path, req, host);
             }
-            throw fostlib::exceptions::not_implemented(
-                    __PRETTY_FUNCTION__,
-                    "'else' condition in fost.control.status-condition not "
-                    "defined",
-                    config);
+            return if_response;
         }
     } c_control_status_condition;
 
