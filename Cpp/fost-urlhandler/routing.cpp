@@ -6,6 +6,7 @@
 */
 
 
+#include <fost/crypto>
 #include "fost-urlhandler.hpp"
 #include <fost/urlhandler.hpp>
 #include <fost/log>
@@ -33,6 +34,13 @@ bool fostlib::urlhandler::service(fostlib::http::server::request &req) {
 
     // Now process it
     fostlib::string hostname(req.data()->headers()["Host"].value());
+
+    // Fost-Request-ID
+    if (!req.data()->headers().exists("Fost-Request-ID")) {
+        req.data()->headers().set(
+                "Fost-Request-ID",
+                fostlib::timestamp_nonce24b64u().underlying().underlying());
+    }
 
     fostlib::json host_config = c_hosts.value();
     if (host_config.has_key(hostname)

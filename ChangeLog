@@ -1,3 +1,6 @@
+2019-08-26  Tle Ekkul  <e.aryuth@gmail.com>
+ Add Fost-Request-ID in every requests and response
+
 2019-08-06  Pattarawut Imamnuaysup  <pattarawut@hot-now.com>
  Add a return for status condition control when an if condition fails without else condition
 
