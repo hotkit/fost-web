@@ -97,15 +97,26 @@ std::pair<boost::shared_ptr<fostlib::mime>, int>
                 fostlib::http::server::request &request,
                 const fostlib::host &host) {
     try {
+
+        std::pair<boost::shared_ptr<fostlib::mime>, int> response;
         if (configuration.isobject()) {
             auto view_fn = find_view(
                     view_name(configuration), configuration["configuration"]);
-            return view_for(view_fn.first)(view_fn.second, path, request, host);
+            response = view_for(view_fn.first)(
+                    view_fn.second, path, request, host);
         } else {
             auto view_name = coerce<string>(configuration);
             auto to_exec = find_view(view_name);
-            return view_for(to_exec.first)(to_exec.second, path, request, host);
+            response = view_for(to_exec.first)(
+                    to_exec.second, path, request, host);
         }
+
+        // Preserve Fost-Request-ID from request
+        response.first->headers().set(
+                "Fost-Request-ID",
+                request.data()->headers()["Fost-Request-ID"]);
+
+        return response;
     } catch (fostlib::exceptions::exception &e) {
         push_back(e.data(), "fost-web", "execute", "stacktrace", configuration);
         throw;

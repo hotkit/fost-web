@@ -42,6 +42,7 @@ if(TARGET check)
             schema.validate-tests.cpp
             test.throw.tests.cpp
             view-tests.cpp
+            view.request-id.tests.cpp
         )
     target_link_libraries(fost-urlhandler-smoke fost-urlhandler)
     smoke_test(fost-urlhandler-smoke)
