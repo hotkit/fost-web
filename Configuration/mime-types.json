@@ -19,5 +19,8 @@
     ".jpeg": "image/jpg",
     ".png": "image/png",
 
-    ".svg": "image/svg+xml"
+    ".svg": "image/svg+xml",
+
+    ".pdf": "application/pdf",
+    ".zip": "application/zip"
 }
