@@ -27,6 +27,7 @@ target_include_directories(fost-urlhandler PUBLIC ../include)
 target_link_libraries(fost-urlhandler fost-inet f5-json-schema)
 set_target_properties(fost-urlhandler PROPERTIES DEBUG_POSTFIX "-d")
 install(TARGETS fost-urlhandler LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(DIRECTORY ../include/fost DESTINATION include)
 
 if(TARGET check)
     add_library(fost-urlhandler-smoke STATIC EXCLUDE_FROM_ALL
