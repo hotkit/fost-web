@@ -42,7 +42,16 @@ namespace {
                 fostlib::string const &path,
                 fostlib::http::server::request &request,
                 fostlib::host const &host) const override;
-
+        /// Replace any `Location` header that goes to the upstream
+        /// with the address used in the proxy request
+        std::pair<boost::shared_ptr<fostlib::mime>, int>
+                respond(fostlib::json const &configuration,
+                        fostlib::url const &location,
+                        fostlib::string const &path,
+                        fostlib::http::server::request const &request,
+                        fostlib::host const &host,
+                        boost::shared_ptr<fostlib::mime> body,
+                        int status) const override;
     } c_reverse;
 
 
@@ -72,14 +81,15 @@ std::pair<boost::shared_ptr<fostlib::mime>, int>
     info("proxy", "headers", request.data()->headers());
 
     http::user_agent ua(base);
-    auto proxy =
-            ua_request(configuration, std::move(location), path, request, host);
+    auto proxy = ua_request(configuration, location, path, request, host);
     auto response = ua(proxy);
     auto body{response->body()};
-    info("repsonse", "status", response->status());
+    info("response", "status", response->status());
     info("time", time.seconds());
 
-    return std::make_pair(body, response->status());
+    return respond(
+            configuration, location, path, request, host, body,
+            response->status());
 }
 
 
@@ -106,6 +116,19 @@ fostlib::http::user_agent::request fostlib::web_proxy::base::ua_request(
 }
 
 
+std::pair<boost::shared_ptr<fostlib::mime>, int>
+        fostlib::web_proxy::base::respond(
+                json const &configuration,
+                fostlib::url const &location,
+                string const &path,
+                http::server::request const &request,
+                host const &host,
+                boost::shared_ptr<mime> body,
+                int status) const {
+    return {body, status};
+}
+
+
 /**
  * ## `reverse` proxy
  */
@@ -120,4 +143,30 @@ fostlib::http::user_agent::request reverse::ua_request(
     request.headers().set("Host", location.server().name());
     return fostlib::http::user_agent::request{
             request.method(), std::move(location), request.data()};
+}
+
+
+std::pair<boost::shared_ptr<fostlib::mime>, int> reverse::respond(
+        fostlib::json const &configuration,
+        fostlib::url const &location,
+        fostlib::string const &path,
+        fostlib::http::server::request const &request,
+        fostlib::host const &host,
+        boost::shared_ptr<fostlib::mime> body,
+        int status) const {
+    if (body->headers().exists("Location")
+        && configuration.has_key("Location")) {
+        fostlib::url destination{location, body->headers()["Location"].value()};
+        if (destination.server().name() == location.server().name()
+            && destination.server().service() == location.server().service()) {
+            fostlib::url loc_header{fostlib::coerce<fostlib::string>(
+                    configuration["Location"])};
+            fostlib::url new_location{
+                    loc_header, loc_header.pathspec() + destination.pathspec()};
+            new_location.query(destination.query());
+            body->headers().set(
+                    "Location", fostlib::coerce<fostlib::string>(new_location));
+        }
+    }
+    return {body, status};
 }

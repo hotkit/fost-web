@@ -40,6 +40,16 @@ namespace fostlib::web_proxy {
                 http::server::request &request,
                 host const &host) const;
 
+        /// All the proxy to alter any aspect of the response it wishes
+        virtual std::pair<boost::shared_ptr<mime>, int>
+                respond(json const &configuration,
+                        url const &location,
+                        string const &path,
+                        http::server::request const &request,
+                        host const &host,
+                        boost::shared_ptr<mime> body,
+                        int status) const;
+
       private:
         std::pair<boost::shared_ptr<mime>, int> operator()(
                 json const &configuration,

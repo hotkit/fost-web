@@ -66,3 +66,64 @@ FSL_TEST_FUNCTION(host_replacement) {
             fostlib::string{response->body_as_string()}.find("sha256")
             != fostlib::string::npos);
 }
+
+
+/// A same-site redirect must have its `Location` fixed up so the next
+/// request will also go through the proxy. This test assumes that the
+/// proxy is used from the root of the local host web server.
+FSL_TEST_FUNCTION(location_replacement) {
+    fostlib::http::server::request req;
+    req.headers().add("Host", "localhost");
+    auto config = proxy_config("reverse", "https://kirit.com/");
+    insert(config, "configuration", "Location", "http://localhost/");
+    auto const [response, status] = fostlib::urlhandler::view::execute(
+            config, "/_resources", req, fostlib::host{});
+    FSL_CHECK_EQ(status, 302);
+    FSL_CHECK_EQ(
+            response->headers()["Location"].value(),
+            "http://localhost/_resources/");
+}
+
+
+/// A same-site redirect must have its `Location` fixed up so the next
+/// request will also go through the proxy. This test assumes that the
+/// proxy is mounted at `/proxy/` on the local host.
+FSL_TEST_FUNCTION(location_replacement_with_path) {
+    fostlib::http::server::request req;
+    req.headers().add("Host", "localhost");
+    auto config = proxy_config("reverse", "https://kirit.com/");
+    insert(config, "configuration", "Location", "http://localhost/proxy/");
+    auto const [response, status] = fostlib::urlhandler::view::execute(
+            config, "/_resources", req, fostlib::host{});
+    FSL_CHECK_EQ(status, 302);
+    FSL_CHECK_EQ(
+            response->headers()["Location"].value(),
+            "http://localhost/proxy/_resources/");
+}
+
+
+/// Check that the `Location` header is not replaced when the
+/// configuration item for the proxy server location is not present.
+FSL_TEST_FUNCTION(location_replacement_no_config) {
+    fostlib::http::server::request req;
+    req.headers().add("Host", "localhost");
+    auto const config = proxy_config("reverse", "https://kirit.com/");
+    auto const [response, status] = fostlib::urlhandler::view::execute(
+            config, "/_resources", req, fostlib::host{});
+    FSL_CHECK_EQ(status, 302);
+    FSL_CHECK_EQ(response->headers()["Location"].value(), "/_resources/");
+}
+
+
+/// Check that the `Location` header is not replaced when the
+/// location points to a host which is not the upstream one
+FSL_TEST_FUNCTION(location_replacement_no_match) {
+    fostlib::http::server::request req;
+    req.headers().add("Host", "localhost");
+    auto config = proxy_config("reverse", "https://www.kirit.com/");
+    insert(config, "configuration", "Location", "http://localhost/proxy/");
+    auto const [response, status] = fostlib::urlhandler::view::execute(
+            config, "/", req, fostlib::host{});
+    FSL_CHECK_EQ(status, 301);
+    FSL_CHECK_EQ(response->headers()["Location"].value(), "https://kirit.com/");
+}
