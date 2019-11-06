@@ -6,6 +6,9 @@
  */
 
 
+#pragma once
+
+
 #ifdef FOST_OS_WINDOWS
     #define FOST_URLHANDLER_DECLSPEC __declspec( dllimport )
 #else
@@ -14,15 +17,3 @@
 
 
 #include <fost/urlhandler.hpp>
-
-
-namespace fostlib {
-
-
-    namespace urlhandler {
-
-
-    }
-
-
-}
