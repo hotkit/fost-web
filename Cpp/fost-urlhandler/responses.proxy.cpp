@@ -15,9 +15,9 @@
 namespace {
 
 
-    const class proxy_view final : public fostlib::urlhandler::view {
-      public:
-        proxy_view() : view("fost.proxy.transparent") {}
+    class proxy_base : public fostlib::urlhandler::view {
+      protected:
+        proxy_base(f5::u8view const n) : view(n) {}
 
 
         std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
@@ -48,8 +48,13 @@ namespace {
 
             return std::make_pair(body, response->status());
         }
+    };
 
-    } c_proxy_view;
+
+    const class transparent final : public proxy_base {
+      public:
+        transparent() : proxy_base("fost.proxy.transparent") {}
+    } c_transparent;
 
 
 }
