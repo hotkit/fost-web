@@ -22,11 +22,28 @@ namespace {
         handled the request itself. This is normally done with the co-operation
         of the upstream host.
      */
-    const class transparent final : public fostlib::web_proxy::base {
-      public:
+    const struct transparent final : public fostlib::web_proxy::base {
         transparent() : base("fost.proxy.transparent") {}
-
     } c_transparent;
+
+    /**
+        The reverse proxy places itself between the user agent and
+        the upstream. It will make sure that things like `Host` headers
+        in the request and `Location` headers in the response are
+        corrected so that all future requests also pass through it rather
+        than the upstream web server.
+     */
+    const struct reverse final : public fostlib::web_proxy::base {
+        reverse() : base("fost.proxy.reverse") {}
+        /// Replace the Host header in the request
+        fostlib::http::user_agent::request ua_request(
+                fostlib::json const &configuration,
+                fostlib::url location,
+                fostlib::string const &path,
+                fostlib::http::server::request &request,
+                fostlib::host const &host) const override;
+
+    } c_reverse;
 
 
 }
@@ -55,7 +72,8 @@ std::pair<boost::shared_ptr<fostlib::mime>, int>
     info("proxy", "headers", request.data()->headers());
 
     http::user_agent ua(base);
-    http::user_agent::request proxy(request.method(), location, request.data());
+    auto proxy =
+            ua_request(configuration, std::move(location), path, request, host);
     auto response = ua(proxy);
     auto body{response->body()};
     info("repsonse", "status", response->status());
@@ -69,9 +87,37 @@ fostlib::url fostlib::web_proxy::base::upstream(
         json const &configuration,
         url const &base,
         string const &path,
-        http::server::request &request,
+        http::server::request const &request,
         host const &host) const {
     url location{base, path};
     location.query(request.query_string());
     return location;
+}
+
+
+fostlib::http::user_agent::request fostlib::web_proxy::base::ua_request(
+        json const &configuration,
+        url location,
+        string const &path,
+        http::server::request &request,
+        host const &host) const {
+    return http::user_agent::request{request.method(), std::move(location),
+                                     request.data()};
+}
+
+
+/**
+ * ## `reverse` proxy
+ */
+
+
+fostlib::http::user_agent::request reverse::ua_request(
+        fostlib::json const &configuration,
+        fostlib::url location,
+        fostlib::string const &path,
+        fostlib::http::server::request &request,
+        fostlib::host const &host) const {
+    request.headers().set("Host", location.server().name());
+    return fostlib::http::user_agent::request{
+            request.method(), std::move(location), request.data()};
 }

@@ -28,6 +28,15 @@ namespace fostlib::web_proxy {
                 json const &configuration,
                 url const &base,
                 string const &path,
+                http::server::request const &request,
+                host const &host) const;
+
+        /// Return the request that is to be used by the user agent making
+        /// talking to the upstream web server.
+        virtual http::user_agent::request ua_request(
+                json const &configuration,
+                url location,
+                string const &path,
                 http::server::request &request,
                 host const &host) const;
 
