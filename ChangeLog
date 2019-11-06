@@ -1,3 +1,6 @@
+2019-11-06  Kirit Saelensminde  <kirit@felspar.com>
+ Add a reverse proxy view that allows for changes in request and response.
+
 2019-08-26  Tle Ekkul  <e.aryuth@gmail.com>
  Add Fost-Request-ID in every requests and response
 
