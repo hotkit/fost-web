@@ -6,13 +6,13 @@
  */
 
 
-#include <fost/internet>
-#include <fost/http.server.hpp>
-
-
 #pragma once
 #ifndef FOST_URLHANDLER_HPP
 #define FOST_URLHANDLER_HPP
+
+
+#include <fost/internet>
+#include <fost/http.server.hpp>
 
 
 namespace fostlib {
