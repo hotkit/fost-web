@@ -7,7 +7,7 @@
 
 
 #include "fost-urlhandler.hpp"
-#include <fost/urlhandler.hpp>
+#include <fost/web-proxy.hpp>
 #include <fost/log>
 #include <fost/timer>
 
@@ -36,6 +36,7 @@ namespace {
             fostlib::url location(base, path);
             location.query(request.query_string());
             info("proxy", "url", location);
+            info("proxy", "headers", request.data()->headers());
 
             fostlib::http::user_agent ua(base);
             fostlib::http::user_agent::request proxy(
