@@ -1,7 +1,0 @@
-
-install static :
-        [ glob-tree *.*  ]
-    :
-        <location>$(PREFIX)/Templates/testserver
-        <install-source-root>$(TOP)/Templates/testserver
-    ;

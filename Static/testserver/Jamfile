@@ -1,7 +1,0 @@
-
-install static :
-        [ glob-tree *.*  ]
-    :
-        <location>$(PREFIX)/Static/testserver
-        <install-source-root>$(TOP)/Static/testserver
-    ;
