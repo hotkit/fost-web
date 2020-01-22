@@ -23,6 +23,7 @@ add_library(fost-urlhandler
         schema.validate.cpp
         test.throw.cpp
         view.cpp
+        view.matcher.cpp
     )
 target_include_directories(fost-urlhandler PUBLIC ../include)
 target_link_libraries(fost-urlhandler fost-inet f5-json-schema)
@@ -45,6 +46,7 @@ if(TARGET check)
             schema.validate-tests.cpp
             test.throw.tests.cpp
             view-tests.cpp
+            view.matcher.tests.cpp
             view.request-id.tests.cpp
         )
     target_link_libraries(fost-urlhandler-smoke fost-urlhandler)

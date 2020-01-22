@@ -45,15 +45,16 @@ namespace {
             }
             return m;
         }
-        fostlib::log::debug(fostlib::c_fost_web_urlhandler)("", "Path size mismatch")(
-                "o", "size", o.size())("parts", "size", parts.size());
+        fostlib::log::debug(fostlib::c_fost_web_urlhandler)(
+                "", "Path size mismatch")("o", "size", o.size())(
+                "parts", "size", parts.size());
         return fostlib::null;
     }
 }
 
 
 fostlib::nullable<fostlib::match> fostlib::matcher(
-        const fostlib::json &configuration, const fostlib::string &path) {
+        fostlib::json const &configuration, fostlib::string const &path) {
     auto parts = fostlib::split(path, "/");
     if (configuration.isobject()) {
         return check(configuration, parts);
