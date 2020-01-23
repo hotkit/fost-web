@@ -39,6 +39,8 @@ namespace {
                     "": "<view>" // fallback
                 }
             }
+
+            * This view doesn't consume any path
             */
             if (!configuration.has_key("")) {
                 throw fostlib::exceptions::not_implemented(
