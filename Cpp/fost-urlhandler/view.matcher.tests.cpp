@@ -13,10 +13,23 @@
 FSL_TEST_SUITE(view_matcher);
 
 namespace {
-    void check_fost_req_id(
-            const fostlib::mime &req, const fostlib::ascii_string &message) {
-        FSL_CHECK(req.headers().exists("Fost-Request-ID"));
-    }
+    const class check_fost_view_match_set_header :
+    public fostlib::urlhandler::view {
+      public:
+        check_fost_view_match_set_header()
+        : view("fost.view.test.match_set_header") {}
+
+        std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
+                const fostlib::json &config,
+                const fostlib::string &path,
+                fostlib::http::server::request &req,
+                const fostlib::host &host) const {
+            FSL_CHECK_EQ(req.headers().exists("__1"), true);
+            boost::shared_ptr<fostlib::mime> response{
+                    new fostlib::text_body(L"OK")};
+            return std::make_pair(response, 200);
+        }
+    } c_check_fost_view_match_set_header;
 }
 
 FSL_TEST_FUNCTION(view_matcher_call_correct_view) {
@@ -41,9 +54,8 @@ FSL_TEST_FUNCTION(view_matcher_call_correct_view) {
     fostlib::json path1{};
     fostlib::push_back(path1, "path", "/test");
     fostlib::push_back(path1, "path", 1);
-    fostlib::insert(path1, "execute", "fost.response.200");
+    fostlib::insert(path1, "execute", "fost.view.test.match_set_header");
     fostlib::push_back(config, "configuration", "match", path1);
-    fostlib::log::debug(fostlib::c_fost_web_urlhandler)("", config);
     auto [response, status] = fostlib::urlhandler::view::execute(
             config, "/test/fred", req, fostlib::host{});
     FSL_CHECK_EQ(status, 200);

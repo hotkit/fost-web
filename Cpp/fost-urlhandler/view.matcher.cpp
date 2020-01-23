@@ -48,7 +48,17 @@ namespace {
 
             for (auto m : match_config) {
                 auto matched = fostlib::matcher(m, path);
-                if (matched) { return execute(m["execute"], path, req, host); }
+                if (matched) {
+                    for (std::size_t i = 0;
+                         i != matched.value().arguments.size(); i++) {
+                        req.headers().set(
+                                f5::u8string{"__"}
+                                        + fostlib::coerce<fostlib::string>(
+                                                i + 1),
+                                matched.value().arguments[i]);
+                    }
+                    return execute(m["execute"], path, req, host);
+                }
             }
             throw fostlib::exceptions::not_implemented(
                     __PRETTY_FUNCTION__, "fost.view.match not implemented");
