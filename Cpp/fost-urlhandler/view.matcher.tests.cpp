@@ -25,6 +25,7 @@ namespace {
                 fostlib::http::server::request &req,
                 const fostlib::host &host) const {
             FSL_CHECK_EQ(req.headers().exists("__1"), true);
+            FSL_CHECK_EQ(req.headers()["__1"].value(), "fred");
             boost::shared_ptr<fostlib::mime> response{
                     new fostlib::text_body(L"OK")};
             return std::make_pair(response, 200);
