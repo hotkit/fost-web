@@ -30,19 +30,22 @@ namespace {
             executed.
 
             Example: {
-                    "view": "fost.view.match",
-                    "configuration": {
-                            "match": [{
-                                            "path": ["/test", 1],
-                                            "precondition": [],
-                                            "execute": "<view>"
-                                    },{ // fallback
-                                            "path": [],
-                                            "execute": "<view>"
-                                    }]
-                    }
+                "view": "fost.view.match",
+                "configuration": {
+                    "match": [{
+                        "path": ["/test", 1],
+                        "execute": "<view>"
+                    }],
+                    "": "<view>" // fallback
+                }
             }
             */
+            if (!configuration.has_key("")) {
+                throw fostlib::exceptions::not_implemented(
+                        __PRETTY_FUNCTION__,
+                        "fost.view.match required fallback view in "
+                        "configuration \"\"");
+            }
             auto &match_config = configuration["match"];
             fostlib::log::debug(fostlib::c_fost_web_urlhandler)("path", path);
 
@@ -60,8 +63,7 @@ namespace {
                     return execute(m["execute"], path, req, host);
                 }
             }
-            throw fostlib::exceptions::not_implemented(
-                    __PRETTY_FUNCTION__, "fost.view.match not implemented");
+            return execute(configuration[""], path, req, host);
         }
     } c_view_matcher;
 
