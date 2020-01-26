@@ -42,10 +42,12 @@ namespace {
 
             * This view doesn't consume any path
             */
-            if (!configuration.has_key("")) {
+            if (!configuration.has_key("no-match")
+                || !configuration.has_key("match")) {
                 throw fostlib::exceptions::not_implemented(
                         __PRETTY_FUNCTION__,
-                        "fost.view.match required fallback view in "
+                        "fost.view.match required keys [\"no-match\", "
+                        "\"match\"] in the"
                         "configuration \"\"");
             }
             auto &match_config = configuration["match"];
@@ -68,7 +70,7 @@ namespace {
                         matched.value().configuration["execute"], path, req,
                         host);
             }
-            return execute(configuration[""], path, req, host);
+            return execute(configuration["no-match"], path, req, host);
         }
     } c_view_matcher;
 

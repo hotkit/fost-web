@@ -45,7 +45,7 @@ namespace {
                     "path": ["/shop", 1, "/employee", 2, "/address", 3],
                     "execute": "fost.view.test.echo"
                 }],
-                "": "fost.response.404"
+                "no-match": "fost.response.404"
             }
         }
         */
@@ -76,7 +76,8 @@ namespace {
         fostlib::insert(path3, "execute", "fost.view.test.echo");
         fostlib::push_back(config, "configuration", "match", path3);
 
-        fostlib::insert(config, "configuration", "", "fost.response.404");
+        fostlib::insert(
+                config, "configuration", "no-match", "fost.response.404");
         return config;
     }
 }
@@ -95,6 +96,23 @@ FSL_TEST_FUNCTION(throw_exception_when_no_fallback_view_defined) {
     fostlib::insert(config, "view", "fost.view.match");
     fostlib::json path1{};
     fostlib::push_back(config, "configuration", "match", path1);
+    FSL_CHECK_EXCEPTION(
+            fostlib::urlhandler::view::execute(
+                    config, "/test/fred", req, fostlib::host{}),
+            fostlib::exceptions::not_implemented &);
+}
+
+FSL_TEST_FUNCTION(throw_exception_when_no_match_view_defined) {
+    /*
+    {
+        "view": "fost.view.match",
+        "configuration": {
+        }
+    }
+    */
+    fostlib::http::server::request req("GET", "/");
+    fostlib::json config{};
+    fostlib::insert(config, "view", "fost.view.match");
     FSL_CHECK_EXCEPTION(
             fostlib::urlhandler::view::execute(
                     config, "/test/fred", req, fostlib::host{}),
