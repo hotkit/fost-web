@@ -49,21 +49,24 @@ namespace {
                         "configuration \"\"");
             }
             auto &match_config = configuration["match"];
-            fostlib::log::debug(fostlib::c_fost_web_urlhandler)("path", path);
+            fostlib::log::debug(fostlib::c_fost_web_urlhandler)("path", path)(
+                    "configuration", match_config);
 
-            for (auto m : match_config) {
-                auto matched = fostlib::matcher(m, path);
-                if (matched) {
-                    for (std::size_t i = 0;
-                         i != matched.value().arguments.size(); i++) {
-                        req.headers().set(
-                                f5::u8string{"__"}
-                                        + fostlib::coerce<fostlib::string>(
-                                                i + 1),
-                                matched.value().arguments[i]);
-                    }
-                    return execute(m["execute"], path, req, host);
+            auto matched = fostlib::matcher(match_config, path);
+            if (matched) {
+                for (std::size_t i = 0; i != matched.value().arguments.size();
+                     i++) {
+                    req.headers().set(
+                            f5::u8string{"__"}
+                                    + fostlib::coerce<fostlib::string>(i + 1),
+                            matched.value().arguments[i]);
                 }
+                fostlib::log::debug(fostlib::c_fost_web_urlhandler)(
+                        "matched",
+                        path)("configuration", matched.value().configuration);
+                return execute(
+                        matched.value().configuration["execute"], path, req,
+                        host);
             }
             return execute(configuration[""], path, req, host);
         }

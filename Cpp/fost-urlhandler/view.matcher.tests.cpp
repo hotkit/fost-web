@@ -41,6 +41,9 @@ namespace {
                 },{
                     "path": ["/shop", 1, "/employee", 2],
                     "execute": "fost.view.test.echo"
+                },{
+                    "path": ["/shop", 1, "/employee", 2, "/address", 3],
+                    "execute": "fost.view.test.echo"
                 }],
                 "": "fost.response.404"
             }
@@ -60,8 +63,18 @@ namespace {
         fostlib::push_back(path2, "path", 1);
         fostlib::push_back(path2, "path", "/employee");
         fostlib::push_back(path2, "path", 2);
+        fostlib::push_back(path2, "path", "/address");
+        fostlib::push_back(path2, "path", 3);
         fostlib::insert(path2, "execute", "fost.view.test.echo");
         fostlib::push_back(config, "configuration", "match", path2);
+
+        fostlib::json path3{};
+        fostlib::push_back(path3, "path", "/shop");
+        fostlib::push_back(path3, "path", 1);
+        fostlib::push_back(path3, "path", "/employee");
+        fostlib::push_back(path3, "path", 2);
+        fostlib::insert(path3, "execute", "fost.view.test.echo");
+        fostlib::push_back(config, "configuration", "match", path3);
 
         fostlib::insert(config, "configuration", "", "fost.response.404");
         return config;
@@ -73,10 +86,7 @@ FSL_TEST_FUNCTION(throw_exception_when_no_fallback_view_defined) {
     {
         "view": "fost.view.match",
         "configuration": {
-            "match": [{
-                "path": ["/test", 1],
-                "execute": "fost.view.test.echo"
-            }]
+            "match": [{}]
         }
     }
     */
@@ -113,6 +123,22 @@ FSL_TEST_FUNCTION(view_matcher_can_match_two_path) {
     FSL_CHECK_EQ(response->headers()["__1"].value(), "coffee");
     FSL_CHECK_EQ(response->headers().exists("__2"), true);
     FSL_CHECK_EQ(response->headers()["__2"].value(), "ploy");
+}
+
+FSL_TEST_FUNCTION(view_matcher_match_the_longest_path) {
+    auto const config = configuration();
+    fostlib::http::server::request req("GET", "/");
+    auto [response, status] = fostlib::urlhandler::view::execute(
+            config, "/shop/coffee/employee/ploy/address/home", req,
+            fostlib::host{});
+    FSL_CHECK_EQ(status, 200);
+
+    FSL_CHECK_EQ(response->headers().exists("__1"), true);
+    FSL_CHECK_EQ(response->headers()["__1"].value(), "coffee");
+    FSL_CHECK_EQ(response->headers().exists("__2"), true);
+    FSL_CHECK_EQ(response->headers()["__2"].value(), "ploy");
+    FSL_CHECK_EQ(response->headers().exists("__3"), true);
+    FSL_CHECK_EQ(response->headers()["__3"].value(), "home");
 }
 
 FSL_TEST_FUNCTION(view_matcher_support_fallback) {
