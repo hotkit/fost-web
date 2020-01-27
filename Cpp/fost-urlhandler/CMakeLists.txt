@@ -3,11 +3,13 @@ add_library(fost-urlhandler
         control.exception.cpp
         control.status-condition.cpp
         fost-urlhandler.cpp
+        fsigma.cpp
         matcher.cpp
         middleware.logging.cpp
         middleware.request.cpp
         middleware.template.cpp
         mime-types.cpp
+        precondition.cpp
         responses.cpp
         responses.301.cpp
         responses.302.cpp
@@ -36,6 +38,7 @@ if(TARGET check)
             control.exception.tests.cpp
             control.status-condition-tests.cpp
             matcher.tests.cpp
+            precondition.tests.cpp
             responses.tests.cpp
             responses.301-tests.cpp
             responses.302-tests.cpp
