@@ -36,7 +36,7 @@ namespace {
                         "path": ["/test", 1],
                         "execute": "<view>"
                     }],
-                    "": "<view>" // fallback
+                    "no-match": "<view>" // fallback
                 }
             }
 
