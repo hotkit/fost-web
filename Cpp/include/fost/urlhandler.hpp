@@ -125,6 +125,10 @@ namespace fostlib {
         FOST_URLHANDLER_DECLSPEC
         extern const view &schema_validation;
 
+        /// match with path
+        FOST_URLHANDLER_DECLSPEC
+        extern const view &view_matcher;
+
         /// Generic response handler
         FOST_URLHANDLER_DECLSPEC
         extern const view &response_generic;

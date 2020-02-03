@@ -3,10 +3,13 @@ add_library(fost-urlhandler
         control.exception.cpp
         control.status-condition.cpp
         fost-urlhandler.cpp
+        fsigma.cpp
+        matcher.cpp
         middleware.logging.cpp
         middleware.request.cpp
         middleware.template.cpp
         mime-types.cpp
+        precondition.cpp
         responses.cpp
         responses.301.cpp
         responses.302.cpp
@@ -22,6 +25,7 @@ add_library(fost-urlhandler
         schema.validate.cpp
         test.throw.cpp
         view.cpp
+        view.matcher.cpp
     )
 target_include_directories(fost-urlhandler PUBLIC ../include)
 target_link_libraries(fost-urlhandler fost-inet f5-json-schema)
@@ -33,6 +37,8 @@ if(TARGET check)
     add_library(fost-urlhandler-smoke STATIC EXCLUDE_FROM_ALL
             control.exception.tests.cpp
             control.status-condition-tests.cpp
+            matcher.tests.cpp
+            precondition.tests.cpp
             responses.tests.cpp
             responses.301-tests.cpp
             responses.302-tests.cpp
@@ -43,6 +49,7 @@ if(TARGET check)
             schema.validate-tests.cpp
             test.throw.tests.cpp
             view-tests.cpp
+            view.matcher.tests.cpp
             view.request-id.tests.cpp
         )
     target_link_libraries(fost-urlhandler-smoke fost-urlhandler)
