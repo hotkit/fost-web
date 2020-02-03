@@ -8,7 +8,6 @@
 
 #pragma once
 
-
 #include <fost/core>
 
 
@@ -21,8 +20,9 @@ namespace fostlib {
     };
 
 
+    using match_predicate = std::function<bool(match const &)>;
     fostlib::nullable<match>
-            matcher(const fostlib::json &config, const fostlib::string &path);
+            matcher(const fostlib::json &config, const fostlib::string &path, match_predicate = match_predicate{});
 
 
 }

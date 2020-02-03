@@ -13,9 +13,10 @@
 #include <fost/string>
 
 
+
 namespace {
     fostlib::nullable<fostlib::match>
-            check(const fostlib::json &conf, const fostlib::split_type &parts) {
+            check(const fostlib::json &conf, const fostlib::split_type &parts, fostlib::match_predicate mp) {
         if (not conf.has_key("path")) return fostlib::null;
         const fostlib::json &o = conf["path"];
         if (o.size() == parts.size()) {
@@ -43,7 +44,9 @@ namespace {
                     }
                 }
             }
-            return m;
+            if (not mp || mp(m)) {
+                return m;
+            }
         }
         fostlib::log::debug(fostlib::c_fost_web_urlhandler)(
                 "", "Path size mismatch")("o", "size", o.size())(

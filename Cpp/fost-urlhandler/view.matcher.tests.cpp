@@ -166,3 +166,20 @@ FSL_TEST_FUNCTION(view_matcher_support_fallback) {
             config, "/some/random/url", req, fostlib::host{});
     FSL_CHECK_EQ(status, 404);
 }
+
+
+FSL_TEST_FUNCTION(view_matcher_support_preconditions) {
+    auto const config = configuration();
+    /*
+    match[0] = {
+        "path": ["/test", 1],
+        "precondition": ["eq", ["match", 1], ["header", "__user"]]
+        "execute": "fost.view.test.echo"
+    }
+    It should not match if the precondition is false
+    */
+    fostlib::http::server::request req("GET", "/test/fred");
+    auto [response, status] = fostlib::urlhandler::view::execute(
+            config, "/test/fred", req, fostlib::host{});
+    FSL_CHECK_EQ(status, 404);
+}
