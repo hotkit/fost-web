@@ -8,9 +8,13 @@
 
 #include "fost-urlhandler.hpp"
 #include <fost/urlhandler.hpp>
+#include <fost/log>
 
 
 namespace {
+
+
+    fostlib::module const c_replace{fostlib::c_fost_web_urlhandler, "replace"};
 
 
     const class middleware_template final : public fostlib::urlhandler::view {
@@ -27,8 +31,41 @@ namespace {
                 fostlib::string text = wrapped.first->body_as_string();
                 for (auto const &[str, with] :
                      configuration["replace"].object()) {
-                    text = fostlib::replace_all(
-                            text, str, fostlib::coerce<f5::u8view>(with));
+                    fostlib::json replacement{with};
+                    if (with.isarray() && with.size() > 0) {
+                        if (with[0] == "setting" && with.size() >= 3) {
+                            auto const section =
+                                    fostlib::coerce<fostlib::string>(with[1]);
+                            auto const name =
+                                    fostlib::coerce<fostlib::string>(with[2]);
+                            if (with.size() == 4) {
+                                replacement =
+                                        fostlib::setting<fostlib::json>::value(
+                                                section, name, with[3]);
+                            } else {
+                                replacement =
+                                        fostlib::setting<fostlib::json>::value(
+                                                section, name);
+                            }
+                        } else {
+                            fostlib::log::warning(c_replace)(
+                                    "", "Cannot understand replacement array")(
+                                    "replacing", with);
+                        }
+                    } else if (with.isobject()) {
+                        fostlib::log::warning(c_replace)(
+                                "", "Cannot understand replacement object")(
+                                "replacing", with);
+                    }
+                    if (not replacement.isatom()) {
+                        text = fostlib::replace_all(
+                                text, str,
+                                fostlib::json::unparse(replacement, false));
+                    } else {
+                        text = fostlib::replace_all(
+                                text, str,
+                                fostlib::coerce<fostlib::string>(replacement));
+                    }
                 }
                 return {boost::make_shared<fostlib::text_body>(
                                 text, wrapped.first->headers()),
