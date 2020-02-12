@@ -1,5 +1,5 @@
 /**
-    Copyright 2011-2019 Red Anchor Trading Co. Ltd.
+    Copyright 2011-2020 Red Anchor Trading Co. Ltd.
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -88,94 +88,96 @@ namespace fostlib {
         /// ## Test views
 
         /// Throw an exception
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &test_throw;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &test_throw;
 
         /// ## Control flow views
 
         /// Routing to new views based on status condition
         FOST_URLHANDLER_DECLSPEC
-        extern const view &control_status_condition;
+                [[deprecated("Use view::execute")]] extern const view
+                        &control_status_condition;
         /// Catching exceptions and routing to different views
         FOST_URLHANDLER_DECLSPEC
-        extern const view &control_exception_catch;
+                [[deprecated("Use view::execute")]] extern const view
+                        &control_exception_catch;
 
 
         /// Runs the view found at the location with the longest prefix
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &view_pathprefix;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &view_pathprefix;
         /// Serves the view found based on an exact match of the URL
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &view_pathname;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &view_pathname;
 
 
         /// ## Middleware
 
         /// Log the request and results
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &middleware_logging;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &middleware_logging;
         /// Alter the requests parameters before processing
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &middleware_request;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &middleware_request;
         /// Wrap a template around a response
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &middleware_template;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &middleware_template;
 
         /// request body JSON Schema validation
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &schema_validation;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &schema_validation;
 
         /// Generic response handler
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_generic;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_generic;
 
         /// ## Standard responses
 
         /// Return a 200 response to the user
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_200;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_200;
         /// Used to return a standard 301 to the user
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_301;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_301;
         /// Used to return a standard 302 to the user
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_302;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_302;
         /// Used to return a standard 303 to the user
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_303;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_303;
         /// Used to return a standard 403 to the user
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_401;
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_403;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_401;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_403;
         /// Used to return a standard 404 to the user
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_404;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_404;
         /// Used to return a standard 405 to the user
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_405;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_405;
         /// Used to return a standard 410 to the user
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_410;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_410;
         /// Used to return a standard 412 to the user
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_412;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_412;
         /// Used to return a standard 500 (internal server error) to the user
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_500;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_500;
         /// Used to return a standard 501 (not implemented) to the user
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_501;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_501;
         /// Used to return a standard 503 (service unavailable) to the user
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &response_503;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &response_503;
 
 
         /// ## Serving files
 
         /// Returns static files
-        FOST_URLHANDLER_DECLSPEC
-        extern const view &static_server;
+        FOST_URLHANDLER_DECLSPEC [[deprecated(
+                "Use view::execute")]] extern const view &static_server;
 
 
     }
