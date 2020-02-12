@@ -1,5 +1,5 @@
 /**
-    Copyright 2019 Red Anchor Trading Co. Ltd.
+    Copyright 2019-2020 Red Anchor Trading Co. Ltd.
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -29,7 +29,8 @@ namespace {
         fostlib::utf::save_file(root / "index.html", "html");
         fostlib::utf::save_file(root / "index.txt", "text");
         fostlib::json conf;
-        fostlib::insert(conf, "root", root);
+        fostlib::insert(conf, "view", "fost.static");
+        fostlib::insert(conf, "configuration", "root", root);
         return conf;
     }
 
@@ -55,7 +56,7 @@ FSL_TEST_SUITE(static_files);
 FSL_TEST_FUNCTION(file) {
     auto conf = setup();
     fostlib::http::server::request req("GET", "/index.html");
-    auto [resp, status] = fostlib::urlhandler::static_server(
+    auto [resp, status] = fostlib::urlhandler::view::execute(
             conf, "index.html", req, fostlib::host{});
     FSL_CHECK_EQ(status, 200);
     FSL_CHECK_EQ(resp->headers()["Content-Type"].value(), "text/html");
@@ -68,7 +69,7 @@ FSL_TEST_FUNCTION(default_file) {
     auto conf = setup();
     fostlib::http::server::request req("GET", "/");
     auto [resp, status] =
-            fostlib::urlhandler::static_server(conf, "", req, fostlib::host{});
+            fostlib::urlhandler::view::execute(conf, "", req, fostlib::host{});
     FSL_CHECK_EQ(status, 200);
     FSL_CHECK_EQ(resp->headers()["Content-Type"].value(), "text/html");
     FSL_CHECK_EQ(content(*resp), "html");
@@ -78,10 +79,10 @@ FSL_TEST_FUNCTION(default_file) {
 /// Serve a custom index file from the directory
 FSL_TEST_FUNCTION(custom_default_file) {
     auto conf = setup();
-    fostlib::insert(conf, "index", "index.txt");
+    fostlib::insert(conf, "configuration", "index", "index.txt");
     fostlib::http::server::request req("GET", "/");
     auto [resp, status] =
-            fostlib::urlhandler::static_server(conf, "", req, fostlib::host{});
+            fostlib::urlhandler::view::execute(conf, "", req, fostlib::host{});
     FSL_CHECK_EQ(status, 200);
     FSL_CHECK_EQ(resp->headers()["Content-Type"].value(), "text/plain");
     FSL_CHECK_EQ(content(*resp), "text");
@@ -92,17 +93,17 @@ FSL_TEST_FUNCTION(custom_default_file) {
 FSL_TEST_FUNCTION(default_file_not_found) {
     auto conf = setup();
     fostlib::http::server::request req("GET", "/empty/");
-    auto [resp, status] = fostlib::urlhandler::static_server(
+    auto [resp, status] = fostlib::urlhandler::view::execute(
             conf, "empty/", req, fostlib::host{});
     FSL_CHECK_EQ(status, 403);
     FSL_CHECK_EQ(resp->headers()["Content-Type"].value(), "text/html");
 }
 FSL_TEST_FUNCTION(custom_default_file_not_found) {
     auto conf = setup();
-    fostlib::insert(conf, "index", "non-existant.txt");
+    fostlib::insert(conf, "configuration", "index", "non-existant.txt");
     fostlib::http::server::request req("GET", "/");
     auto [resp, status] =
-            fostlib::urlhandler::static_server(conf, "", req, fostlib::host{});
+            fostlib::urlhandler::view::execute(conf, "", req, fostlib::host{});
     FSL_CHECK_EQ(status, 403);
     FSL_CHECK_EQ(resp->headers()["Content-Type"].value(), "text/html");
 }
@@ -112,7 +113,7 @@ FSL_TEST_FUNCTION(custom_default_file_not_found) {
 FSL_TEST_FUNCTION(directory_redirect) {
     auto conf = setup();
     fostlib::http::server::request req("GET", "/empty");
-    auto [resp, status] = fostlib::urlhandler::static_server(
+    auto [resp, status] = fostlib::urlhandler::view::execute(
             conf, "empty", req, fostlib::host{});
     FSL_CHECK_EQ(status, 302);
     FSL_CHECK_EQ(resp->headers()["Location"].value(), "/empty/");
@@ -122,9 +123,10 @@ FSL_TEST_FUNCTION(directory_redirect) {
 /// Can customise the directory serving view
 FSL_TEST_FUNCTION(directory_view_forbidden) {
     auto conf = setup();
-    fostlib::insert(conf, "directory", "view", "fost.response.500");
+    fostlib::insert(
+            conf, "configuration", "directory", "view", "fost.response.500");
     fostlib::http::server::request req("GET", "/empty/");
-    auto [resp, status] = fostlib::urlhandler::static_server(
+    auto [resp, status] = fostlib::urlhandler::view::execute(
             conf, "empty/", req, fostlib::host{});
     FSL_CHECK_EQ(status, 500);
     FSL_CHECK_EQ(resp->headers()["Content-Type"].value(), "text/html");
@@ -133,10 +135,12 @@ FSL_TEST_FUNCTION(directory_view_forbidden) {
 /// Forgetting root directory throws
 FSL_TEST_FUNCTION(directory_view_no_root) {
     auto conf = setup();
-    fostlib::insert(conf, "directory", "view", "fost.static.directory.json");
+    fostlib::insert(
+            conf, "configuration", "directory", "view",
+            "fost.static.directory.json");
     fostlib::http::server::request req("GET", "/empty/");
     FSL_CHECK_EXCEPTION(
-            fostlib::urlhandler::static_server(
+            fostlib::urlhandler::view::execute(
                     conf, "empty/", req, fostlib::host{}),
             fostlib::exceptions::not_implemented &);
 }
@@ -145,10 +149,14 @@ FSL_TEST_FUNCTION(directory_view_no_root) {
 /// Empty directory gives empty JSON when served as JSON
 FSL_TEST_FUNCTION(empty_directory_view_json) {
     auto conf = setup();
-    fostlib::insert(conf, "directory", "view", "fost.static.directory.json");
-    fostlib::insert(conf, "directory", "configuration", "root", conf["root"]);
+    fostlib::insert(
+            conf, "configuration", "directory", "view",
+            "fost.static.directory.json");
+    fostlib::insert(
+            conf, "configuration", "directory", "configuration", "root",
+            conf["configuration"]["root"]);
     fostlib::http::server::request req("GET", "/empty/");
-    auto [resp, status] = fostlib::urlhandler::static_server(
+    auto [resp, status] = fostlib::urlhandler::view::execute(
             conf, "empty/", req, fostlib::host{});
     FSL_CHECK_EQ(status, 200);
     FSL_CHECK_EQ(resp->headers()["Content-Type"].value(), "application/json");
@@ -159,13 +167,18 @@ FSL_TEST_FUNCTION(empty_directory_view_json) {
 /// Folders with files give us a listing
 FSL_TEST_FUNCTION(directory_view_json) {
     auto conf = setup();
-    fostlib::insert(conf, "directory", "view", "fost.static.directory.json");
-    fostlib::insert(conf, "directory", "configuration", "root", conf["root"]);
     fostlib::insert(
-            conf, "directory", "configuration", "index", "non-existant.txt");
+            conf, "configuration", "directory", "view",
+            "fost.static.directory.json");
+    fostlib::insert(
+            conf, "configuration", "directory", "configuration", "root",
+            conf["configuration"]["root"]);
+    fostlib::insert(
+            conf, "configuration", "directory", "configuration", "index",
+            "non-existant.txt");
     fostlib::http::server::request req("GET", "/");
     auto [resp, status] =
-            fostlib::urlhandler::static_server(conf, "", req, fostlib::host{});
+            fostlib::urlhandler::view::execute(conf, "", req, fostlib::host{});
     FSL_CHECK_EQ(status, 200);
     FSL_CHECK_EQ(resp->headers()["Content-Type"].value(), "application/json");
     auto const listing = fostlib::json::parse(content(*resp));

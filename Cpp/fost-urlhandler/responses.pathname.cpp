@@ -1,5 +1,5 @@
 /**
-    Copyright 2018-2019 Red Anchor Trading Co. Ltd.
+    Copyright 2018-2020 Red Anchor Trading Co. Ltd.
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -30,8 +30,8 @@ namespace {
                 /// matches in its entirety
                 return execute(configuration[path], "", req, h);
             } else {
-                return fostlib::urlhandler::response_404(
-                        fostlib::json(), path, req, h);
+                return execute(
+                        fostlib::json("fost.response.404"), path, req, h);
             }
         }
     } c_pathname;

@@ -1,5 +1,5 @@
 /**
-    Copyright 2011-2019 Red Anchor Trading Co. Ltd.
+    Copyright 2011-2020 Red Anchor Trading Co. Ltd.
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -53,9 +53,11 @@ namespace {
                 const fostlib::fs::path &dirname) const {
             if (not static_cast<f5::u8view>(req.file_spec()).ends_with("/")) {
                 fostlib::json redirect;
-                fostlib::insert(redirect, "location", req.file_spec() + "/");
-                return fostlib::urlhandler::response_302(
-                        redirect, path, req, host);
+                fostlib::insert(redirect, "view", "fost.response.302");
+                fostlib::insert(
+                        redirect, "configuration", "location",
+                        req.file_spec() + "/");
+                return execute(redirect, path, req, host);
             }
             auto filename = dirname;
             if (configuration.has_key("index")) {
@@ -78,8 +80,7 @@ namespace {
                         fostlib::http::server::request &req,
                         const fostlib::host &host,
                         const fostlib::fs::path &) const {
-            return fostlib::urlhandler::response_403(
-                    fostlib::json{}, path, req, host);
+            return execute(fostlib::json{"fost.response.403"}, path, req, host);
         }
     } c_directory{"fost.static.directory"};
 
@@ -151,8 +152,9 @@ namespace {
                 }
             } else {
                 if (not fostlib::fs::exists(filename)) {
-                    return fostlib::urlhandler::response_404(
-                            fostlib::json(), path, req, host);
+                    return execute(
+                            fostlib::json("fost.response.404"), path, req,
+                            host);
                 }
             }
             if (req.method() == "GET" || req.method() == "HEAD") {
@@ -167,11 +169,13 @@ namespace {
                 return std::make_pair(response, 200);
             } else {
                 fostlib::json c405;
-                fostlib::push_back(c405, "allow", "GET");
-                fostlib::push_back(c405, "allow", "HEAD");
+                fostlib::insert(c405, "view", "fost.response.405");
+                fostlib::push_back(c405, "configuration", "allow", "GET");
+                fostlib::push_back(c405, "configuration", "allow", "HEAD");
                 if (allow_delete(configuration))
-                    fostlib::push_back(c405, "allow", "DELETE");
-                return fostlib::urlhandler::response_405(c405, path, req, host);
+                    fostlib::push_back(
+                            c405, "configuration", "allow", "DELETE");
+                return execute(c405, path, req, host);
             }
         }
     } c_response_static;

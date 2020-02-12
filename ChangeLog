@@ -1,3 +1,7 @@
+2020-02-12  Kirit Saelensminde  <kirit@felspar.com>
+ * Add middleware that can replace response text with fixed strings or setting values.
+ * Deprecate use of view instances.
+
 2019-11-06  Kirit Saelensminde  <kirit@felspar.com>
  Add a reverse proxy view that allows for changes in request and response.
 

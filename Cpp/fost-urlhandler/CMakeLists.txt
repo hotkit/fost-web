@@ -4,6 +4,7 @@ add_library(fost-urlhandler
         control.status-condition.cpp
         fost-urlhandler.cpp
         middleware.logging.cpp
+        middleware.replace.cpp
         middleware.request.cpp
         middleware.template.cpp
         mime-types.cpp
@@ -33,6 +34,7 @@ if(TARGET check)
     add_library(fost-urlhandler-smoke STATIC EXCLUDE_FROM_ALL
             control.exception.tests.cpp
             control.status-condition-tests.cpp
+            middleware.replace.tests.cpp
             responses.tests.cpp
             responses.301-tests.cpp
             responses.302-tests.cpp
