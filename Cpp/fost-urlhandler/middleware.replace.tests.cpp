@@ -103,3 +103,90 @@ FSL_TEST_FUNCTION(setting_with_default_object) {
             "<html><head><title>{}</title></head><body><h1>{}</h1></body></"
             "html>");
 }
+
+
+// test do replace on text/html file already test by other above test with view
+// fost.response.200
+
+
+namespace {
+    const class response_plain : public fostlib::urlhandler::view {
+      public:
+        response_plain() : view("test.response.plain") {}
+
+        std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
+                const fostlib::json &config,
+                const fostlib::string &,
+                fostlib::http::server::request &req,
+                const fostlib::host &) const {
+            boost::shared_ptr<fostlib::mime> response;
+            response.reset(new fostlib::text_body(
+                    L"<html><head><title>OK</title></head>"
+                    L"<body><h1>OK</h1></body></html>",
+                    fostlib::mime::mime_headers(), "text/plain"));
+            return std::make_pair(response, 200);
+        }
+    } c_response_plain;
+}
+
+
+FSL_TEST_FUNCTION(should_do_replace_only_text_html_and_javascript_file) {
+    fostlib::json config;
+    fostlib::insert(config, "view", "fost.middleware.replace");
+    fostlib::insert(config, "configuration", "view", "test.response.plain");
+    fostlib::push_back(config, "configuration", "replace", "OK", "setting");
+    fostlib::push_back(
+            config, "configuration", "replace", "OK", "Test middleware");
+    fostlib::push_back(
+            config, "configuration", "replace", "OK", "Not a setting value");
+    fostlib::push_back(config, "configuration", "replace", "OK", "Default");
+    fostlib::http::server::request req;
+    auto response = fostlib::urlhandler::view::execute(
+            config, "", req, fostlib::host{});
+    FSL_CHECK_EQ(response.second, 200);
+    FSL_CHECK_EQ(
+            response.first->body_as_string(),
+            "<html><head><title>OK</title></head><body><h1>OK</h1></body></"
+            "html>");
+}
+
+
+namespace {
+    const class response_javascript : public fostlib::urlhandler::view {
+      public:
+        response_javascript() : view("test.response.javascript") {}
+
+        std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
+                const fostlib::json &config,
+                const fostlib::string &,
+                fostlib::http::server::request &req,
+                const fostlib::host &) const {
+            boost::shared_ptr<fostlib::mime> response;
+            response.reset(new fostlib::text_body(
+                    L"<script>console.log('OK')</script>",
+                    fostlib::mime::mime_headers(), "application/javascript"));
+            return std::make_pair(response, 200);
+        }
+    } c_response_javascript;
+}
+
+
+FSL_TEST_FUNCTION(should_do_replace_javascript_file) {
+    fostlib::json config;
+    fostlib::insert(config, "view", "fost.middleware.replace");
+    fostlib::insert(
+            config, "configuration", "view", "test.response.javascript");
+    fostlib::push_back(config, "configuration", "replace", "OK", "setting");
+    fostlib::push_back(
+            config, "configuration", "replace", "OK", "Test middleware");
+    fostlib::push_back(
+            config, "configuration", "replace", "OK", "Not a setting value");
+    fostlib::push_back(config, "configuration", "replace", "OK", "Default");
+    fostlib::http::server::request req;
+    auto response = fostlib::urlhandler::view::execute(
+            config, "", req, fostlib::host{});
+    FSL_CHECK_EQ(response.second, 200);
+    FSL_CHECK_EQ(
+            response.first->body_as_string(),
+            "<script>console.log('Default')</script>");
+}

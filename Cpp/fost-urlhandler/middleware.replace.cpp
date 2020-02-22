@@ -27,7 +27,11 @@ namespace {
                 fostlib::http::server::request &req,
                 const fostlib::host &h) const {
             auto const wrapped = execute(configuration, path, req, h);
-            if (configuration.has_key("replace") /* TODO check media type */) {
+            auto const wrapped_content_type =
+                    wrapped.first->headers()["Content-Type"].value();
+            if (configuration.has_key("replace")
+                && (wrapped_content_type == "text/html"
+                    || wrapped_content_type == "application/javascript")) {
                 fostlib::string text = wrapped.first->body_as_string();
                 for (auto const &[str, with] :
                      configuration["replace"].object()) {
