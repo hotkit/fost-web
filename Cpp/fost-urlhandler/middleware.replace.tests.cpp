@@ -110,6 +110,44 @@ FSL_TEST_FUNCTION(setting_with_default_object) {
 
 
 namespace {
+    const class response_font : public fostlib::urlhandler::view {
+      public:
+        response_font() : view("test.response.font") {}
+
+        std::pair<boost::shared_ptr<fostlib::mime>, int> operator()(
+                const fostlib::json &config,
+                const fostlib::string &,
+                fostlib::http::server::request &req,
+                const fostlib::host &) const {
+            boost::shared_ptr<fostlib::mime> response;
+            response.reset(new fostlib::text_body(
+                    L"A B C D E F G OK", fostlib::mime::mime_headers(),
+                    "font/ttf"));
+            return std::make_pair(response, 200);
+        }
+    } c_response_font;
+}
+
+
+FSL_TEST_FUNCTION(should_do_replace_only_text_and_javascript_file) {
+    fostlib::json config;
+    fostlib::insert(config, "view", "fost.middleware.replace");
+    fostlib::insert(config, "configuration", "view", "test.response.font");
+    fostlib::push_back(config, "configuration", "replace", "OK", "setting");
+    fostlib::push_back(
+            config, "configuration", "replace", "OK", "Test middleware");
+    fostlib::push_back(
+            config, "configuration", "replace", "OK", "Not a setting value");
+    fostlib::push_back(config, "configuration", "replace", "OK", "Default");
+    fostlib::http::server::request req;
+    auto response = fostlib::urlhandler::view::execute(
+            config, "", req, fostlib::host{});
+    FSL_CHECK_EQ(response.second, 200);
+    FSL_CHECK_EQ(response.first->body_as_string(), "A B C D E F G OK");
+}
+
+
+namespace {
     const class response_plain : public fostlib::urlhandler::view {
       public:
         response_plain() : view("test.response.plain") {}
@@ -130,7 +168,7 @@ namespace {
 }
 
 
-FSL_TEST_FUNCTION(should_do_replace_only_text_html_and_javascript_file) {
+FSL_TEST_FUNCTION(should_do_replace_text_file) {
     fostlib::json config;
     fostlib::insert(config, "view", "fost.middleware.replace");
     fostlib::insert(config, "configuration", "view", "test.response.plain");
@@ -146,8 +184,8 @@ FSL_TEST_FUNCTION(should_do_replace_only_text_html_and_javascript_file) {
     FSL_CHECK_EQ(response.second, 200);
     FSL_CHECK_EQ(
             response.first->body_as_string(),
-            "<html><head><title>OK</title></head><body><h1>OK</h1></body></"
-            "html>");
+            "<html><head><title>Default</title></head><body><h1>Default</h1></"
+            "body></html>");
 }
 
 

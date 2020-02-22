@@ -30,7 +30,7 @@ namespace {
             auto const wrapped_content_type =
                     wrapped.first->headers()["Content-Type"].value();
             if (configuration.has_key("replace")
-                && (wrapped_content_type == "text/html"
+                && (wrapped_content_type.starts_with("text/")
                     || wrapped_content_type == "application/javascript")) {
                 fostlib::string text = wrapped.first->body_as_string();
                 for (auto const &[str, with] :
