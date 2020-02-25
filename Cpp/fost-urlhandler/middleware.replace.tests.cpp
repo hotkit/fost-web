@@ -129,7 +129,7 @@ namespace {
 }
 
 
-FSL_TEST_FUNCTION(should_do_replace_only_text_and_javascript_file) {
+FSL_TEST_FUNCTION(should_do_replace_only_text_file) {
     fostlib::json config;
     fostlib::insert(config, "view", "fost.middleware.replace");
     fostlib::insert(config, "configuration", "view", "test.response.font");
@@ -209,7 +209,7 @@ namespace {
 }
 
 
-FSL_TEST_FUNCTION(should_do_replace_javascript_file) {
+FSL_TEST_FUNCTION(should_do_not_replace_javascript_file) {
     fostlib::json config;
     fostlib::insert(config, "view", "fost.middleware.replace");
     fostlib::insert(
@@ -226,5 +226,5 @@ FSL_TEST_FUNCTION(should_do_replace_javascript_file) {
     FSL_CHECK_EQ(response.second, 200);
     FSL_CHECK_EQ(
             response.first->body_as_string(),
-            "<script>console.log('Default')</script>");
+            "<script>console.log('OK')</script>");
 }
