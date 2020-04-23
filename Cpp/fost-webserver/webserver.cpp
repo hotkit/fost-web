@@ -14,27 +14,25 @@
 #include <fost/urlhandler>
 
 
-using namespace fostlib;
-
-
 namespace {
-    const setting<string>
+    const fostlib::setting<fostlib::string>
             c_cwd("webserver.cpp", "webserver", "Change directory", "");
-    const setting<string>
+    const fostlib::setting<fostlib::string>
             c_host("webserver.cpp", "webserver", "Bind to", "localhost");
-    const setting<int> c_port("webserver.cpp", "webserver", "Port", 8001);
-    const setting<string>
+    const fostlib::setting<int>
+            c_port("webserver.cpp", "webserver", "Port", 8001);
+    const fostlib::setting<fostlib::string>
             c_mime("webserver.cpp",
                    "webserver",
                    "MIME types",
                    "Configuration/mime-types.json");
-    const setting<json>
-            c_load("webserver.cpp", "webserver", "Load", json::array_t());
+    const fostlib::setting<fostlib::json> c_load(
+            "webserver.cpp", "webserver", "Load", fostlib::json::array_t());
 
-    const setting<json> c_logger(
+    const fostlib::setting<fostlib::json> c_logger(
             "webserver.cpp", "webserver", "logging", fostlib::json(), true);
     // Take out the Fost logger configuration so we don't end up with both
-    const setting<json> c_fost_logger(
+    const fostlib::setting<fostlib::json> c_fost_logger(
             "webserver.cpp",
             "webserver",
             "Logging sinks",
@@ -55,7 +53,7 @@ FSL_MAIN(
     std::vector<fostlib::settings> configuration;
     configuration.reserve(args.size());
     for (std::size_t arg{1}; arg != args.size(); ++arg) {
-        o << "Loading config " << json(args[arg].value());
+        o << "Loading config " << fostlib::json(args[arg].value());
         auto filename = fostlib::coerce<fostlib::fs::path>(args[arg].value());
         configuration.emplace_back(std::move(filename));
     }
@@ -82,16 +80,15 @@ FSL_MAIN(
     }
 
     // Load MIME types
-    urlhandler::load_mime_configuration(c_mime.value());
+    fostlib::urlhandler::load_mime_configuration(c_mime.value());
 
     // Bind server to host and port
-    http::server server(host(c_host.value()), c_port.value());
-    o << L"Answering requests on "
-         L"http://"
-      << server.binding() << L":" << server.port() << L"/" << std::endl;
+    fostlib::http::server server(fostlib::host(c_host.value()), c_port.value());
+    o << "Answering requests on http://" << server.binding() << ":"
+      << server.port() << "/" << std::endl;
 
     // Service requests
-    server(urlhandler::service);
+    server(fostlib::urlhandler::service);
 
     // It will never get this far
     return 0;
