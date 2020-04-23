@@ -23,6 +23,10 @@ namespace {
         map->emplace_if_not_found("std::logic_error", [](fostlib::string msg) {
             throw std::logic_error{static_cast<std::string>(msg)};
         });
+        map->emplace_if_not_found(
+                "fostlib::exceptions::null", [](fostlib::string msg) {
+                    throw fostlib::exceptions::null{msg};
+                });
         return map;
     }();
 
