@@ -42,9 +42,9 @@ FSL_TEST_FUNCTION(simple) {
 
 
 FSL_TEST_FUNCTION(setting) {
-    fostlib::setting<fostlib::string> const s{"middleware.replace.tests.cpp",
-                                              "Test middleware", "Replacement",
-                                              "Very OK", true};
+    fostlib::setting<fostlib::string> const s{
+            "middleware.replace.tests.cpp", "Test middleware", "Replacement",
+            "Very OK", true};
     fostlib::json config;
     fostlib::insert(config, "view", "fost.middleware.replace");
     fostlib::insert(config, "configuration", "view", "fost.response.200");

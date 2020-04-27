@@ -39,8 +39,9 @@ namespace {
     fostlib::string content(const fostlib::mime &body) {
         fostlib::string text;
         for (auto part : body) {
-            text += std::string{reinterpret_cast<char const *>(part.first),
-                                reinterpret_cast<char const *>(part.second)};
+            text += std::string{
+                    reinterpret_cast<char const *>(part.first),
+                    reinterpret_cast<char const *>(part.second)};
         }
         return text;
     }
