@@ -78,9 +78,9 @@ FSL_TEST_FUNCTION(dotdotslash_not_allowed) {
 
 FSL_TEST_FUNCTION(fostlib_exception_is_500) {
     fostlib::json configuration;
-    fostlib::insert(configuration, "view", "test.throw");
+    fostlib::insert(configuration, "", "view", "test.throw");
     fostlib::insert(
-            configuration, "configuration", "exception",
+            configuration, "", "configuration", "exception",
             "fostlib::exceptions::null");
     const fostlib::setting<fostlib::json> host_config{
             "urlhandling/routing-tests.cpp/fostlib_exception_is_500",
@@ -89,6 +89,24 @@ FSL_TEST_FUNCTION(fostlib_exception_is_500) {
             "GET", "/", std::make_unique<fostlib::binary_body>(),
             [](auto const &, auto const &message) {
                 FSL_CHECK_EQ(message, "500 Internal Server Error");
+            }};
+    FSL_CHECK(fostlib::urlhandler::service(req));
+}
+
+
+FSL_TEST_FUNCTION(fostlib_parse_error_is_400) {
+    fostlib::json configuration;
+    fostlib::insert(configuration, "", "view", "test.throw");
+    fostlib::insert(
+            configuration, "", "configuration", "exception",
+            "fostlib::exceptions::parse_error");
+    const fostlib::setting<fostlib::json> host_config{
+            "urlhandling/routing-tests.cpp/fostlib_parse_error_is_400",
+            "webserver", "hosts", configuration};
+    fostlib::http::server::request req{
+            "GET", "/", std::make_unique<fostlib::binary_body>(),
+            [](auto const &, auto const &message) {
+                FSL_CHECK_EQ(message, "400 Bad Request");
             }};
     FSL_CHECK(fostlib::urlhandler::service(req));
 }

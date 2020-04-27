@@ -1,5 +1,5 @@
 /**
-    Copyright 2019 Red Anchor Trading Co. Ltd.
+    Copyright 2019-2020 Red Anchor Trading Co. Ltd.
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -7,9 +7,11 @@
 
 
 #include "fost-urlhandler.hpp"
+#include <f5/threading/map.hpp>
 #include <fost/test-throw-view.hpp>
 #include <fost/urlhandler.hpp>
-#include <f5/threading/map.hpp>
+
+#include <fost/exception/parse_error.hpp>
 
 #include <stdexcept>
 
@@ -26,6 +28,10 @@ namespace {
         map->emplace_if_not_found(
                 "fostlib::exceptions::null", [](fostlib::string msg) {
                     throw fostlib::exceptions::null{msg};
+                });
+        map->emplace_if_not_found(
+                "fostlib::exceptions::parse_error", [](fostlib::string msg) {
+                    throw fostlib::exceptions::parse_error{msg};
                 });
         return map;
     }();
