@@ -14,8 +14,8 @@
 namespace {
 
 
-    const fostlib::module c_catch{fostlib::c_fost_web_urlhandler,
-                                  "control.exception.catch"};
+    const fostlib::module c_catch{
+            fostlib::c_fost_web_urlhandler, "control.exception.catch"};
 
 
     const class catch_exception final : public fostlib::urlhandler::view {

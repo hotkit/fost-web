@@ -111,8 +111,8 @@ fostlib::http::user_agent::request fostlib::web_proxy::base::ua_request(
         string const &path,
         http::server::request &request,
         host const &host) const {
-    return http::user_agent::request{request.method(), std::move(location),
-                                     request.data()};
+    return http::user_agent::request{
+            request.method(), std::move(location), request.data()};
 }
 
 

@@ -56,8 +56,8 @@ std::pair<boost::shared_ptr<fostlib::mime>, int> fostlib::urlhandler::serve_file
     fostlib::mime::mime_headers headers;
     auto now = fostlib::timestamp::now();
     headers.set("Date", timestamp_to_string(now));
-    static const fostlib::jcursor expires_path{"response", "headers",
-                                               "expires"};
+    static const fostlib::jcursor expires_path{
+            "response", "headers", "expires"};
     if (configuration.has_key(expires_path)) {
         auto expire_duration =
                 fostlib::coerce<fostlib::timediff>(configuration[expires_path]);
