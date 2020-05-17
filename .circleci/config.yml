@@ -32,6 +32,7 @@ jobs:
             git clone git@github.com:hotkit/fost-base.git .circleci/fost-base
             git clone git@github.com:hotkit/fost-crypto.git .circleci/crypto
             git clone git@github.com:hotkit/fost-internet.git .circleci/fost-internet
+            git clone git@github.com:hotkit/json-schema.git .circleci/json-schema
             git clone git@github.com:hotkit/threading.git .circleci/threading
       - run:
           name: cmake
