@@ -42,7 +42,8 @@ namespace {
 
 FSL_MAIN(
         "webserver",
-        "Threaded HTTP server\n" "Copyright (C) 2002-2020 Red Anchor Trading Co. Ltd.")
+        "Threaded HTTP server\n"
+        "Copyright (C) 2002-2020 Red Anchor Trading Co. Ltd.")
 (fostlib::ostream &o, fostlib::arguments &args) {
     args.commandSwitch("C", c_cwd.section(), c_cwd.name());
     if (not c_cwd.value().empty()) {
