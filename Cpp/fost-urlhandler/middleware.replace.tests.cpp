@@ -121,7 +121,7 @@ namespace {
                 const fostlib::host &) const {
             boost::shared_ptr<fostlib::mime> response;
             response.reset(new fostlib::text_body(
-                    L"A B C D E F G OK", fostlib::mime::mime_headers(),
+                    "A B C D E F G OK", fostlib::mime::mime_headers(),
                     "font/ttf"));
             return std::make_pair(response, 200);
         }
@@ -159,8 +159,8 @@ namespace {
                 const fostlib::host &) const {
             boost::shared_ptr<fostlib::mime> response;
             response.reset(new fostlib::text_body(
-                    L"<html><head><title>OK</title></head>"
-                    L"<body><h1>OK</h1></body></html>",
+                    "<html><head><title>OK</title></head>"
+                    "<body><h1>OK</h1></body></html>",
                     fostlib::mime::mime_headers(), "text/plain"));
             return std::make_pair(response, 200);
         }
@@ -201,7 +201,7 @@ namespace {
                 const fostlib::host &) const {
             boost::shared_ptr<fostlib::mime> response;
             response.reset(new fostlib::text_body(
-                    L"<script>console.log('OK')</script>",
+                    "<script>console.log('OK')</script>",
                     fostlib::mime::mime_headers(), "application/javascript"));
             return std::make_pair(response, 200);
         }
