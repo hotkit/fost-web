@@ -1,5 +1,5 @@
 /**
-    Copyright 2011-2019 Red Anchor Trading Co. Ltd.
+    Copyright 2011-2020 Red Anchor Trading Co. Ltd.
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -65,7 +65,7 @@ namespace {
                 if (title)
                     replace_content(
                             skin, "{{ element title }}",
-                            L"<title>" + title.value() + L"</title>");
+                            "<title>" + title.value() + "</title>");
 
                 fostlib::nullable<fostlib::string> inner(
                         find_content(content, "body"));
@@ -74,7 +74,7 @@ namespace {
 
                 boost::shared_ptr<fostlib::mime> response(
                         new fostlib::text_body(
-                                skin, wrapped.first->headers(), L"text/html"));
+                                skin, wrapped.first->headers(), "text/html"));
                 return std::make_pair(response, wrapped.second);
             } else
                 return wrapped;

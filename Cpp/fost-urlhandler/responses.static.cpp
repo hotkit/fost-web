@@ -163,9 +163,9 @@ namespace {
             } else if (allow_delete(configuration) && req.method() == "DELETE") {
                 fostlib::fs::remove(filename);
                 boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
-                        L"<html><head><title>Resource deleted</title></head>"
-                        L"<body><h1>Resource deleted</h1></body></html>",
-                        fostlib::mime::mime_headers(), L"text/html"));
+                        "<html><head><title>Resource deleted</title></head>"
+                        "<body><h1>Resource deleted</h1></body></html>",
+                        fostlib::mime::mime_headers(), "text/html"));
                 return std::make_pair(response, 200);
             } else {
                 fostlib::json c405;

@@ -1,5 +1,5 @@
 /**
-    Copyright 2008-2019 Red Anchor Trading Co. Ltd.
+    Copyright 2008-2020 Red Anchor Trading Co. Ltd.
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -41,8 +41,8 @@ namespace {
 
 
 FSL_MAIN(
-        L"webserver",
-        L"Threaded HTTP server\nCopyright (C) 2002-2016, Felspar Co. Ltd.")
+        "webserver",
+        "Threaded HTTP server\n" "Copyright (C) 2002-2020 Red Anchor Trading Co. Ltd.")
 (fostlib::ostream &o, fostlib::arguments &args) {
     args.commandSwitch("C", c_cwd.section(), c_cwd.name());
     if (not c_cwd.value().empty()) {

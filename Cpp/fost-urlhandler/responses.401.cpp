@@ -1,5 +1,5 @@
 /**
-    Copyright 2012-2019 Red Anchor Trading Co. Ltd.
+    Copyright 2012-2020 Red Anchor Trading Co. Ltd.
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -21,7 +21,7 @@ const class response_401 : public fostlib::urlhandler::view {
             const fostlib::host &host) const {
         if (!config.has_key("schemes"))
             throw fostlib::exceptions::not_implemented(
-                    __func__,
+                    __PRETTY_FUNCTION__,
                     "No 'schemes' key in the configuration so can't build "
                     "the required WWW-Authenticate header");
         fostlib::string schemes;
@@ -35,8 +35,8 @@ const class response_401 : public fostlib::urlhandler::view {
         boost::shared_ptr<fostlib::mime> response;
         if (config["view"].isnull()) {
             response.reset(new fostlib::text_body(
-                    L"<html><head><title>Not authorized</title></head>"
-                    L"<body><h1>Not authorized</h1></body></html>",
+                    "<html><head><title>Not authorized</title></head>"
+                    "<body><h1>Not authorized</h1></body></html>",
                     fostlib::mime::mime_headers(), "text/html"));
         } else {
             response = execute(config, path, req, host).first;

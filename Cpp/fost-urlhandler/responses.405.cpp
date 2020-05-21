@@ -1,5 +1,5 @@
 /**
-    Copyright 2012-2019 Red Anchor Trading Co. Ltd.
+    Copyright 2012-2020 Red Anchor Trading Co. Ltd.
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -33,9 +33,9 @@ const class response_405 : public fostlib::urlhandler::view {
         fostlib::mime::mime_headers headers;
         headers.set("Allow", allow);
         boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
-                L"<html><head><title>Method Not Allowed</title></head>"
-                L"<body><h1>Method Not Allowed</h1></body></html>",
-                headers, L"text/html"));
+                "<html><head><title>Method Not Allowed</title></head>"
+                "<body><h1>Method Not Allowed</h1></body></html>",
+                headers, "text/html"));
         return std::make_pair(response, 405);
     }
 } c_response_405;

@@ -1,5 +1,5 @@
 /**
-    Copyright 2011-2019 Red Anchor Trading Co. Ltd.
+    Copyright 2011-2020 Red Anchor Trading Co. Ltd.
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -27,9 +27,9 @@ public fostlib::urlhandler::view {
             fostlib::http::server::request &req,
             const fostlib::host &) const {
         boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
-                L"<html><head><title>Web server tests</title></head>"
-                L"<body><h1>Web server tests</h1></body></html>",
-                fostlib::mime::mime_headers(), L"text/html"));
+                "<html><head><title>Web server tests</title></head>"
+                "<body><h1>Web server tests</h1></body></html>",
+                fostlib::mime::mime_headers(), "text/html"));
         return std::make_pair(response, 200);
     }
 } c_testrunner;

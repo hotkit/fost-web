@@ -1,5 +1,5 @@
 /**
-    Copyright 2012-2019 Red Anchor Trading Co. Ltd.
+    Copyright 2012-2020 Red Anchor Trading Co. Ltd.
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -35,8 +35,8 @@ namespace {
             fostlib::mime::mime_headers headers;
             headers.set("Location", location);
             boost::shared_ptr<fostlib::mime> response(new fostlib::text_body(
-                    L"<html><head><title>Found</title></head>"
-                    L"<body><h1>Found</h1></body></html>",
+                    "<html><head><title>Found</title></head>"
+                    "<body><h1>Found</h1></body></html>",
                     headers, "text/html"));
             return std::make_pair(response, 302);
         }
