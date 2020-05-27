@@ -1,5 +1,5 @@
 /**
-    Copyright 2011-2019 Red Anchor Trading Co. Ltd.
+    Copyright 2011-2020 Red Anchor Trading Co. Ltd.
 
     Distributed under the Boost Software License, Version 1.0.
     See <http://www.boost.org/LICENSE_1_0.txt>
@@ -66,31 +66,22 @@ namespace {
     };
 
 
+    /**
+     * ## List of generic responses
+     */
+
+    const response response_generic = response{};
+
+    const response response_200 = response{200};
+
+    const response response_403 = response{403};
+    const response response_404 = response{404, "Resource not found"};
+    const response response_410 = response{410};
+    const response response_412 = response{412};
+
+    const response response_500 = response{500};
+    const response response_501 = response{501};
+    const response response_503 = response{503};
+
+
 }
-
-
-/**
- * ## List of generic responses
- */
-
-const fostlib::urlhandler::view &fostlib::urlhandler::response_generic =
-        response{};
-
-const fostlib::urlhandler::view &fostlib::urlhandler::response_200 =
-        response{200};
-
-const fostlib::urlhandler::view &fostlib::urlhandler::response_403 =
-        response{403};
-const fostlib::urlhandler::view &fostlib::urlhandler::response_404 =
-        response{404, "Resource not found"};
-const fostlib::urlhandler::view &fostlib::urlhandler::response_410 =
-        response{410};
-const fostlib::urlhandler::view &fostlib::urlhandler::response_412 =
-        response{412};
-
-const fostlib::urlhandler::view &fostlib::urlhandler::response_500 =
-        response{500};
-const fostlib::urlhandler::view &fostlib::urlhandler::response_501 =
-        response{501};
-const fostlib::urlhandler::view &fostlib::urlhandler::response_503 =
-        response{503};

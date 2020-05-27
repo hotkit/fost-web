@@ -13,6 +13,7 @@
 #include <f5/json/assertions.hpp>
 #include <f5/json/schema.hpp>
 
+
 const class schema_validation : public fostlib::urlhandler::view {
   public:
     schema_validation() : view("fost.schema.validate") {}
@@ -46,6 +47,3 @@ const class schema_validation : public fostlib::urlhandler::view {
         return execute(config["valid"], path, req, host);
     }
 } c_schema_validation;
-
-const fostlib::urlhandler::view &fostlib::urlhandler::schema_validation =
-        c_schema_validation;

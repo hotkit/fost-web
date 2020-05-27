@@ -38,7 +38,3 @@ namespace {
 
 
 }
-
-
-const fostlib::urlhandler::view &fostlib::urlhandler::view_pathname =
-        c_pathname;

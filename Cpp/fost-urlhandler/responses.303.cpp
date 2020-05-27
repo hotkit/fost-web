@@ -38,6 +38,3 @@ const class response_303 : public fostlib::urlhandler::view {
         return std::make_pair(response, 303);
     }
 } c_response_303;
-
-const fostlib::urlhandler::view &fostlib::urlhandler::response_303 =
-        c_response_303;

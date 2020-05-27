@@ -44,7 +44,3 @@ namespace {
 
 
 }
-
-
-const fostlib::urlhandler::view &fostlib::urlhandler::response_302 =
-        c_response_302;

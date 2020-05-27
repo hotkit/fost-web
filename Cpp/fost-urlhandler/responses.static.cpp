@@ -182,7 +182,3 @@ namespace {
 
 
 }
-
-
-const fostlib::urlhandler::view &fostlib::urlhandler::static_server =
-        c_response_static;

@@ -85,9 +85,6 @@ namespace {
 
 }
 
-const fostlib::urlhandler::view &fostlib::urlhandler::test_throw =
-        c_throw_exception;
-
 
 fostlib::urlhandler::test_throw_plugin::test_throw_plugin(
         fostlib::string n, test_throw_plugin_fn f)

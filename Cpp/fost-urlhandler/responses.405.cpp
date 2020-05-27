@@ -39,6 +39,3 @@ const class response_405 : public fostlib::urlhandler::view {
         return std::make_pair(response, 405);
     }
 } c_response_405;
-
-const fostlib::urlhandler::view &fostlib::urlhandler::response_405 =
-        c_response_405;

@@ -83,7 +83,3 @@ namespace {
 
 
 }
-
-
-const fostlib::urlhandler::view &fostlib::urlhandler::middleware_template =
-        c_middleware_template;

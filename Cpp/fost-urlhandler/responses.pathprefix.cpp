@@ -57,7 +57,3 @@ namespace {
 
 
 }
-
-
-const fostlib::urlhandler::view &fostlib::urlhandler::view_pathprefix =
-        c_pathprefix;
